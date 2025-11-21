@@ -585,7 +585,7 @@
             }
 
             if (missedPromotions.length > 0) {
-                promoHistoryHTML = "تاريخ الترقيات الفائتة/المستحقة بناءً على التخرج:<ul class='promo-list'>";
+                promoHistoryHTML = "تاريخ الترقيات المستحقة:<ul class='promo-list'>";
                 missedPromotions.forEach((date, index) => {
                     const gradeAchieved = grade - (index + 1);
                     promoHistoryHTML += `<li> الترقية رقم ${index + 1} (للدرجة ${gradeAchieved >= 1 ? gradeAchieved : 1}): <i class="far fa-calendar-alt"></i> **${formatDate(date)}**</li>`;
@@ -660,7 +660,7 @@
         // 3. عرض النتائج 
         document.getElementById("salaryResult").classList.remove('hidden');
         document.getElementById("salaryResult").innerHTML =
-            "💵 **الراتب الكلي الحالي (قبل الترقية):** <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+            "الراتب الكلي الحالي (قبل الترقية): <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
             
         document.getElementById("promoResult").classList.remove('hidden');
         document.getElementById("promoResult").innerHTML = promotionDetails;
@@ -670,7 +670,7 @@
         if (dueDate) {
              document.getElementById("dueDate").classList.remove('hidden');
              document.getElementById("dueDate").innerHTML =
-            "تاريخ الاستحقاق القادم للترقية التالية: 🗓️ <strong>" + formatDate(dueDate) + "</strong>";
+            "تاريخ الاستحقاق القادم للترقية :  <strong>" + formatDate(dueDate) + "</strong>";
         } 
 
 
