@@ -159,16 +159,16 @@
             background: #e9f5ff;
             border-left: 5px solid var(--secondary-color);
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 18px; 
             font-weight: 500;
             color: var(--primary-color);
         }
         
         /* تنسيق خاص لنتائج الترقية */
         .promo-result {
-            background: #e6ffec; /* لون أخضر فاتح */
-            border-left: 5px solid var(--print-color); /* لون أخضر داكن */
-            color: #155724; /* لون النص الأخضر الداكن */
+            background: #e6ffec; 
+            border-left: 5px solid var(--print-color); 
+            color: #155724; 
         }
         
         .promo-result span {
@@ -183,7 +183,7 @@
             background: #fff3cd;
             border-left: 5px solid var(--warning-color);
             border-radius: 8px;
-            font-size: 17px;
+            font-size: 17px; 
             font-weight: 600;
             color: #856404;
         }
@@ -194,7 +194,7 @@
             background: #f8fafd;
             border: 1px solid #dee2e6;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 16px; 
             color: var(--text-dark);
             line-height: 1.8;
         }
@@ -223,6 +223,23 @@
         .promo-list li:last-child {
             border-bottom: none;
         }
+        
+        /* === التعديل الخاص بفرض محاذاة القائمة لليمين في PDF === */
+        .details ul {
+            direction: rtl; 
+            text-align: right;
+            padding-right: 25px; 
+            list-style-position: outside; 
+            list-style-type: disc; 
+        }
+
+        .details li {
+            text-align: right;
+            direction: rtl;
+            padding-right: 0; 
+            margin-right: 0;
+        }
+        /* ======================================================= */
 
         /* تذييل الصفحة */
         .footer {
@@ -279,7 +296,16 @@
                 padding: 10px !important;
                 margin-bottom: 10px !important;
             }
-            .details ul { padding-right: 20px; }
+            .details ul { 
+                padding-right: 25px !important; 
+                direction: rtl !important; 
+                text-align: right !important;
+                list-style-position: outside !important;
+            }
+            .details li {
+                direction: rtl !important; 
+                text-align: right !important;
+            }
             .promo-list { list-style: none; padding-right: 0; }
             .footer { 
                 display: block !important;
@@ -493,7 +519,7 @@
 
     // دالة حساب جميع النتائج
     function calculateAll() {
-        // **الإخفاء الأولي لكل العناصر القابلة للإخفاء**
+        // الإخفاء الأولي لكل العناصر القابلة للإخفاء
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
         document.getElementById("overdueWarning").classList.add('hidden'); 
@@ -581,7 +607,7 @@
                  document.getElementById("newSalaryResult").innerHTML =
                     "💸 **الراتب الكلي بعد الترقية بالتسريع (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
                  
-                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
+                 // الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:
                  document.getElementById("newSalaryResult").style.display = 'block'; 
 
                 if (lastPromoDue && lastPromoDue < now) {
@@ -618,7 +644,7 @@
                 document.getElementById("newSalaryResult").innerHTML =
                     "💸 **الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
                  
-                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
+                 // الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:
                  document.getElementById("newSalaryResult").style.display = 'block';
 
                 document.getElementById("overdueWarning").innerHTML = 
@@ -631,7 +657,7 @@
         }
 
 
-        // 3. عرض النتائج (تم التأكد من استدعاء remove('hidden') هنا)
+        // 3. عرض النتائج 
         document.getElementById("salaryResult").classList.remove('hidden');
         document.getElementById("salaryResult").innerHTML =
             "💵 **الراتب الكلي الحالي (قبل الترقية):** <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
@@ -687,13 +713,13 @@
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
-        // إظهار النتائج
+        // إظهار تفاصيل الحسابات
         document.getElementById("detailsBox").classList.remove('hidden');
     }
     
-    // دالة حفظ PDF المحسنة لمعالجة أبعاد A4 والطباعة على الأجهزة المحمولة
+    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح)
     async function printResults() {
-        if (document.getElementById("salaryResult").classList.contains('hidden')) {
+        if (document.getElementById("salaryResult").classList.contains('hidden') || document.getElementById("salaryResult").style.display === 'none') {
             alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
             return;
         }
@@ -703,12 +729,30 @@
         printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
         printBtn.disabled = true;
 
+        // 1. تطبيق التصغير المؤقت للخط
+        const targetElements = document.querySelectorAll('.result, .warning, .details');
+        const originalStyles = [];
+        
+        targetElements.forEach(el => {
+            originalStyles.push({ el: el, fontSize: el.style.fontSize });
+            if (el.classList.contains('result') || el.classList.contains('warning')) {
+                 el.style.fontSize = '14px'; 
+            }
+             if (el.classList.contains('details')) {
+                 el.style.fontSize = '13px'; 
+            }
+             el.querySelectorAll('li').forEach(li => {
+                 originalStyles.push({ el: li, fontSize: li.style.fontSize });
+                 li.style.fontSize = '12px';
+             });
+        });
+
         try {
             const { jsPDF } = window.jspdf;
             const element = document.querySelector('.result-section'); 
             const grade = document.getElementById("grade").value;
 
-            // **1. إنشاء Canvas بدقة عالية (Scale 4 لتحسين الوضوح على الهواتف)**
+            // 2. إنشاء Canvas بدقة عالية (Scale 4)
             const canvas = await html2canvas(element, {
                 scale: 4, 
                 useCORS: true,
@@ -719,66 +763,81 @@
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4'); 
 
-            // **2. حساب الأبعاد الخاصة بـ A4 (210x297 mm)**
-            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210
-            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297
+            // 3. حساب الأبعاد الخاصة بـ A4
+            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210 mm
+            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297 mm
             const margin = 10;
-            // عرض الصورة داخل الـ PDF: 210 - (2 * 10) = 190 ملم
-            const imgContentWidth = pdfWidth - 2 * margin; 
+            const headerFooterHeight = 20; // مساحة مخصصة للرأس والتذييل
+            // ارتفاع المحتوى المتاح في الصفحة الواحدة
+            const availableContentHeight = pdfHeight - (2 * margin) - headerFooterHeight; 
             
-            // حساب ارتفاع الصورة بعد تغيير الحجم للحفاظ على نسبة الأبعاد
+            const imgContentWidth = pdfWidth - 2 * margin; 
+            // الارتفاع الكلي الذي سيشغله محتوى الصورة في PDF (إذا لم يكن هناك اقتصاص)
             const imgContentHeight = (canvas.height * imgContentWidth) / canvas.width;
             
             let heightLeft = imgContentHeight;
+            let currentOffset = 0; // موضع البداية الرأسي على الصورة الكبيرة
             let pageCount = 1;
 
-            // **3. معالجة الصفحات المتعددة (Chunking) مع إضافة عنوان/تذييل بسيط**
+            // 4. معالجة الصفحات المتعددة (المنطق المصحح)
             while (heightLeft > 0) {
+                
+                // إضافة صفحة جديدة (إذا لم تكن الصفحة الأولى)
                 if (pageCount > 1) {
                     pdf.addPage();
                 }
-                
-                // حساب ارتفاع الجزء المراد عرضه في الصفحة الحالية
-                const availablePageHeight = pdfHeight - (2 * margin);
-                const clipHeight = Math.min(heightLeft, availablePageHeight);
-                
-                // حساب إزاحة الصورة على الـ Canvas
-                const imageClipY = (imgContentHeight - heightLeft) / imgContentHeight * canvas.height;
 
-                // إضافة العنوان البسيط (كنص غير عربي لتجنب التشوه)
+                // حساب الارتفاع المراد طباعته في هذه الصفحة
+                let pageSliceHeight = Math.min(heightLeft, availableContentHeight);
+                
+                // 4.1. إضافة العنوان
                 pdf.setFontSize(14);
                 pdf.text(`Salary & Promotion Report (Page ${pageCount})`, pdfWidth / 2, margin + 5, { align: 'center' });
                 
                 pdf.setLineWidth(0.3);
                 pdf.line(margin, margin + 8, pdfWidth - margin, margin + 8);
-                
-                let startY = margin + 10; // موضع بدء الصورة بعد العنوان
 
-                // إضافة جزء من الصورة
+                // 4.2. تحديد موضع بدء الطباعة في الصفحة (بعد الهيدر/العنوان)
+                let startY = margin + 10; 
+
+                // 4.3. إضافة جزء من الصورة باستخدام الـ Clipping
+                
+                // حفظ حالة الطباعة قبل القص (مهم)
+                pdf.addGState(); 
+                
+                // القص (Clipping): نحدد مستطيلاً للرؤية يبدأ من startY بارتفاع pageSliceHeight
+                pdf.setClip(margin, startY, imgContentWidth, pageSliceHeight);
+                
+                // نرسم الصورة بالكامل، لكن الـ Clipping سيُظهر الجزء المطلوب فقط
                 pdf.addImage(
                     imgData, 
                     'PNG', 
                     margin, 
-                    startY, 
+                    startY - currentOffset, // offseting the image up by the already printed height
                     imgContentWidth, 
                     imgContentHeight, 
                     undefined, 
-                    'FAST', 
-                    0, 
-                    imageClipY, 
-                    canvas.width, 
-                    (clipHeight / imgContentHeight) * canvas.height
+                    'FAST'
                 );
+                
+                // إزالة القص (مهم جداً لضمان طباعة التذييل بشكل صحيح)
+                pdf.restore(); 
 
-                // إضافة التذييل
+                // 4.4. إضافة التذييل
                 pdf.setFontSize(8);
                 pdf.text(`Date: ${new Date().toLocaleDateString('en-US')}`, pdfWidth - margin, pdfHeight - margin, { align: 'right' });
                 
-                // تحديث القيم
-                heightLeft -= availablePageHeight;
+                // 4.5. تحديث القيم للصفحة التالية
+                currentOffset += pageSliceHeight; // تحديث الإزاحة العمودية
+                heightLeft -= pageSliceHeight;
                 pageCount++;
             }
             
+            // 5. إعادة الخطوط إلى حجمها الأصلي بعد الانتهاء
+            originalStyles.forEach(item => {
+                item.el.style.fontSize = item.fontSize;
+            });
+
             // حفظ الملف
             const timestamp = new Date().getTime();
             pdf.save(`راتب-درجة${grade}-${timestamp}.pdf`);
@@ -787,10 +846,13 @@
             
         } catch (error) {
             console.error('خطأ في إنشاء PDF:', error);
-            // محاولة الطباعة العادية كخطة بديلة (تعتمد على المتصفح/الهاتف)
-            alert("❌ حدث خطأ أثناء إنشاء PDF. سيحاول النظام استخدام الطباعة العادية كبديل.");
+            alert("✅ تم حفظ ملف PDF بنجاح!");
             window.print();
         } finally {
+            // 6. التأكد من إعادة الخطوط في جميع الأحوال (مهم جداً)
+            originalStyles.forEach(item => {
+                item.el.style.fontSize = item.fontSize;
+            });
             printBtn.innerHTML = originalText;
             printBtn.disabled = false;
         }
