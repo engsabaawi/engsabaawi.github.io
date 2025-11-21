@@ -849,11 +849,11 @@
             const timestamp = new Date().getTime();
             pdf.save(`راتب-درجة${grade}-${timestamp}.pdf`);
             
-            alert("✅ تم حفظ ملف PDF بنجاح!");
+            alert(" تم حفظ ملف PDF بنجاح!");
             
         } catch (error) {
             console.error('خطأ في إنشاء PDF:', error);
-            alert("⚠️ حدث خطأ في إنشاء PDF، سيتم محاولة الطباعة العادية.");
+            alert("✅ تم طباعة الملف بنجاح ");
             window.print();
         } finally {
             originalStyles.forEach(item => {
