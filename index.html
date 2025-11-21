@@ -406,7 +406,8 @@
         <div id="newGradeStage" class="result hidden"></div>
         <div id="dueDate" class="result hidden"></div>
         <div id="overdueWarning" class="warning hidden"></div> 
-        <div id="newSalaryResult" class="result promo-result hidden"></div> <div id="detailsBox" class="details hidden"></div>
+        <div id="newSalaryResult" class="result promo-result" style="display: none;"></div> 
+        <div id="detailsBox" class="details hidden"></div>
     </div>
 
     <div class="footer">
@@ -492,11 +493,13 @@
 
     // دالة حساب جميع النتائج
     function calculateAll() {
-        // إخفاء النتائج السابقة
+        // **الإخفاء الأولي لكل العناصر القابلة للإخفاء**
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
         document.getElementById("overdueWarning").classList.add('hidden'); 
-        document.getElementById("newSalaryResult").classList.add('hidden'); // إخفاء الراتب الجديد
+        
+        // الإخفاء القسري للراتب الجديد باستخدام الـ style مباشرة
+        document.getElementById("newSalaryResult").style.display = 'none';
 
         // جلب المدخلات
         const grade = parseInt(document.getElementById("grade").value);
@@ -577,7 +580,9 @@
 
                  document.getElementById("newSalaryResult").innerHTML =
                     "💸 **الراتب الكلي بعد الترقية بالتسريع (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
-                 document.getElementById("newSalaryResult").classList.remove('hidden');
+                 
+                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
+                 document.getElementById("newSalaryResult").style.display = 'block'; 
 
                 if (lastPromoDue && lastPromoDue < now) {
                      document.getElementById("overdueWarning").innerHTML = 
@@ -612,7 +617,9 @@
                 
                 document.getElementById("newSalaryResult").innerHTML =
                     "💸 **الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
-                 document.getElementById("newSalaryResult").classList.remove('hidden');
+                 
+                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
+                 document.getElementById("newSalaryResult").style.display = 'block';
 
                 document.getElementById("overdueWarning").innerHTML = 
                     "⚠️ **فوات أوان الترقية العادية:** الموظف مستحق للترقية إلى الدرجة **" + newGrade + "** بتاريخ **" + formatDate(dueDate) + "**، وقد فات موعد استحقاقها. **يرجى مراجعة الموارد البشرية** لتعديل راتبك إلى القيمة المحسوبة أدناه.";
@@ -624,18 +631,21 @@
         }
 
 
-        // 3. عرض النتائج
+        // 3. عرض النتائج (تم التأكد من استدعاء remove('hidden') هنا)
+        document.getElementById("salaryResult").classList.remove('hidden');
         document.getElementById("salaryResult").innerHTML =
             "💵 **الراتب الكلي الحالي (قبل الترقية):** <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+            
+        document.getElementById("promoResult").classList.remove('hidden');
         document.getElementById("promoResult").innerHTML = promotionDetails;
         
+        document.getElementById("newGradeStage").classList.remove('hidden');
+
         if (dueDate) {
+             document.getElementById("dueDate").classList.remove('hidden');
              document.getElementById("dueDate").innerHTML =
             "تاريخ الاستحقاق القادم للترقية التالية: 🗓️ <strong>" + formatDate(dueDate) + "</strong>";
-        } else {
-             document.getElementById("dueDate").innerHTML =
-            "تاريخ الاستحقاق: غير محدد (يرجى إدخال تاريخ التخرج/آخر ترقية)";
-        }
+        } 
 
 
         // 4. تفاصيل الحسابات (الراتب الحالي)
@@ -678,74 +688,109 @@
             "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
         // إظهار النتائج
-        document.querySelectorAll('.result').forEach(el => el.classList.remove('hidden'));
         document.getElementById("detailsBox").classList.remove('hidden');
     }
     
-    // دالة حفظ PDF المحسنة
+    // دالة حفظ PDF المحسنة لمعالجة أبعاد A4 والطباعة على الأجهزة المحمولة
     async function printResults() {
-        // التحقق من وجود نتائج
         if (document.getElementById("salaryResult").classList.contains('hidden')) {
             alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
             return;
         }
-        
-        // إضافة تأثير تحميل
+
         const printBtn = document.getElementById("printBtn");
         const originalText = printBtn.innerHTML;
         printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
         printBtn.disabled = true;
-        
+
         try {
             const { jsPDF } = window.jspdf;
-            const element = document.querySelector('.result-section');
-            
-            // إنشاء canvas من النتائج
+            const element = document.querySelector('.result-section'); 
+            const grade = document.getElementById("grade").value;
+
+            // **1. إنشاء Canvas بدقة عالية (Scale 4 لتحسين الوضوح على الهواتف)**
             const canvas = await html2canvas(element, {
-                scale: 2,
+                scale: 4, 
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff'
             });
-            
+
             const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdf = new jsPDF('p', 'mm', 'a4'); 
+
+            // **2. حساب الأبعاد الخاصة بـ A4 (210x297 mm)**
+            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210
+            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297
+            const margin = 10;
+            // عرض الصورة داخل الـ PDF: 210 - (2 * 10) = 190 ملم
+            const imgContentWidth = pdfWidth - 2 * margin; 
             
-            // حساب أبعاد الصورة لتناسب صفحة PDF
-            const imgWidth = 190;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            // حساب ارتفاع الصورة بعد تغيير الحجم للحفاظ على نسبة الأبعاد
+            const imgContentHeight = (canvas.height * imgContentWidth) / canvas.width;
             
-            // إضافة عنوان
-            pdf.setFontSize(18);
-            pdf.text('تقرير حساب الراتب والترقية', 105, 15, { align: 'center' });
-            
-            // إضافة خط فاصل
-            pdf.setLineWidth(0.5);
-            pdf.line(20, 20, 190, 20);
-            
-            // إضافة الصورة
-            pdf.addImage(imgData, 'PNG', 10, 25, imgWidth, imgHeight);
-            
-            // إضافة تاريخ التقرير في أسفل الصفحة
-            pdf.setFontSize(10);
-            pdf.text(`تاريخ إنشاء التقرير: ${new Date().toLocaleDateString('ar-EG')}`, 105, 280, { align: 'center' });
+            let heightLeft = imgContentHeight;
+            let pageCount = 1;
+
+            // **3. معالجة الصفحات المتعددة (Chunking) مع إضافة عنوان/تذييل بسيط**
+            while (heightLeft > 0) {
+                if (pageCount > 1) {
+                    pdf.addPage();
+                }
+                
+                // حساب ارتفاع الجزء المراد عرضه في الصفحة الحالية
+                const availablePageHeight = pdfHeight - (2 * margin);
+                const clipHeight = Math.min(heightLeft, availablePageHeight);
+                
+                // حساب إزاحة الصورة على الـ Canvas
+                const imageClipY = (imgContentHeight - heightLeft) / imgContentHeight * canvas.height;
+
+                // إضافة العنوان البسيط (كنص غير عربي لتجنب التشوه)
+                pdf.setFontSize(14);
+                pdf.text(`Salary & Promotion Report (Page ${pageCount})`, pdfWidth / 2, margin + 5, { align: 'center' });
+                
+                pdf.setLineWidth(0.3);
+                pdf.line(margin, margin + 8, pdfWidth - margin, margin + 8);
+                
+                let startY = margin + 10; // موضع بدء الصورة بعد العنوان
+
+                // إضافة جزء من الصورة
+                pdf.addImage(
+                    imgData, 
+                    'PNG', 
+                    margin, 
+                    startY, 
+                    imgContentWidth, 
+                    imgContentHeight, 
+                    undefined, 
+                    'FAST', 
+                    0, 
+                    imageClipY, 
+                    canvas.width, 
+                    (clipHeight / imgContentHeight) * canvas.height
+                );
+
+                // إضافة التذييل
+                pdf.setFontSize(8);
+                pdf.text(`Date: ${new Date().toLocaleDateString('en-US')}`, pdfWidth - margin, pdfHeight - margin, { align: 'right' });
+                
+                // تحديث القيم
+                heightLeft -= availablePageHeight;
+                pageCount++;
+            }
             
             // حفظ الملف
-            const grade = document.getElementById("grade").value;
             const timestamp = new Date().getTime();
             pdf.save(`راتب-درجة${grade}-${timestamp}.pdf`);
             
-            // رسالة نجاح
             alert("✅ تم حفظ ملف PDF بنجاح!");
             
         } catch (error) {
             console.error('خطأ في إنشاء PDF:', error);
+            // محاولة الطباعة العادية كخطة بديلة (تعتمد على المتصفح/الهاتف)
             alert("❌ حدث خطأ أثناء إنشاء PDF. سيحاول النظام استخدام الطباعة العادية كبديل.");
-            
-            // محاولة الطباعة العادية كخطة بديلة
             window.print();
         } finally {
-            // إعادة زر الطباعة إلى حالته الأصلية
             printBtn.innerHTML = originalText;
             printBtn.disabled = false;
         }
@@ -758,6 +803,10 @@
         document.getElementById("kidsBox").classList.add('hidden');
         document.getElementById("gradBox").classList.add('hidden');
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
+        
+        // الإخفاء القسري للراتب الجديد باستخدام الـ style مباشرة:
+        document.getElementById("newSalaryResult").style.display = 'none'; 
+        
         document.getElementById("detailsBox").classList.add('hidden');
         document.getElementById("overdueWarning").classList.add('hidden'); 
         alert("✅ تم تصفير جميع حقول الإدخال.");
