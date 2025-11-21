@@ -802,10 +802,10 @@
         
         if (service && typeof service !== 'string') {
             serviceElement.innerHTML = 
-                `⏱️ **سنوات الخدمة الفعلية**: 
-                **${service.years}** سنة، 
-                **${service.months}** شهر، 
-                **${service.days}** يوم.`;
+                `سنوات الخدمة الفعلية: 
+                (${service.years}) سنة،و 
+                (${service.months}) شهر،و 
+                (${service.days}) يوم.`;
             serviceElement.classList.remove('hidden');
         } else if (typeof service === 'string') {
             alert(service); // تنبيه في حال وجود خطأ منطقي في التاريخ
