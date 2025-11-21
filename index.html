@@ -612,7 +612,7 @@
 
                 if (lastPromoDue && lastPromoDue < now) {
                      document.getElementById("overdueWarning").innerHTML = 
-                        "⚠️ **تنبيه بفوات الأوان:** الترقية إلى الدرجة **" + newGrade + "** كانت مستحقة بتاريخ **" + formatDate(lastPromoDue) + "**، وقد فات موعدها. **يرجى مراجعة الموارد البشرية** لتعديل راتبك إلى القيمة المحسوبة أدناه.";
+                        "⚠️ مستحق الترقية إلى الدرجة " + newGrade + "وكانت مستحقة بتاريخ (" + formatDate(lastPromoDue) + ") ,يرجى مراجعة التدريب والتطوير.";
                      document.getElementById("overdueWarning").classList.remove('hidden');
                 }
             }
@@ -642,7 +642,7 @@
                 newTotalSalary = newSalaryCalc.totalSalary;
                 
                 document.getElementById("newSalaryResult").innerHTML =
-                    "💸 **الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
+                    "الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
                  
                  // الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:
                  document.getElementById("newSalaryResult").style.display = 'block';
@@ -706,7 +706,7 @@
                 "<li>" + conditionalFactorName + ": " + (conditionalFactor * 100) + "%</li>" +
             "</ul>" +
             "<strong>المخصصات المحسوبة على الاسمي:</strong> <span>" + factoredAllowance.toLocaleString() + "</span> دينار<br>" +
-            "<strong>مخصصات الموقع/الإقامة:</strong> <span>" + locationAllowance.toLocaleString() + "</span> دينار<br>" +
+            "<strong>مخصصات الموقع والساعات الاضافية:</strong> <span>" + locationAllowance.toLocaleString() + "</span> دينار<br>" +
             "<strong>مخصصات الزوجية والأطفال:</strong> <span>" + familyAllowance.toLocaleString() + "</span> دينار<br>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<strong>الاستقطاعات الإجمالية:</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار (تقاعد: " + retirement.toLocaleString() + ")<br>" +
