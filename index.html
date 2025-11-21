@@ -10,7 +10,6 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <style>
         :root {
             --primary-color: #0056b3; 
@@ -717,7 +716,7 @@
         document.getElementById("detailsBox").classList.remove('hidden');
     }
     
-    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح)
+    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح وإضافة التذييل المخصص)
     async function printResults() {
         if (document.getElementById("salaryResult").classList.contains('hidden') || document.getElementById("salaryResult").style.display === 'none') {
             alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
@@ -729,7 +728,7 @@
         printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
         printBtn.disabled = true;
 
-        // 1. تطبيق التصغير المؤقت للخط
+        // 1. تطبيق التصغير المؤقت للخط لتحسين تناسب المحتوى في PDF
         const targetElements = document.querySelectorAll('.result, .warning, .details');
         const originalStyles = [];
         
@@ -751,7 +750,13 @@
             const { jsPDF } = window.jspdf;
             const element = document.querySelector('.result-section'); 
             const grade = document.getElementById("grade").value;
-
+            
+            // =======================================================
+            // البيانات المخصصة للتذييل
+            const websiteURL = 'www.s-m-c.gov.iq'; // **يمكنك تغيير هذا إلى موقعك الفعلي**
+            const printDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            // =======================================================
+            
             // 2. إنشاء Canvas بدقة عالية (Scale 4)
             const canvas = await html2canvas(element, {
                 scale: 4, 
@@ -762,73 +767,75 @@
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4'); 
+            pdf.setR2L(true); // لضبط الاتجاه من اليمين لليسار (مهم للعربية)
+            
+            // ملاحظة: إذا كان الخط العربي لا يظهر بشكل صحيح، يجب تضمين خط يدويًا يدعم jsPDF
+            // pdf.setFont('Amiri-Regular', 'normal'); // مثال لاستخدام خط مدمج
 
             // 3. حساب الأبعاد الخاصة بـ A4
             const pdfWidth = pdf.internal.pageSize.getWidth(); // 210 mm
             const pdfHeight = pdf.internal.pageSize.getHeight(); // 297 mm
             const margin = 10;
-            const headerFooterHeight = 20; // مساحة مخصصة للرأس والتذييل
-            // ارتفاع المحتوى المتاح في الصفحة الواحدة
+            const headerFooterHeight = 25; // مساحة مخصصة للرأس والتذييل
             const availableContentHeight = pdfHeight - (2 * margin) - headerFooterHeight; 
             
             const imgContentWidth = pdfWidth - 2 * margin; 
-            // الارتفاع الكلي الذي سيشغله محتوى الصورة في PDF (إذا لم يكن هناك اقتصاص)
             const imgContentHeight = (canvas.height * imgContentWidth) / canvas.width;
             
             let heightLeft = imgContentHeight;
-            let currentOffset = 0; // موضع البداية الرأسي على الصورة الكبيرة
+            let currentOffset = 0; 
             let pageCount = 1;
 
             // 4. معالجة الصفحات المتعددة (المنطق المصحح)
             while (heightLeft > 0) {
                 
-                // إضافة صفحة جديدة (إذا لم تكن الصفحة الأولى)
                 if (pageCount > 1) {
                     pdf.addPage();
                 }
 
-                // حساب الارتفاع المراد طباعته في هذه الصفحة
                 let pageSliceHeight = Math.min(heightLeft, availableContentHeight);
                 
-                // 4.1. إضافة العنوان
+                // 4.1. إضافة العنوان (في الأعلى)
+                // pdf.setFont('Amiri-Regular', 'normal'); 
                 pdf.setFontSize(14);
-                pdf.text(`Salary & Promotion Report (Page ${pageCount})`, pdfWidth / 2, margin + 5, { align: 'center' });
+                pdf.text(`تقرير الراتب والترقية - صفحة ${pageCount}`, pdfWidth / 2, margin + 5, { align: 'center' });
                 
                 pdf.setLineWidth(0.3);
-                pdf.line(margin, margin + 8, pdfWidth - margin, margin + 8);
+                pdf.line(margin, margin + 8, pdfWidth - margin, pdfHeight - margin - 8);
 
-                // 4.2. تحديد موضع بدء الطباعة في الصفحة (بعد الهيدر/العنوان)
                 let startY = margin + 10; 
 
-                // 4.3. إضافة جزء من الصورة باستخدام الـ Clipping
-                
-                // حفظ حالة الطباعة قبل القص (مهم)
+                // 4.2. إضافة جزء من الصورة باستخدام الـ Clipping
                 pdf.addGState(); 
-                
-                // القص (Clipping): نحدد مستطيلاً للرؤية يبدأ من startY بارتفاع pageSliceHeight
                 pdf.setClip(margin, startY, imgContentWidth, pageSliceHeight);
                 
-                // نرسم الصورة بالكامل، لكن الـ Clipping سيُظهر الجزء المطلوب فقط
                 pdf.addImage(
                     imgData, 
                     'PNG', 
                     margin, 
-                    startY - currentOffset, // offseting the image up by the already printed height
+                    startY - currentOffset, 
                     imgContentWidth, 
                     imgContentHeight, 
                     undefined, 
                     'FAST'
                 );
                 
-                // إزالة القص (مهم جداً لضمان طباعة التذييل بشكل صحيح)
                 pdf.restore(); 
 
-                // 4.4. إضافة التذييل
-                pdf.setFontSize(8);
-                pdf.text(`Date: ${new Date().toLocaleDateString('en-US')}`, pdfWidth - margin, pdfHeight - margin, { align: 'right' });
+                // 4.3. إضافة التذييل المخصص (في الأسفل)
+                pdf.setLineWidth(0.3);
+                pdf.line(margin, pdfHeight - margin - 12, pdfWidth - margin, pdfHeight - margin - 12);
                 
-                // 4.5. تحديث القيم للصفحة التالية
-                currentOffset += pageSliceHeight; // تحديث الإزاحة العمودية
+                pdf.setFontSize(8);
+                
+                // الموقع الإلكتروني (يسار)
+                pdf.text(`الموقع: ${websiteURL}`, margin, pdfHeight - margin - 5, { align: 'left' });
+                
+                // تاريخ الطباعة ورقم الصفحة (يمين)
+                pdf.text(`تاريخ الطباعة: ${printDate} | صفحة ${pageCount}`, pdfWidth - margin, pdfHeight - margin - 5, { align: 'right' });
+                
+                // 4.4. تحديث القيم للصفحة التالية
+                currentOffset += pageSliceHeight; 
                 heightLeft -= pageSliceHeight;
                 pageCount++;
             }
@@ -846,10 +853,9 @@
             
         } catch (error) {
             console.error('خطأ في إنشاء PDF:', error);
-            alert("✅ تم حفظ ملف PDF بنجاح!");
+            alert("⚠️ حدث خطأ في إنشاء PDF، سيتم محاولة الطباعة العادية.");
             window.print();
         } finally {
-            // 6. التأكد من إعادة الخطوط في جميع الأحوال (مهم جداً)
             originalStyles.forEach(item => {
                 item.el.style.fontSize = item.fontSize;
             });
