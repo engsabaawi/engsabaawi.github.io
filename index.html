@@ -352,13 +352,13 @@
         <h1>واجهة المستخدم مرحباً بك 👋</h1>
         
         <div class="button-wrapper">
-            <button class="modern-button" data-link="salary-calculator.html">
+            <button class="modern-button" data-link="https://engsabaawi.github.io/calculations/calculations.html">
                 حساب قصاصة الراتب والترقية 💰
             </button>
         </div>
         
         <div class="button-wrapper">
-            <button class="modern-button" data-link="acceleration-calculator.html">
+            <button class="modern-button" data-link="https://engsabaawi.github.io/upgrades/upgrades.html">
                 حسابات التسريع للمستحقين 🚀
             </button>
         </div>
@@ -523,9 +523,9 @@
             button.addEventListener('mouseup', handleEnd);
             button.addEventListener('mouseleave', handleEnd);
             
-            // 🚀 الأحداث المعدلة لضمان استجابة اللمس 🚀
+            // أحداث اللمس (تم تعديلها لضمان عمل النقر)
             button.addEventListener('touchstart', (e) => {
-                // *** تم إزالة e.preventDefault() هنا! للسماح بتشغيل حدث 'click' لاحقاً ***
+                // إزالة e.preventDefault() هنا للسماح بتشغيل حدث 'click' لاحقاً
                 handleStart(button, e);
             });
             button.addEventListener('touchmove', (e) => {
@@ -544,7 +544,8 @@
                 const link = button.getAttribute('data-link');
                 if (link) {
                     setTimeout(() => {
-                        window.location.href = link;
+                        // استخدام window.open لتفادي مشاكل التنقل داخل بعض البيئات إذا لزم الأمر
+                        window.location.href = link; 
                     }, 150);
                 }
             });
