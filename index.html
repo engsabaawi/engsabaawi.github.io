@@ -3,432 +3,592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>واجهة المستخدم</title>
-    
-    <!-- خط Rubik من Google Fonts -->
+    <title>🧮 نظام احترافي لحساب الراتب والترقية</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary-color: #0056b3; 
+            --secondary-color: #007bff; 
+            --background-light: #f5f8fa;
+            --background-card: #ffffff;
+            --text-dark: #212529;
+            --text-light: #ffffff;
+            --reset-color: #dc3545;
+            --warning-color: #ffc107;
+            --print-color: #28a745;
         }
 
         body {
             font-family: 'Rubik', sans-serif;
-            background: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            direction: rtl;
-            overflow: hidden;
+            background: var(--background-light);
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            direction: rtl; 
         }
 
         .container {
+            max-width: 960px;
+            margin: 30px auto;
+            background: var(--background-card);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 60px);
             position: relative;
+            padding-bottom: 80px;
+        }
+
+        h2 {
             text-align: center;
-            padding: 60px 40px;
-            background: #ebebeb;
-            border-radius: 30px;
-            z-index: 1;
             margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
         }
 
-        /* إطار ضبابي حول الكونتينر */
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            right: -50px;
-            bottom: -50px;
-            background: rgba(235, 235, 235, 0.4);
-            filter: blur(35px);
-            z-index: -1;
-            border-radius: 60px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        h1 {
-            font-family: 'Rubik', sans-serif;
-            color: #333333;
-            font-size: 2.5em;
-            margin-bottom: 50px;
+        label {
+            font-size: 17px;
             font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .button-wrapper {
-            position: relative;
-            display: inline-block;
-            margin: 20px;
-        }
-
-        .modern-button {
-            position: relative;
-            padding: 20px 40px;
-            font-size: 1.2em;
-            color: white;
-            background: linear-gradient(45deg, #2196F3 0%, #21CBF3 100%);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            min-width: 300px;
-            font-family: 'Rubik', sans-serif;
-            font-weight: 500;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
-        }
-
-        .modern-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .button-wrapper:nth-child(2) .modern-button {
-            background: linear-gradient(45deg, #4CAF50 0%, #8BC34A 100%);
-        }
-
-        /* إطار ضبابي حول الأزرار */
-        .button-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            background: linear-gradient(45deg, rgba(33, 150, 243, 0.3) 0%, rgba(33, 203, 243, 0.3) 100%);
-            filter: blur(15px);
-            z-index: -1;
-            border-radius: 65px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .button-wrapper:nth-child(2)::before {
-            background: linear-gradient(45deg, rgba(76, 175, 80, 0.3) 0%, rgba(139, 195, 74, 0.3) 100%);
-        }
-
-        .button-wrapper:hover::before {
-            opacity: 1;
-        }
-
-        .bubble {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0.1) 70%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.2s ease;
-            z-index: 10;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-
-        .bubble.show {
-            opacity: 0.8;
-        }
-
-        .bubble.follow {
-            opacity: 0.8;
-            transition: none;
-        }
-
-        /* تنسيق الفوتر */
-        footer {
+        input[type="number"],
+        input[type="date"],
+        select {
             width: 100%;
-            padding: 15px 0;
-            background: transparent;
-            position: fixed;
+            padding: 14px;
+            font-size: 17px;
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            background: #f8f9fa;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            background: var(--background-card);
+            outline: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button i {
+            margin-left: 10px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        #calculateBtn {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+        #calculateBtn:hover {
+            background: #004599;
+            transform: translateY(-2px);
+        }
+
+        #resetBtn {
+            background: var(--reset-color);
+            color: var(--text-light);
+        }
+        #resetBtn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        #printBtn {
+            background: var(--print-color);
+            color: var(--text-light);
+        }
+        #printBtn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .result {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #e9f5ff;
+            border-left: 5px solid var(--secondary-color);
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        /* تنسيق خاص لنتائج الترقية */
+        .promo-result {
+            background: #e6ffec; /* لون أخضر فاتح */
+            border-left: 5px solid var(--print-color); /* لون أخضر داكن */
+            color: #155724; /* لون النص الأخضر الداكن */
+        }
+        
+        .promo-result span {
+            font-weight: 700;
+            color: var(--print-color);
+        }
+
+
+        .warning {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 5px solid var(--warning-color);
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .details {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafd;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            font-size: 16px;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .details strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .details span {
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .promo-list {
+            margin-top: 10px;
+            padding-right: 0;
+            list-style: none;
+        }
+        .promo-list li {
+            padding: 5px 0 5px 10px;
+            border-bottom: 1px dotted #ccc;
+            font-size: 16px;
+        }
+        .promo-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* تذييل الصفحة */
+        .footer {
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            z-index: 100;
-        }
-
-        .footer-line {
-            width: 95%;
-            height: 1px;
-            background: #333;
-            margin: 0 auto 10px auto;
-            opacity: 0.3;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: 0.9em;
-            color: #333;
-            font-weight: 400;
-        }
-
-        .visitor-counter {
-            font-family: 'Rubik', sans-serif;
-            font-size: 0.9em;
-            color: #2196F3;
-            font-weight: 500;
-            background: rgba(33, 150, 243, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            min-width: 150px;
+            padding: 20px 35px;
+            margin-top: 40px;
+            border-top: 2px solid #000;
             text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            background: transparent;
         }
 
-        .datetime {
-            font-family: 'Rubik', sans-serif;
-            font-size: 0.9em;
-            color: #333;
-            font-weight: 400;
-            direction: ltr;
-            text-align: left;
+        .footer p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer hr {
+            border: none;
+            border-top: 1px solid #000;
+            margin: 0 0 15px 0;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 40px 20px;
-                margin: 20px;
-                margin-bottom: 20px;
-            }
+            .container { margin: 15px; padding: 25px; padding-bottom: 70px; border-radius: 15px; }
+            h2 { font-size: 28px; margin-bottom: 20px; }
+            .btn-group { flex-direction: column; gap: 10px; }
+            button { font-size: 17px; padding: 14px; }
+            .result { font-size: 17px; padding: 14px; }
+            .details { font-size: 15px; padding: 15px; }
+            .footer { padding: 15px 25px; }
+        }
 
-            .container::before {
-                top: -40px;
-                left: -40px;
-                right: -40px;
-                bottom: -40px;
-                filter: blur(25px);
+        /* تنسيق خاص للطباعة كاحتياطي */
+        @media print {
+            body { background: white; }
+            .container { 
+                box-shadow: none; 
+                margin: 0; 
+                padding: 0;
+                max-width: 100%;
             }
-
-            .button-wrapper::before {
-                top: -10px;
-                left: -10px;
-                right: -10px;
-                bottom: -10px;
-                filter: blur(10px);
+            .form-group, .btn-group, h2 { display: none !important; }
+            .result-section { border-top: none; padding-top: 0; }
+            .result, .warning, .details {
+                page-break-inside: avoid;
+                border: 1px solid #333 !important;
+                background: #f9f9f9 !important;
+                padding: 10px !important;
+                margin-bottom: 10px !important;
             }
-            
-            h1 {
-                font-size: 1.8em;
-                font-weight: 500;
-            }
-            
-            .modern-button {
-                min-width: 250px;
-                font-size: 1em;
-                padding: 15px 30px;
-                font-weight: 400;
-            }
-            
-            .bubble {
-                width: 60px;
-                height: 60px;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-
-            .footer-text {
-                order: 2;
-            }
-
-            .visitor-counter {
-                order: 1;
-            }
-
-            .datetime {
-                order: 3;
-                text-align: center;
+            .details ul { padding-right: 20px; }
+            .promo-list { list-style: none; padding-right: 0; }
+            .footer { 
+                display: block !important;
+                position: relative !important;
+                border-top: 2px solid #000 !important;
+                padding: 15px !important;
+                margin-top: 20px !important;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>واجهة المستخدم مرحباً بك</h1>
-        
-        <div class="button-wrapper">
-            <button class="modern-button" data-link="salary-calculator.html">
-                حساب قصاصة الراتب والترقية
-            </button>
+
+<div class="container">
+
+    <h2><i class="fas fa-calculator"></i> نظام حساب الراتب والترقية</h2>
+
+    <form id="salaryForm">
+        <div class="form-group">
+            <label for="degreeType">الشهادة</label>
+            <select id="degreeType" name="degreeType">
+                <option value="diploma">دبلوم</option>
+                <option value="bachelor" selected>بكلوريوس</option>
+                <option value="master">ماجستير</option>
+                <option value="phd">دكتوراه</option>
+            </select>
         </div>
         
-        <div class="button-wrapper">
-            <button class="modern-button" data-link="acceleration-calculator.html">
-                حسابات التسريع للمستحقين
-            </button>
+        <div class="form-group">
+            <label for="workType">تصنيف الوظيفة</label>
+            <select id="workType" name="workType">
+                <option value="field" selected>ميداني</option>
+                <option value="admin">إداري</option>
+            </select>
         </div>
+
+        <div class="form-group">
+            <label for="grade">الدرجة الحالية</label>
+            <select id="grade" name="grade">
+                <option value="8" selected>8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="stage">المرحلة الحالية</label>
+            <select id="stage" name="stage">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="locationAllowance">مخصصات الموقع / الإقامة (دينار)</label>
+            <input type="number" id="locationAllowance" name="locationAllowance" value="50000" min="0">
+        </div>
+
+        <div class="form-group">
+            <label for="lastPromotion">تاريخ آخر ترقية</label>
+            <input type="date" id="lastPromotion" name="lastPromotion">
+        </div>
+
+        <div class="form-group">
+            <label for="promotionType">نوع الترقية</label>
+            <select id="promotionType" name="promotionType">
+                <option value="normal" selected>غير مشمول بالتسريع (ترقية عادية)</option>
+                <option value="fast">مشمول بالتسريع (تاريخ تخرج)</option>
+            </select>
+        </div>
+
+        <div id="gradBox" class="form-group hidden">
+            <label for="gradDate">تاريخ التخرج</label>
+            <input type="date" id="gradDate" name="gradDate">
+        </div>
+
+        <div class="form-group">
+            <label for="social">الحالة الاجتماعية</label>
+            <select id="social" name="social">
+                <option value="single" selected>أعزب</option>
+                <option value="married">متزوج</option>
+            </select>
+        </div>
+
+        <div id="kidsBox" class="form-group hidden">
+            <label for="kids">عدد الأطفال</label>
+            <select id="kids" name="kids">
+                <option value="0" selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="bonusMonths">عدد أشهر القدم (كتب الشكر)</label>
+            <input type="number" id="bonusMonths" name="bonusMonths" value="0" min="0">
+        </div>
+
+        <div class="btn-group">
+            <button type="button" id="calculateBtn"><i class="fas fa-hand-holding-usd"></i> احسب النتائج</button>
+            <button type="button" id="resetBtn"><i class="fas fa-redo-alt"></i> تصفير الحقول</button>
+            <button type="button" id="printBtn"><i class="fas fa-print"></i> طباعة/حفظ PDF</button>
+        </div>
+    </form>
+
+    <div class="result-section">
+        <div id="salaryResult" class="result hidden"></div>
+        <div id="promoResult" class="result hidden"></div>
+        <div id="newGradeStage" class="result hidden"></div>
+        <div id="dueDate" class="result hidden"></div>
+        <div id="overdueWarning" class="warning hidden"></div> 
+        <div id="newSalaryResult" class="result promo-result" style="display: none;"></div> 
+        <div id="detailsBox" class="details hidden"></div>
     </div>
 
-    <!-- الفوتر (التذييل) -->
-    <footer>
-        <div class="footer-line"></div>
-        <div class="footer-content">
-            <div class="footer-text">
-                حقوق البرمجة والتصميم - مالك محمد - شركة مصافي الجنوب
-            </div>
-            <div class="visitor-counter">
-                عدد الزوار: <span id="visitorCount">0</span>
-            </div>
-            <div class="datetime" id="datetime">
-                <!-- سيتم تعبئته بـ JavaScript -->
-            </div>
-        </div>
-    </footer>
+    <div class="footer">
+        <hr>
+        <p>حقوق النشر والتصميم - مالك محمد - شركة مصافي الجنوب</p>
+    </div>
 
-    <script>
-        let currentBubble = null;
-        let isPressed = false;
-        let currentButton = null;
-        let visitorCount = 0;
+</div>
 
-        // تحميل عدد الزوار من localStorage
-        function loadVisitorCount() {
-            const saved = localStorage.getItem('visitorCount');
-            if (saved) {
-                visitorCount = parseInt(saved, 10);
+<script>
+    // القيم الأساسية للراتب
+    const gradeBase = { 8: 260000, 7: 296000, 6: 362000, 5: 429000, 4: 509000, 3: 600000, 2: 723000, 1: 910000 };
+    const stageAddLogic = (grade) => {
+        const defaultAdd = { 8: 3000, 7: 6000, 6: 6000, 5: 6000, 4: 8000, 3: 10000, 2: 17000, 1: 20000 };
+        return defaultAdd[grade] || 0;
+    };
+    
+    // دالة مساعدة لحساب الراتب الكلي لأي درجة ومرحلة محددة
+    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids) {
+        // 1. الراتب الاسمي
+        const nominal = gradeBase[targetGrade] + ((targetStage - 1) * stageAddLogic(targetGrade));
+
+        // 2. حساب المعاملات الموحدة
+        let certFactor;
+        switch (degree) {
+            case 'diploma': certFactor = 0.35; break;
+            case 'bachelor': certFactor = 0.45; break;
+            case 'master': certFactor = 0.65; break;
+            case 'phd': certFactor = 0.75; break;
+            default: certFactor = 0;
+        }
+
+        const riskFactor = workType === 'field' ? 0.3 : 0.25;
+        
+        let conditionalFactor = 0; 
+        
+        if (degree !== 'diploma') {
+            conditionalFactor = workType === 'field' ? 0.50 : 0.35;
+        }
+        
+        const fixedOtherAllowanceFactor = 0.3; 
+
+        const totalFactors = certFactor + riskFactor + conditionalFactor + fixedOtherAllowanceFactor;
+        const factoredAllowance = nominal * totalFactors; 
+
+        // 3. مخصصات الزوجية والأطفال
+        let familyAllowance = 0;
+        if (social === "married") {
+            familyAllowance = 50000 + kids * 10000; 
+        }
+        
+        // 4. الاستقطاعات
+        const retirement = 0.1 * nominal;
+        const fixedDeductions = 25000 + 4000;
+        const totalDeductions = retirement + fixedDeductions;
+        
+        // 5. الراتب الكلي
+        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance) - totalDeductions;
+        
+        return { nominal, totalSalary };
+    }
+
+
+    // الدوال الأساسية للتحكم بعرض الحقول
+    function toggleKids() {
+        document.getElementById("kidsBox").classList.toggle(
+            "hidden",
+            document.getElementById("social").value !== "married"
+        );
+    }
+
+    function toggleGradDate() {
+        document.getElementById("gradBox").classList.toggle(
+            "hidden",
+            document.getElementById("promotionType").value !== "fast"
+        );
+    }
+
+    // دالة مساعدة لتنسيق التاريخ
+    function formatDate(date) {
+        return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // دالة حساب جميع النتائج
+    function calculateAll() {
+        // **الإخفاء الأولي لكل العناصر القابلة للإخفاء**
+        document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
+        document.getElementById("detailsBox").classList.add('hidden');
+        document.getElementById("overdueWarning").classList.add('hidden'); 
+        
+        // الإخفاء القسري للراتب الجديد باستخدام الـ style مباشرة
+        document.getElementById("newSalaryResult").style.display = 'none';
+
+        // جلب المدخلات
+        const grade = parseInt(document.getElementById("grade").value);
+        const stage = parseInt(document.getElementById("stage").value);
+        const degree = document.getElementById("degreeType").value; 
+        const workType = document.getElementById("workType").value;   
+        const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0; 
+        const social = document.getElementById("social").value;
+        const kids = parseInt(document.getElementById("kids").value) || 0;
+        const promoType = document.getElementById("promotionType").value;
+        const lastPromo = document.getElementById("lastPromotion").value ? new Date(document.getElementById("lastPromotion").value) : null;
+        const bonusMonths = parseInt(document.getElementById("bonusMonths").value) || 0;
+        const now = new Date();
+
+
+        // 1. حساب الراتب الحالي
+        const { nominal: currentNominal, totalSalary: currentTotalSalary } = 
+            calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids);
+
+
+        // 2. حساب الترقية وتاريخ الاستحقاق
+        let newGrade = grade;
+        let promotionDetails = "";
+        let dueDate = null;
+        let promoHistoryHTML = "";
+        let newNominal = 0;
+        let newTotalSalary = 0;
+
+        if (promoType === "fast") {
+            const gradDateInput = document.getElementById("gradDate").value;
+            if (!gradDateInput) {
+                alert("يرجى إدخال تاريخ التخرج لحساب التسريع.");
+                return;
             }
-            updateVisitorDisplay();
-        }
-
-        // حفظ عدد الزوار في localStorage
-        function saveVisitorCount() {
-            localStorage.setItem('visitorCount', visitorCount);
-        }
-
-        // تحديث عرض عدد الزوار
-        function updateVisitorDisplay() {
-            document.getElementById('visitorCount').textContent = visitorCount;
-        }
-
-        // زيادة عدد الزوار
-        function incrementVisitorCount() {
-            visitorCount++;
-            updateVisitorDisplay();
-            saveVisitorCount();
-        }
-
-        // تحديث التاريخ والوقت
-        function updateDateTime() {
-            const now = new Date();
-            const options = {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            };
-            const dateTimeStr = now.toLocaleString('ar-IQ', options);
-            document.getElementById('datetime').textContent = dateTimeStr;
-        }
-
-        // إنشاء وتحريك الفقاعة
-        function handleStart(button, event) {
-            isPressed = true;
-            currentButton = button;
+            const gradDate = new Date(gradDateInput);
             
-            // إزالة فقاعة قديمة إن وجدت
-            if (currentBubble) {
-                currentBubble.remove();
+            let monthsFromGrad = (now.getFullYear() - gradDate.getFullYear()) * 12 + (now.getMonth() - gradDate.getMonth());
+            if (now.getDate() < gradDate.getDate()) monthsFromGrad--;
+            
+            const promotionsCount = Math.floor(monthsFromGrad / 24);
+            const targetGrade = grade - promotionsCount;
+            newGrade = targetGrade >= 1 ? targetGrade : 1;
+            
+            // الدرجة الجديدة تكون بالمرحلة 1
+            const newStage = 1; 
+
+            promotionDetails = "عدد الترقيات المستحقة بالتسريع (درجة لكل سنتين): <strong>" + promotionsCount + "</strong>";
+
+            let missedPromotions = [];
+            let lastPromoDue = null;
+            
+            for (let i = 0; i < promotionsCount; i++) {
+                let promoDate = new Date(gradDate);
+                promoDate.setMonth(promoDate.getMonth() + (i + 1) * 24);
+                missedPromotions.push(promoDate);
+                lastPromoDue = promoDate;
             }
-            
-            // إنشاء فقاعة جديدة
-            currentBubble = document.createElement('div');
-            currentBubble.classList.add('bubble');
-            
-            const rect = button.getBoundingClientRect();
-            const clientX = event.clientX || (event.touches && event.touches[0].clientX);
-            const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-            
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-            
-            currentBubble.style.left = x + 'px';
-            currentBubble.style.top = y + 'px';
-            
-            button.appendChild(currentBubble);
-            
-            setTimeout(() => {
-                currentBubble.classList.add('show');
-            }, 10);
-        }
 
-        function handleMove(event) {
-            if (!isPressed || !currentBubble || !currentButton) return;
-            
-            currentBubble.classList.add('follow');
-            
-            const rect = currentButton.getBoundingClientRect();
-            const clientX = event.clientX || (event.touches && event.touches[0].clientX);
-            const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-            
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-            
-            currentBubble.style.left = x + 'px';
-            currentBubble.style.top = y + 'px';
-        }
-
-        function handleEnd() {
-            if (currentBubble) {
-                currentBubble.remove();
-                currentBubble = null;
+            if (missedPromotions.length > 0) {
+                promoHistoryHTML = "تاريخ الترقيات الفائتة/المستحقة بناءً على التخرج:<ul class='promo-list'>";
+                missedPromotions.forEach((date, index) => {
+                    const gradeAchieved = grade - (index + 1);
+                    promoHistoryHTML += `<li> الترقية رقم ${index + 1} (للدرجة ${gradeAchieved >= 1 ? gradeAchieved : 1}): <i class="far fa-calendar-alt"></i> **${formatDate(date)}**</li>`;
+                });
+                promoHistoryHTML += "</ul>";
+            } else {
+                 promoHistoryHTML = "لم يمر سنتان على التخرج بعد، لا توجد ترقيات فائتة/مستحقة حاليًا.";
             }
-            isPressed = false;
-            currentButton = null;
-        }
 
-        // إضافة الأحداث لكل زر
-        document.querySelectorAll('.modern-button').forEach(button => {
-            // أحداث الماوس
-            button.addEventListener('mousedown', (e) => handleStart(button, e));
-            button.addEventListener('mousemove', handleMove);
-            button.addEventListener('mouseup', handleEnd);
-            button.addEventListener('mouseleave', handleEnd);
-            
-            // أحداث اللمس
-            button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                handleStart(button, e);
-            });
-            button.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                handleMove(e);
-            });
-            button.addEventListener('touchend', handleEnd);
-            
-            // التنقل وزيادة عدد الزوار
-            button.addEventListener('click', () => {
-                incrementVisitorCount();
-                const link = button.getAttribute('data-link');
-                if (link) {
-                    setTimeout(() => {
-                        window.location.href = link;
-                    }, 150);
+            dueDate = new Date(gradDate);
+            dueDate.setMonth(dueDate.getMonth() + (promotionsCount + 1) * 24);
+
+            if (promotionsCount > 0) {
+                 // حساب الراتب على الدرجة الجديدة (المستحقة)
+                const newSalaryCalc = calculateFullSalary(newGrade, newStage, degree, workType, locationAllowance, social, kids);
+                newNominal = newSalaryCalc.nominal;
+                newTotalSalary = newSalaryCalc.totalSalary;
+
+                 document.getElementById("newSalaryResult").innerHTML =
+                    "💸 **الراتب الكلي بعد الترقية بالتسريع (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
+                 
+                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
+                 document.getElementById("newSalaryResult").style.display = 'block'; 
+
+                if (lastPromoDue && lastPromoDue < now) {
+                     document.getElementById("overdueWarning").innerHTML = 
+                        "⚠️ **تنبيه بفوات الأوان:** الترقية إلى الدرجة **" + newGrade + "** كانت مستحقة بتاريخ **" + formatDate(lastPromoDue) + "**، وقد فات موعدها. **يرجى مراجعة الموارد البشرية** لتعديل راتبك إلى القيمة المحسوبة أدناه.";
+                     document.getElementById("overdueWarning").classList.remove('hidden');
                 }
-<<<<<<< Updated upstream
-            });
-=======
             }
             
             document.getElementById("newGradeStage").innerHTML =
@@ -458,11 +618,11 @@
                 document.getElementById("newSalaryResult").innerHTML =
                     "💸 **الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
                  
-                 // الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:
+                 // **الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:**
                  document.getElementById("newSalaryResult").style.display = 'block';
 
                 document.getElementById("overdueWarning").innerHTML = 
-                    "⚠️ فوات أوان الترقية العادية: الموظف مستحق للترقية إلى الدرجة **" + newGrade + " بتاريخ*" + formatDate(dueDate) + "*، وقد فات موعد استحقاقها. يرجى مراجعة التدريب والتطوير لتعديل راتبك إلى القيمة المحسوبة أدناه.";
+                    "⚠️ **فوات أوان الترقية العادية:** الموظف مستحق للترقية إلى الدرجة **" + newGrade + "** بتاريخ **" + formatDate(dueDate) + "**، وقد فات موعد استحقاقها. **يرجى مراجعة الموارد البشرية** لتعديل راتبك إلى القيمة المحسوبة أدناه.";
                  document.getElementById("overdueWarning").classList.remove('hidden');
             }
 
@@ -471,7 +631,7 @@
         }
 
 
-        // 3. عرض النتائج 
+        // 3. عرض النتائج (تم التأكد من استدعاء remove('hidden') هنا)
         document.getElementById("salaryResult").classList.remove('hidden');
         document.getElementById("salaryResult").innerHTML =
             "💵 **الراتب الكلي الحالي (قبل الترقية):** <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
@@ -527,13 +687,13 @@
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
-        // إظهار تفاصيل الحسابات
+        // إظهار النتائج
         document.getElementById("detailsBox").classList.remove('hidden');
     }
     
-    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح)
+    // دالة حفظ PDF المحسنة لمعالجة أبعاد A4 والطباعة على الأجهزة المحمولة
     async function printResults() {
-        if (document.getElementById("salaryResult").classList.contains('hidden') || document.getElementById("salaryResult").style.display === 'none') {
+        if (document.getElementById("salaryResult").classList.contains('hidden')) {
             alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
             return;
         }
@@ -543,36 +703,127 @@
         printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
         printBtn.disabled = true;
 
-        // 1. تطبيق التصغير المؤقت للخط
-        const targetElements = document.querySelectorAll('.result, .warning, .details');
-        const originalStyles = [];
+        try {
+            const { jsPDF } = window.jspdf;
+            const element = document.querySelector('.result-section'); 
+            const grade = document.getElementById("grade").value;
+
+            // **1. إنشاء Canvas بدقة عالية (Scale 4 لتحسين الوضوح على الهواتف)**
+            const canvas = await html2canvas(element, {
+                scale: 4, 
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4'); 
+
+            // **2. حساب الأبعاد الخاصة بـ A4 (210x297 mm)**
+            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210
+            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297
+            const margin = 10;
+            // عرض الصورة داخل الـ PDF: 210 - (2 * 10) = 190 ملم
+            const imgContentWidth = pdfWidth - 2 * margin; 
+            
+            // حساب ارتفاع الصورة بعد تغيير الحجم للحفاظ على نسبة الأبعاد
+            const imgContentHeight = (canvas.height * imgContentWidth) / canvas.width;
+            
+            let heightLeft = imgContentHeight;
+            let pageCount = 1;
+
+            // **3. معالجة الصفحات المتعددة (Chunking) مع إضافة عنوان/تذييل بسيط**
+            while (heightLeft > 0) {
+                if (pageCount > 1) {
+                    pdf.addPage();
+                }
+                
+                // حساب ارتفاع الجزء المراد عرضه في الصفحة الحالية
+                const availablePageHeight = pdfHeight - (2 * margin);
+                const clipHeight = Math.min(heightLeft, availablePageHeight);
+                
+                // حساب إزاحة الصورة على الـ Canvas
+                const imageClipY = (imgContentHeight - heightLeft) / imgContentHeight * canvas.height;
+
+                // إضافة العنوان البسيط (كنص غير عربي لتجنب التشوه)
+                pdf.setFontSize(14);
+                pdf.text(`Salary & Promotion Report (Page ${pageCount})`, pdfWidth / 2, margin + 5, { align: 'center' });
+                
+                pdf.setLineWidth(0.3);
+                pdf.line(margin, margin + 8, pdfWidth - margin, margin + 8);
+                
+                let startY = margin + 10; // موضع بدء الصورة بعد العنوان
+
+                // إضافة جزء من الصورة
+                pdf.addImage(
+                    imgData, 
+                    'PNG', 
+                    margin, 
+                    startY, 
+                    imgContentWidth, 
+                    imgContentHeight, 
+                    undefined, 
+                    'FAST', 
+                    0, 
+                    imageClipY, 
+                    canvas.width, 
+                    (clipHeight / imgContentHeight) * canvas.height
+                );
+
+                // إضافة التذييل
+                pdf.setFontSize(8);
+                pdf.text(`Date: ${new Date().toLocaleDateString('en-US')}`, pdfWidth - margin, pdfHeight - margin, { align: 'right' });
+                
+                // تحديث القيم
+                heightLeft -= availablePageHeight;
+                pageCount++;
+            }
+            
+            // حفظ الملف
+            const timestamp = new Date().getTime();
+            pdf.save(`راتب-درجة${grade}-${timestamp}.pdf`);
+            
+            alert("✅ تم حفظ ملف PDF بنجاح!");
+            
+        } catch (error) {
+            console.error('خطأ في إنشاء PDF:', error);
+            // محاولة الطباعة العادية كخطة بديلة (تعتمد على المتصفح/الهاتف)
+            alert("❌ حدث خطأ أثناء إنشاء PDF. سيحاول النظام استخدام الطباعة العادية كبديل.");
+            window.print();
+        } finally {
+            printBtn.innerHTML = originalText;
+            printBtn.disabled = false;
+        }
+    }
+
+    // دالة التصفير
+    function resetForm() {
+        document.getElementById("salaryForm").reset();
+        document.getElementById("locationAllowance").value = 50000; 
+        document.getElementById("kidsBox").classList.add('hidden');
+        document.getElementById("gradBox").classList.add('hidden');
+        document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         
-        targetElements.forEach(el => {
-            originalStyles.push({ el: el, fontSize: el.style.fontSize });
-            if (el.classList.contains('result') || el.classList.contains('warning')) {
-                 el.style.fontSize = '14px'; 
-            }
-             if (el.classList.contains('details')) {
-                 el.style.fontSize = '13px'; 
-            }
-             el.querySelectorAll('li').forEach(li => {
-                 originalStyles.push({ el: li, fontSize: li.style.fontSize });
-                 li.style.fontSize = '12px';
-             });
->>>>>>> Stashed changes
-        });
+        // الإخفاء القسري للراتب الجديد باستخدام الـ style مباشرة:
+        document.getElementById("newSalaryResult").style.display = 'none'; 
+        
+        document.getElementById("detailsBox").classList.add('hidden');
+        document.getElementById("overdueWarning").classList.add('hidden'); 
+        alert("✅ تم تصفير جميع حقول الإدخال.");
+    }
 
-        // إلغاء الفقاعة إذا تم النقر خارج الأزرار
-        document.addEventListener('mouseup', handleEnd);
-        document.addEventListener('touchend', handleEnd);
+    // ربط الدوال بالأحداث
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("social").addEventListener('change', toggleKids);
+        document.getElementById("promotionType").addEventListener('change', toggleGradDate);
+        document.getElementById("calculateBtn").addEventListener('click', calculateAll);
+        document.getElementById("resetBtn").addEventListener('click', resetForm);
+        document.getElementById("printBtn").addEventListener('click', printResults);
 
-        // تهيئة الصفحة
-        window.addEventListener('load', () => {
-            loadVisitorCount();
-            updateDateTime();
-            // تحديث الوقت كل ثانية
-            setInterval(updateDateTime, 1000);
-        });
-    </script>
+        toggleKids();
+        toggleGradDate();
+    });
+</script>
+
 </body>
 </html>
