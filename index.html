@@ -426,7 +426,140 @@
                         window.location.href = link;
                     }, 150);
                 }
+<<<<<<< Updated upstream
             });
+=======
+            }
+            
+            document.getElementById("newGradeStage").innerHTML =
+            "الدرجة الجديدة المفترضة: <strong>" + newGrade + "</strong> (المرحلة 1)<br>" + promoHistoryHTML;
+
+        } else { // ترقية عادية
+            if (!lastPromo) {
+                alert("يرجى إدخال تاريخ آخر ترقية لحساب الترقية العادية.");
+                return;
+            }
+            const requiredMonths = (grade >= 6 ? 48 : 60); 
+            const promoMonths = requiredMonths - bonusMonths;
+            const targetGrade = grade - 1;
+            
+            dueDate = new Date(lastPromo);
+            dueDate.setMonth(dueDate.getMonth() + promoMonths);
+
+            newGrade = targetGrade >= 1 ? targetGrade : 1; 
+            promotionDetails = "الفترة المطلوبة للترقية (بالأشهر): <strong>" + promoMonths + "</strong>";
+
+            if (dueDate < now) {
+                // حساب الراتب على الدرجة الجديدة (المستحقة)
+                const newSalaryCalc = calculateFullSalary(newGrade, 1, degree, workType, locationAllowance, social, kids);
+                newNominal = newSalaryCalc.nominal;
+                newTotalSalary = newSalaryCalc.totalSalary;
+                
+                document.getElementById("newSalaryResult").innerHTML =
+                    "💸 **الراتب الكلي بعد الترقية (للدرجة " + newGrade + "/المرحلة 1):** <span>" + newTotalSalary.toLocaleString() + "</span> دينار";
+                 
+                 // الإظهار القسري للراتب الجديد باستخدام الـ style مباشرة:
+                 document.getElementById("newSalaryResult").style.display = 'block';
+
+                document.getElementById("overdueWarning").innerHTML = 
+                    "⚠️ فوات أوان الترقية العادية: الموظف مستحق للترقية إلى الدرجة **" + newGrade + " بتاريخ*" + formatDate(dueDate) + "*، وقد فات موعد استحقاقها. يرجى مراجعة التدريب والتطوير لتعديل راتبك إلى القيمة المحسوبة أدناه.";
+                 document.getElementById("overdueWarning").classList.remove('hidden');
+            }
+
+             document.getElementById("newGradeStage").innerHTML =
+            "الترقية القادمة إلى الدرجة: <strong>" + newGrade + "</strong>";
+        }
+
+
+        // 3. عرض النتائج 
+        document.getElementById("salaryResult").classList.remove('hidden');
+        document.getElementById("salaryResult").innerHTML =
+            "💵 **الراتب الكلي الحالي (قبل الترقية):** <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+            
+        document.getElementById("promoResult").classList.remove('hidden');
+        document.getElementById("promoResult").innerHTML = promotionDetails;
+        
+        document.getElementById("newGradeStage").classList.remove('hidden');
+
+        if (dueDate) {
+             document.getElementById("dueDate").classList.remove('hidden');
+             document.getElementById("dueDate").innerHTML =
+            "تاريخ الاستحقاق القادم للترقية التالية: 🗓️ <strong>" + formatDate(dueDate) + "</strong>";
+        } 
+
+
+        // 4. تفاصيل الحسابات (الراتب الحالي)
+        let conditionalFactorName = degree === 'diploma' ? "المخصصات الخاصة (غير مطبقة)" : "المخصصات الهندسية";
+        let certFactor = 0;
+        switch (degree) {
+            case 'diploma': certFactor = 0.35; break;
+            case 'bachelor': certFactor = 0.45; break;
+            case 'master': certFactor = 0.65; break;
+            case 'phd': certFactor = 0.75; break;
+            default: certFactor = 0;
+        }
+        let riskFactor = workType === 'field' ? 0.3 : 0.25;
+        let conditionalFactor = degree === 'diploma' ? 0 : (workType === 'field' ? 0.50 : 0.35);
+        let fixedOtherAllowanceFactor = 0.3;
+        let totalFactors = certFactor + riskFactor + conditionalFactor + fixedOtherAllowanceFactor;
+        let factoredAllowance = currentNominal * totalFactors;
+        let familyAllowance = social === "married" ? (50000 + kids * 10000) : 0;
+        let retirement = 0.1 * currentNominal;
+        let fixedDeductions = 25000 + 4000;
+        let totalDeductions = retirement + fixedDeductions;
+        
+        document.getElementById("detailsBox").innerHTML =
+            "<h3>📊 تفاصيل الحسابات:</h3>" +
+            "<strong>الراتب الاسمي الحالي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
+            "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
+            "<strong>إجمالي معامل المخصصات الموحدة:</strong> <span>" + (totalFactors * 100).toFixed(2) + "%</span><br>" +
+            "<ul> " + 
+                "<li>مخصص الشهادة: " + (certFactor * 100) + "%</li>" +
+                "<li>مخصص الخطورة: " + (riskFactor * 100) + "%</li>" +
+                "<li>مخصصات اخرى : " + (fixedOtherAllowanceFactor * 100) + "%</li>" + 
+                "<li>" + conditionalFactorName + ": " + (conditionalFactor * 100) + "%</li>" +
+            "</ul>" +
+            "<strong>المخصصات المحسوبة على الاسمي:</strong> <span>" + factoredAllowance.toLocaleString() + "</span> دينار<br>" +
+            "<strong>مخصصات الموقع/الإقامة:</strong> <span>" + locationAllowance.toLocaleString() + "</span> دينار<br>" +
+            "<strong>مخصصات الزوجية والأطفال:</strong> <span>" + familyAllowance.toLocaleString() + "</span> دينار<br>" +
+            "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
+            "<strong>الاستقطاعات الإجمالية:</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار (تقاعد: " + retirement.toLocaleString() + ")<br>" +
+            "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
+            "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+
+        // إظهار تفاصيل الحسابات
+        document.getElementById("detailsBox").classList.remove('hidden');
+    }
+    
+    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح)
+    async function printResults() {
+        if (document.getElementById("salaryResult").classList.contains('hidden') || document.getElementById("salaryResult").style.display === 'none') {
+            alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
+            return;
+        }
+
+        const printBtn = document.getElementById("printBtn");
+        const originalText = printBtn.innerHTML;
+        printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
+        printBtn.disabled = true;
+
+        // 1. تطبيق التصغير المؤقت للخط
+        const targetElements = document.querySelectorAll('.result, .warning, .details');
+        const originalStyles = [];
+        
+        targetElements.forEach(el => {
+            originalStyles.push({ el: el, fontSize: el.style.fontSize });
+            if (el.classList.contains('result') || el.classList.contains('warning')) {
+                 el.style.fontSize = '14px'; 
+            }
+             if (el.classList.contains('details')) {
+                 el.style.fontSize = '13px'; 
+            }
+             el.querySelectorAll('li').forEach(li => {
+                 originalStyles.push({ el: li, fontSize: li.style.fontSize });
+                 li.style.fontSize = '12px';
+             });
+>>>>>>> Stashed changes
         });
 
         // إلغاء الفقاعة إذا تم النقر خارج الأزرار
