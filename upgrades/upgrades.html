@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حساب الترقيات المتراكمة والمستحقة</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* التنسيقات الأساسية */
         * {
@@ -23,6 +24,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative; /* يجب أن يكون body Relative إذا كان زر الرجوع Absolute */
         }
 
         .container {
@@ -32,8 +34,51 @@
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative; /* مهم لتعيين نقطة مرجعية لـ back-link إذا كان الزر خارج الـ container */
+        }
+        
+        /* ------------------------------------- */
+        /* تنسيق زر الرجوع المضاف حديثاً */
+        /* ------------------------------------- */
+        .back-link {
+            position: absolute;
+            top: 30px; /* المسافة من الأعلى */
+            right: 40px; /* تحديد موضعه في الزاوية اليمين (للتصميم العربي) */
+            
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            
+            text-decoration: none;
+            padding: 10px; 
+            border-radius: 50%; /* شكل دائري */
+            
+            background-color: #1a73e8; /* لون يتناسب مع عنوان H2 */
+            color: #ffffff; 
+            font-size: 16px;
+            font-weight: 500;
+            
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            
+            z-index: 1000; 
+            width: 45px; 
+            height: 45px; 
         }
 
+        .back-link i {
+            font-size: 20px; 
+            transform: scaleX(-1); /* لقلب السهم ليتجه لليمين في وضع RTL */
+        }
+
+        .back-link:hover {
+            background-color: #0d47a1;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* ------------------------------------- */
+        
         /* تنسيق العنوان الرئيسي */
         h2 {
             text-align: center;
@@ -253,6 +298,10 @@
                 align-items: flex-start;
                 padding: 0;
             }
+            
+            .back-link {
+                display: none !important;
+            }
 
             .container {
                 width: 210mm; 
@@ -307,6 +356,15 @@
         }
 
         @media (max-width: 768px) {
+            .back-link {
+                top: 15px; 
+                right: 15px; 
+                width: 36px;
+                height: 36px;
+            }
+            .back-link i {
+                font-size: 16px;
+            }
             .container {
                 padding: 25px;
             }
@@ -334,7 +392,11 @@
     </style>
 </head>
 <body>
-    <div class="container">
+
+<a href="engsabaawi.github.io" class="back-link" title="العودة إلى الصفحة الرئيسية">
+    <i class="fas fa-chevron-left"></i> 
+</a>
+<div class="container">
         <h2>حساب الترقيات المتراكمة والمستحقة</h2>
         
         <form id="promotionForm">
