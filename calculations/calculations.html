@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧮 نظام احترافي لحساب الراتب والخدمة</title>
+    <title> قصاصة الراتب </title>
 
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -45,7 +45,7 @@
         /* ------------------------------------- */
         .back-link {
             position: absolute;
-            top: 65px; /* المسافة المحددة من الأعلى */
+            top: 75px; /* المسافة المحددة من الأعلى */
             right: 100px; /* **تم التعديل: زيادة المسافة لدفعه إلى اليسار** */
             
             display: flex;
@@ -461,6 +461,25 @@
             </select>
         </div>
 
+        <!-- الحقل الجديد: المسؤولية -->
+        <div class="form-group">
+            <label for="responsibility">المسؤولية</label>
+            <select id="responsibility" name="responsibility">
+                <option value="none" selected>لا يوجد</option>
+                <option value="exists">يوجد</option>
+            </select>
+        </div>
+
+        <!-- الحقل الجديد: المنصب (يظهر عند اختيار "يوجد") -->
+        <div id="positionBox" class="form-group hidden">
+            <label for="position">المنصب</label>
+            <select id="position" name="position">
+                <option value="section-head">مسؤول شعبة</option>
+                <option value="department-head">مسؤول قسم</option>
+                <option value="director">مدير هيئة / معاون مدير / مدير عام</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="grade">الدرجة الحالية</label>
             <select id="grade" name="grade">
@@ -557,8 +576,15 @@
         PREVIOUS_DEDUCTION: 1000 // ما قبله
     };
     
+    // تعريف مخصصات المناصب الإدارية
+    const POSITION_DEDUCTIONS = {
+        'section-head': 0.15,      // مسؤول شعبة: 15%
+        'department-head': 0.20,   // مسؤول قسم: 20%
+        'director': 0.30           // مدير هيئة / معاون مدير / مدير عام: 30%
+    };
+    
     // دالة مساعدة لحساب الراتب الكلي لأي درجة ومرحلة محددة
-    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids) {
+    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids, positionFactor = 0) {
         // 1. الراتب الاسمي
         const nominal = gradeBase[targetGrade] + ((targetStage - 1) * stageAddLogic(targetGrade));
 
@@ -591,15 +617,18 @@
             familyAllowance = 50000 + kids * 10000; 
         }
         
-        // 4. الاستقطاعات
+        // 4. مخصصات المسؤولية
+        const responsibilityAllowance = Math.round(nominal * positionFactor);
+        
+        // 5. الاستقطاعات
         const retirement = Math.round(0.1 * nominal); // تقاعد (10% من الاسمي)
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
         
-        // 5. الراتب الكلي
-        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance) - totalDeductions;
+        // 6. الراتب الكلي
+        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance) - totalDeductions;
         
-        return { nominal, totalSalary };
+        return { nominal, totalSalary, responsibilityAllowance };
     }
 
     // دالة جديدة لحساب سنوات الخدمة الفعلية بدقة
@@ -644,6 +673,14 @@
         );
     }
     
+    // دالة جديدة للتحكم بعرض حقل المنصب
+    function togglePosition() {
+        document.getElementById("positionBox").classList.toggle(
+            "hidden",
+            document.getElementById("responsibility").value !== "exists"
+        );
+    }
+    
     // دالة مساعدة لتنسيق التاريخ
     function formatDate(date) {
         return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -665,9 +702,14 @@
         const social = document.getElementById("social").value;
         const kids = parseInt(document.getElementById("kids").value) || 0;
         
+        // جلب قيم المسؤولية والمنصب
+        const responsibility = document.getElementById("responsibility").value;
+        const position = document.getElementById("position").value;
+        const positionFactor = responsibility === 'exists' ? (POSITION_DEDUCTIONS[position] || 0) : 0;
+        
         // 1. حساب الراتب الحالي
-        const { nominal: currentNominal, totalSalary: currentTotalSalary } = 
-            calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids);
+        const { nominal: currentNominal, totalSalary: currentTotalSalary, responsibilityAllowance } = 
+            calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids, positionFactor);
         
         // 2. عرض نتائج الراتب
         document.getElementById("salaryResult").classList.remove('hidden');
@@ -721,8 +763,15 @@
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
         
-        // حساب إجمالي المخصصات (الاسمي + الزوجية + الموقعية)
-        const totalAllowances = factoredAllowance + locationAllowance + familyAllowance;
+        // حساب إجمالي المخصصات (الاسمي + الزوجية + الموقعية + المسؤولية)
+        const totalAllowances = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance;
+        
+        // إعداد نص مخصصات المسؤولية لعرضه في التفاصيل
+        let responsibilityText = '';
+        if (responsibility === 'exists' && positionFactor > 0) {
+            const positionName = document.getElementById("position").selectedOptions[0].textContent;
+            responsibilityText = `<li>مخصصات مسؤولية (${positionName}) (${(positionFactor * 100).toFixed(0)}%): <span>${responsibilityAllowance.toLocaleString()}</span> دينار</li>`;
+        }
 
 
         document.getElementById("detailsBox").innerHTML =
@@ -736,6 +785,7 @@
                 `<li>مخصصات اخرى ثابتة (${(fixedOtherAllowanceFactor * 100).toFixed(0)}%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
                 `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
+                (responsibilityText ? responsibilityText : '') + // عرض مخصصات المسؤولية إن وجدت
                 `<li>مخصصات الموقع / ساعات إضافية (موقعية): <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
@@ -911,7 +961,12 @@
         document.getElementById("bonusMonths").value = 0;
         document.getElementById("dateOfAppointment").value = ""; 
         
+        // إعادة تعيين حقول المسؤولية
+        document.getElementById("responsibility").value = "none";
+        document.getElementById("position").value = "section-head";
+        
         document.getElementById("kidsBox").classList.add('hidden');
+        document.getElementById("positionBox").classList.add('hidden'); // إخفاء حقل المنصب
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
     }
@@ -919,11 +974,13 @@
     // ربط الدوال بالأحداث
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("social").addEventListener('change', toggleKids);
+        document.getElementById("responsibility").addEventListener('change', togglePosition); // مستمع جديد
         document.getElementById("calculateBtn").addEventListener('click', calculateAll);
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
 
         toggleKids();
+        togglePosition(); // تهيئة حالة حقل المنصب عند التحميل
         resetForm(); // تصفير الحقول عند تحميل الصفحة لتعيين القيم الافتراضية الجديدة
     });
 </script>
