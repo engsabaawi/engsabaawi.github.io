@@ -114,7 +114,7 @@
             box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
         }
 
-        /* إطار ضبابي حول الأزرار */
+        /* إطار ضبابي حول الأزرار - أبقينا على التأثير لجمالية التصميم */
         .button-wrapper::before {
             content: '';
             position: absolute;
@@ -197,7 +197,7 @@
             padding: 5px;
             background: #e9e9e9;
             border-radius: 8px;
-            font-variant-numeric: tabular-nums; 
+            font-variant-numeric: tabular-nums; /* لتحسين عرض الأرقام */
         }
 
         /* تحسينات الوسائط المتعددة (Mobile Responsiveness) */
@@ -243,7 +243,8 @@
             .datetime { order: 2; font-size: 0.8em; }
         }
 
-        /* تنسيقات الفقاعة المتموجة */
+        /* تنسيقات الفقاعة المتموجة - (حافظنا على الكود الأصلي لكنه لا يظهر هنا لتجنب التكرار) */
+        /* ... (CSS الخاص بالفقاعة Bubble: show, follow, moving, keyframes) ... */
         .bubble {
             position: absolute;
             width: 100px;
@@ -275,6 +276,7 @@
             animation: none;
         }
 
+        /* تأثير التموج الحقيقي */
         .bubble::before,
         .bubble::after {
             content: '';
@@ -330,6 +332,7 @@
             66% { transform: translate(-2px, 4px) scale(1.05); }
         }
 
+        /* تأثير الحركة السريعة */
         .bubble.moving {
             animation: bubbleDistort 0.5s ease-in-out;
         }
@@ -349,13 +352,13 @@
         <h1>واجهة المستخدم مرحباً بك 👋</h1>
         
         <div class="button-wrapper">
-            <button class="modern-button" data-link="engsabaawi.github.io/calculations/calculations.html">
+            <button class="modern-button" data-link="salary-calculator.html">
                 حساب قصاصة الراتب والترقية 💰
             </button>
         </div>
         
         <div class="button-wrapper">
-            <button class="modern-button" data-link="engsabaawi.github.io/upgrades/upgrades.html">
+            <button class="modern-button" data-link="acceleration-calculator.html">
                 حسابات التسريع للمستحقين 🚀
             </button>
         </div>
@@ -378,27 +381,42 @@
         let currentBubble = null;
         let isPressed = false;
         let currentButton = null;
+        // قم بتهيئة عدد الزوار لزيادة القيمة عند كل زيارة
         let visitorCount = localStorage.getItem('visitorCount') ? parseInt(localStorage.getItem('visitorCount'), 10) : 0;
         let lastMouseTime = 0;
         let mouseVelocity = { x: 0, y: 0 };
         let lastMousePos = { x: 0, y: 0 };
 
+        // تحديث عرض عدد الزوار
         function updateVisitorDisplay() {
+            // استخدام toLocaleString لتنسيق الرقم مع الفواصل
             document.getElementById('visitorCount').textContent = visitorCount.toLocaleString('ar-IQ');
         }
 
+        // حفظ عدد الزوار في localStorage
         function saveVisitorCount() {
             localStorage.setItem('visitorCount', visitorCount);
         }
 
-        // تحديث التاريخ والوقت بتنسيق عربي
+        // تحديث التاريخ والوقت بتنسيق عربي وأكثر ترتيبًا
         function updateDateTime() {
             const now = new Date();
+            const options = {
+                weekday: 'long', // اليوم
+                year: 'numeric', // السنة
+                month: 'long', // الشهر
+                day: 'numeric', // اليوم من الشهر
+                hour: '2-digit', // الساعة
+                minute: '2-digit', // الدقيقة
+                second: '2-digit', // الثانية
+                hour12: false // نظام 24 ساعة
+            };
+            // التنسيق: اليوم, اليوم/الشهر/السنة - 00:00:00
             const dateStr = now.toLocaleDateString('ar-IQ', { year: 'numeric', month: '2-digit', day: '2-digit' });
             const timeStr = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
             const dayName = now.toLocaleDateString('ar-IQ', { weekday: 'long' });
 
-            // التنسيق: الأحد، 22/11/2025 - 18:30:45
+            // التنسيق المرغوب: الأحد، 22/11/2025 - 18:30:45
             const finalStr = `${dayName}، ${dateStr} - ${timeStr}`;
 
             document.getElementById('datetime').textContent = finalStr;
@@ -505,29 +523,28 @@
             button.addEventListener('mouseup', handleEnd);
             button.addEventListener('mouseleave', handleEnd);
             
-            // أحداث اللمس
+            // 🚀 الأحداث المعدلة لضمان استجابة اللمس 🚀
             button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
+                // *** تم إزالة e.preventDefault() هنا! للسماح بتشغيل حدث 'click' لاحقاً ***
                 handleStart(button, e);
             });
             button.addEventListener('touchmove', (e) => {
-                e.preventDefault();
+                e.preventDefault(); // الإبقاء على منع التمرير (Scrolling) أثناء حركة الفقاعة
                 handleMove(e);
             });
             button.addEventListener('touchend', handleEnd);
             
-            // التنقل وزيادة عدد الزوار عند النقر
+            // التنقل وزيادة عدد الزوار عند النقر (يعمل الآن بعد اللمس أيضاً)
             button.addEventListener('click', () => {
+                // زيادة العداد وحفظه عند النقر (لأن الزر هو نقطة الدخول للتطبيق)
                 visitorCount++; 
                 updateVisitorDisplay();
                 saveVisitorCount(); 
                 
                 const link = button.getAttribute('data-link');
                 if (link) {
-                    // إضافة http:// أو https:// في البداية لضمان عمل الرابط بشكل صحيح كـ URL
-                    const fullLink = link.startsWith('http') ? link : 'http://' + link;
                     setTimeout(() => {
-                        window.location.href = fullLink;
+                        window.location.href = link;
                     }, 150);
                 }
             });
@@ -539,9 +556,9 @@
 
         // تهيئة الصفحة
         window.addEventListener('load', () => {
-            updateVisitorDisplay(); 
+            updateVisitorDisplay(); // لعرض القيمة المحفوظة
             updateDateTime();
-            // تحديث الوقت كل ثانية
+            // تحديث الوقت كل ثانية (1000 ميلي ثانية)
             setInterval(updateDateTime, 1000);
         });
     </script>
