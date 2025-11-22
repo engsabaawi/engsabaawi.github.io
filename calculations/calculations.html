@@ -37,13 +37,16 @@
             padding: 0;
             color: var(--text-dark);
             direction: rtl; 
+            position: relative; 
         }
         
-        /* تنسيق زر الرجوع في أعلى اليسار - تم زيادة البعد عن الحواف */
+        /* ------------------------------------- */
+        /* تنسيق زر الرجوع الجديد (دائري وأعلى اليمين) */
+        /* ------------------------------------- */
         .back-link {
             position: absolute;
-            top: 65px; /* تم زيادته من 50px لزيادة المسافة عن الحافة العلوية */
-            left: 70px; /* تم زيادته من 55px لزيادة المسافة عن الحافة اليسرى */
+            top: 65px; /* المسافة المحددة من الأعلى */
+            right: 100px; /* **تم التعديل: زيادة المسافة لدفعه إلى اليسار** */
             
             display: flex;
             align-items: center; 
@@ -51,7 +54,7 @@
             
             text-decoration: none;
             padding: 10px; 
-            border-radius: 10px;
+            border-radius: 50%; /* تم التغيير إلى دائري (50%) */
             
             background-color: var(--secondary-color); 
             color: var(--text-light); 
@@ -69,6 +72,8 @@
         .back-link i {
             margin-right: 0; 
             font-size: 18px; 
+            /* تم عكس السهم ليناسب الاتجاه الأيمن في RTL */
+            transform: rotate(180deg);
         }
 
         .back-link:hover {
@@ -76,8 +81,9 @@
             transform: translateY(-1px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
+        
+        /* ------------------------------------- */
 
-        /* باقي تنسيقات CSS كما هي... */
         .container {
             max-width: 960px;
             margin: 30px auto;
@@ -342,7 +348,8 @@
         @media (max-width: 768px) {
             .back-link {
                 top: 15px; 
-                left: 15px; 
+                right: 25px; /* **تم التعديل ليناسب الشاشات الصغيرة** */
+                left: auto; /* إلغاء خاصية left */
                 padding: 8px;
                 font-size: 14px;
                 width: 36px;
@@ -350,6 +357,7 @@
             }
             .back-link i {
                 font-size: 16px;
+                transform: rotate(180deg);
             }
             .container { margin: 15px; padding: 25px; padding-bottom: 70px; border-radius: 15px; }
             h2 { font-size: 28px; margin-bottom: 20px; }
