@@ -155,6 +155,8 @@
             outline: none;
         }
         
+        /* ✅ حذف قواعد منع الأرقام */
+        
         .hidden {
             display: none !important;
         }
@@ -345,6 +347,8 @@
             font-weight: 600;
         }
 
+        /* ✅ حذف قواعد منع الأرقام */
+        
         /* استجابة للتصاميم الصغيرة */
         @media (max-width: 768px) {
             .back-link {
@@ -462,6 +466,25 @@
             </select>
         </div>
 
+        <!-- الحقل الجديد: نوع الدوام -->
+        <div class="form-group">
+            <label for="workShift">نوع الدوام</label>
+            <select id="workShift" name="workShift">
+                <option value="morning" selected>صباحي</option>
+                <option value="shift">مناوب</option>
+            </select>
+        </div>
+
+        <!-- الحقل الجديد: عدد الشفتات (يظهر عند اختيار "مناوب") -->
+        <div id="shiftsBox" class="form-group hidden">
+            <label for="shifts">عدد الشفتات</label>
+            <select id="shifts" name="shifts">
+                <option value="6" selected>6 شفتات</option>
+                <option value="7">7 شفتات</option>
+                <option value="8">8 شفتات</option>
+            </select>
+        </div>
+
         <!-- الحقل الجديد: المسؤولية -->
         <div class="form-group">
             <label for="responsibility">المسؤولية</label>
@@ -512,9 +535,10 @@
             </select>
         </div>
 
+        <!-- ✅ تم تغيير التسمية وجعل الحقل متناسقًا وقابلًا للإدخال -->
         <div class="form-group">
-            <label for="locationAllowance">مخصصات الموقع / الإقامة (دينار)</label>
-            <input type="number" id="locationAllowance" name="locationAllowance" value="0" min="0">
+            <label for="locationAllowance">مخصصات الموقع</label>
+            <input type="number" id="locationAllowance" name="locationAllowance" min="0" placeholder="أدخل المبلغ">
         </div>
 
         
@@ -682,6 +706,12 @@
         );
     }
     
+    // دالة جديدة للتحكم بعرض حقل الشفتات
+    function toggleShifts() {
+        const workShift = document.getElementById("workShift").value;
+        document.getElementById("shiftsBox").classList.toggle("hidden", workShift !== 'shift');
+    }
+    
     // دالة مساعدة لتنسيق التاريخ
     function formatDate(date) {
         return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -699,7 +729,10 @@
         const stage = parseInt(document.getElementById("stage").value);
         const degree = document.getElementById("degreeType").value; 
         const workType = document.getElementById("workType").value;   
-        const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0; 
+        
+        // ✅ جلب مخصصات الموقع كقيمة عددية
+        const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0;
+        
         const social = document.getElementById("social").value;
         const kids = parseInt(document.getElementById("kids").value) || 0;
         
@@ -731,7 +764,6 @@
         } else if (typeof service === 'string') {
             alert(service); // تنبيه في حال وجود خطأ منطقي في التاريخ
         }
-
 
         // 4. تفاصيل الحسابات (الراتب الحالي)
         let conditionalFactorName = degree === 'diploma' ? "المخصصات الخاصة" : "المخصصات الهندسية";
@@ -774,7 +806,6 @@
             responsibilityText = `<li>مخصصات مسؤولية (${positionName}) (${(positionFactor * 100).toFixed(0)}%): <span>${responsibilityAllowance.toLocaleString()}</span> دينار</li>`;
         }
 
-
         document.getElementById("detailsBox").innerHTML =
             "<h3>📊 تفاصيل الحسابات:</h3>" +
             "<strong>الراتب الاسمي الحالي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
@@ -787,7 +818,7 @@
                 `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
                 (responsibilityText ? responsibilityText : '') + // عرض مخصصات المسؤولية إن وجدت
-                `<li>مخصصات الموقع / ساعات إضافية (موقعية): <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
+                `<li>مخصصات الموقع: <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<strong>إجمالي المخصصات الكلي:</strong> <span>" + totalAllowances.toLocaleString() + "</span> دينار<br>" + 
@@ -960,8 +991,9 @@
     function resetForm() {
         document.getElementById("salaryForm").reset();
         
-        // تصفير جميع المدخلات الرقمية والتاريخية إلى صفر أو فارغ
-        document.getElementById("locationAllowance").value = 0; 
+        // ✅ تصفير حقل الموقع
+        document.getElementById("locationAllowance").value = '';
+        
         document.getElementById("bonusMonths").value = 0;
         document.getElementById("dateOfAppointment").value = ""; 
         
@@ -969,10 +1001,15 @@
         document.getElementById("responsibility").value = "none";
         document.getElementById("position").value = "section-head";
         
-        document.getElementById("kidsBox").classList.add('hidden');
-        document.getElementById("positionBox").classList.add('hidden'); // إخفاء حقل المنصب
+        // إعادة تعيين حقول الدوام
+        document.getElementById("workShift").value = "morning";
+        document.getElementById("shifts").value = "6";
         
-        // ✅ إخفاء زر الطباعة عند التصفير
+        document.getElementById("kidsBox").classList.add('hidden');
+        document.getElementById("positionBox").classList.add('hidden');
+        document.getElementById("shiftsBox").classList.add('hidden');
+        
+        // إخفاء زر الطباعة عند التصفير
         document.getElementById("printBtn").style.display = 'none';
         
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
@@ -982,13 +1019,15 @@
     // ربط الدوال بالأحداث
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("social").addEventListener('change', toggleKids);
-        document.getElementById("responsibility").addEventListener('change', togglePosition); // مستمع جديد
+        document.getElementById("responsibility").addEventListener('change', togglePosition);
+        document.getElementById("workShift").addEventListener('change', toggleShifts);
         document.getElementById("calculateBtn").addEventListener('click', calculateAll);
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
 
         toggleKids();
-        togglePosition(); // تهيئة حالة حقل المنصب عند التحميل
+        togglePosition();
+        toggleShifts();
         resetForm(); // تصفير الحقول عند تحميل الصفحة لتعيين القيم الافتراضية الجديدة
     });
 </script>
