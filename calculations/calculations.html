@@ -212,6 +212,7 @@
         #printBtn {
             background: var(--print-color);
             color: var(--text-light);
+            display: none; /* ✅ إخفاء الزر بشكل افتراضي */
         }
         #printBtn:hover {
             background: #218838;
@@ -806,6 +807,9 @@
 
         // إظهار تفاصيل الحسابات
         document.getElementById("detailsBox").classList.remove('hidden');
+        
+        // ✅ إظهار زر الطباعة بعد إتمام الحساب
+        document.getElementById("printBtn").style.display = 'flex';
     }
     
     // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح وإضافة التذييل المخصص)
@@ -967,6 +971,10 @@
         
         document.getElementById("kidsBox").classList.add('hidden');
         document.getElementById("positionBox").classList.add('hidden'); // إخفاء حقل المنصب
+        
+        // ✅ إخفاء زر الطباعة عند التصفير
+        document.getElementById("printBtn").style.display = 'none';
+        
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
     }
