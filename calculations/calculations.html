@@ -22,7 +22,7 @@
             --reset-color: #dc3545;
             --warning-color: #ffc107;
             --print-color: #28a745;
-            --input-height: 48px; /* ارتفاع موحد للحقول */
+            --input-height: 48px; 
         }
 
         /* تطبيق box-sizing على جميع العناصر لضمان دقة الأبعاد */
@@ -38,7 +38,46 @@
             color: var(--text-dark);
             direction: rtl; 
         }
+        
+        /* تنسيق زر الرجوع في أعلى اليسار - تم زيادة البعد عن الحواف */
+        .back-link {
+            position: absolute;
+            top: 65px; /* تم زيادته من 50px لزيادة المسافة عن الحافة العلوية */
+            left: 70px; /* تم زيادته من 55px لزيادة المسافة عن الحافة اليسرى */
+            
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            
+            text-decoration: none;
+            padding: 10px; 
+            border-radius: 10px;
+            
+            background-color: var(--secondary-color); 
+            color: var(--text-light); 
+            font-size: 16px;
+            font-weight: 500;
+            
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            
+            z-index: 1000; 
+            width: 40px; 
+            height: 40px; 
+        }
 
+        .back-link i {
+            margin-right: 0; 
+            font-size: 18px; 
+        }
+
+        .back-link:hover {
+            background-color: #0060cc;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* باقي تنسيقات CSS كما هي... */
         .container {
             max-width: 960px;
             margin: 30px auto;
@@ -61,57 +100,47 @@
             padding-bottom: 10px;
         }
 
-        /* تنسيق الـ Form-group باستخدام Flexbox */
         .form-group {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 20px; /* المسافة بين التسمية والحقل */
+            gap: 20px; 
         }
 
-        /* تنسيق التسمية (Label) */
         .form-group label {
             font-size: 17px;
             font-weight: 600;
             color: var(--text-dark);
-            /* تحديد عرض ثابت للتسمية لضمان محاذاة الحقول */
             width: 35%; 
             min-width: 150px; 
             text-align: right;
-            flex-shrink: 0; /* منع التسمية من الانكماش */
+            flex-shrink: 0; 
         }
 
-        /* تنسيق حقول الإدخال الموحدة */
         input[type="number"],
         input[type="date"],
         select {
-            /* جعل الحقل يملأ المساحة المتبقية */
             flex-grow: 1; 
             width: 100%; 
-            
-            /* تنسيقات موحدة للطول والارتفاع */
             height: var(--input-height); 
             padding: 0 14px; 
             font-size: 17px;
-            
             border-radius: 10px;
             border: 1px solid #ced4da;
             background: #f8f9fa;
             transition: border-color 0.3s, box-shadow 0.3s;
-            appearance: none; /* إزالة تنسيقات المتصفح الافتراضية لضمان التناسق */
+            appearance: none; 
             -webkit-appearance: none;
             -moz-appearance: none;
         }
         
-        /* تعديل خاص للـ select لإضافة سهم مخصص */
         select {
             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%20197.8L146.2%2057%205.4%20197.8z%22%2F%3E%3C%2Fsvg%3E');
             background-repeat: no-repeat;
-            background-position: left 10px center; /* وضع السهم على اليسار في RTL */
+            background-position: left 10px center; 
             background-size: 12px 12px;
-            padding-left: 30px; /* لإفساح المجال للسهم */
+            padding-left: 30px; 
         }
-
 
         input:focus, select:focus {
             border-color: var(--secondary-color);
@@ -120,7 +149,6 @@
             outline: none;
         }
         
-        /* تنسيق خاص لتاريخ التخرج وتاريخ التعيين عند إخفائهما */
         .hidden {
             display: none !important;
         }
@@ -129,7 +157,7 @@
             display: flex;
             gap: 15px;
             margin-top: 30px;
-            padding-right: 35%; /* محاذاة مجموعة الأزرار للحقول */
+            padding-right: 35%; 
             min-width: 400px; 
         }
 
@@ -190,11 +218,8 @@
             border-top: 1px solid #e9ecef;
         }
 
-        /* ---------------------------------------------------- */
-        /* التعديلات لتوحيد تباعد حقول المخرجات */
-        /* ---------------------------------------------------- */
         .result {
-            margin-bottom: 15px; /* تباعد ثابت أسفل كل مخرج نتيجة */
+            margin-bottom: 15px; 
             padding: 15px;
             background: #e9f5ff;
             border-left: 5px solid var(--secondary-color);
@@ -202,10 +227,9 @@
             font-size: 18px; 
             font-weight: 500;
             color: var(--primary-color);
-            margin-top: 0; /* ضمان عدم وجود هامش علوي مفرط */
+            margin-top: 0; 
         }
         
-        /* تباعد التحذير أصبح متساوياً (15px) */
         .warning {
             margin-top: 15px; 
             margin-bottom: 15px; 
@@ -218,10 +242,9 @@
             color: #856404;
         }
 
-        /* تباعد التفاصيل أصبح متساوياً (15px) */
         .details {
-            margin-top: 15px; /* تم تقليل الهامش ليتساوى مع 15px */
-            margin-bottom: 0; /* لا حاجة لهامش سفلي إذا كان هو العنصر الأخير */
+            margin-top: 15px; 
+            margin-bottom: 0; 
             padding: 20px;
             background: #f8fafd;
             border: 1px solid #dee2e6;
@@ -230,9 +253,7 @@
             color: var(--text-dark);
             line-height: 1.8;
         }
-        /* ---------------------------------------------------- */
         
-        /* تنسيق خاص لنتائج الترقية */
         .promo-result {
             background: #e6ffec; 
             border-left: 5px solid var(--print-color); 
@@ -284,7 +305,6 @@
             margin-right: 0;
         }
         
-        /* تذييل الصفحة */
         .footer {
             position: absolute;
             bottom: 0;
@@ -311,7 +331,6 @@
             margin: 0 0 15px 0;
         }
         
-        /* تنسيق خاص للخدمة الفعلية */
         #serviceDuration {
             background: #fff7e6; 
             border-left: 5px solid var(--warning-color);
@@ -321,10 +340,20 @@
 
         /* استجابة للتصاميم الصغيرة */
         @media (max-width: 768px) {
+            .back-link {
+                top: 15px; 
+                left: 15px; 
+                padding: 8px;
+                font-size: 14px;
+                width: 36px;
+                height: 36px;
+            }
+            .back-link i {
+                font-size: 16px;
+            }
             .container { margin: 15px; padding: 25px; padding-bottom: 70px; border-radius: 15px; }
             h2 { font-size: 28px; margin-bottom: 20px; }
             
-            /* في الشاشات الصغيرة: تحويل المحاذاة من أفقية لعمودية */
             .form-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -361,8 +390,7 @@
                 padding: 0;
                 max-width: 100%;
             }
-            /* إخفاء عناصر الإدخال والأزرار والرأس عند الطباعة */
-            .form-group, .btn-group, h2 { display: none !important; }
+            .form-group, .btn-group, h2, .back-link { display: none !important; }
             .result-section { border-top: none; padding-top: 0; }
             .result, .warning, .details {
                 page-break-inside: avoid;
@@ -394,6 +422,9 @@
 </head>
 <body>
 
+<a href="https://engsabaawi.github.io" class="back-link" title="العودة إلى الصفحة الرئيسية">
+    <i class="fas fa-chevron-left"></i> 
+</a>
 <div class="container">
 
     <h2><i class="fas fa-calculator"></i> نظام حساب الراتب والخدمة الفعلية</h2>
@@ -875,8 +906,6 @@
         document.getElementById("kidsBox").classList.add('hidden');
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
-        
-        // **تم حذف السطر alert("✅ تم تصفير جميع حقول الإدخال.");**
     }
 
     // ربط الدوال بالأحداث
