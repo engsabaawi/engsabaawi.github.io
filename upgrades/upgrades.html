@@ -24,7 +24,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* يجب أن يكون body Relative إذا كان زر الرجوع Absolute */
+            position: relative; 
         }
 
         .container {
@@ -34,16 +34,16 @@
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            position: relative; /* مهم لتعيين نقطة مرجعية لـ back-link إذا كان الزر خارج الـ container */
+            position: relative; 
         }
         
         /* ------------------------------------- */
-        /* تنسيق زر الرجوع المضاف حديثاً */
+        /* تنسيق زر الرجوع */
         /* ------------------------------------- */
         .back-link {
             position: absolute;
-            top: 30px; /* المسافة من الأعلى */
-            right: 40px; /* تحديد موضعه في الزاوية اليمين (للتصميم العربي) */
+            top: 30px; 
+            right: 40px; 
             
             display: flex;
             align-items: center; 
@@ -51,9 +51,9 @@
             
             text-decoration: none;
             padding: 10px; 
-            border-radius: 50%; /* شكل دائري */
+            border-radius: 50%; 
             
-            background-color: #1a73e8; /* لون يتناسب مع عنوان H2 */
+            background-color: #1a73e8; 
             color: #ffffff; 
             font-size: 16px;
             font-weight: 500;
@@ -68,7 +68,7 @@
 
         .back-link i {
             font-size: 20px; 
-            transform: scaleX(-1); /* لقلب السهم ليتجه لليمين في وضع RTL */
+            transform: scaleX(-1); 
         }
 
         .back-link:hover {
