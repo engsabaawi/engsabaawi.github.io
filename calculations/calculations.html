@@ -657,7 +657,8 @@
         let specialAllowanceDetails = {
             type: 'None', 
             hours: 0, 
-            rate: 0
+            rate: 0,
+            shiftList: '' // **NEW: لتفاصيل الشفتات**
         };
         
         const ratePerHoure = getRatePerHoure(targetGrade);
@@ -677,6 +678,15 @@
             specialAllowanceDetails.type = 'Shift';
             specialAllowanceDetails.hours = hours;
             specialAllowanceDetails.rate = ratePerHoure;
+
+            // **NEW: تحديد تفاصيل الشفتات لـ 7 و 8**
+            if (shifts === 7) {
+                specialAllowanceDetails.shiftList = "صباحي, مسائي, ليلي, صباحي, مسائي, ليلي, صباحي";
+            } else if (shifts === 8) {
+                specialAllowanceDetails.shiftList = "مسائي, ليلي, صباحي, مسائي, ليلي, صباحي, مسائي, ليلي";
+            } else {
+                specialAllowanceDetails.shiftList = "لا يوجد تفصيل للشفتات";
+            }
         }
 
         // 7. الاستقطاعات
@@ -722,6 +732,7 @@
 
     // الدوال الأساسية للتحكم بعرض الحقول
     function toggleKids() {
+        // يبقى منطق الإخفاء مرتبطاً فقط بـ "متزوج"
         document.getElementById("kidsBox").classList.toggle(
             "hidden",
             document.getElementById("social").value !== "married"
@@ -790,7 +801,22 @@
         }
 
         // 4. تفاصيل الحسابات (الراتب الحالي)
-        let conditionalFactorName = degree === 'diploma' ? "المخصصات الخاصة" : "المخصصات الهندسية";
+        
+        // **********************************************
+        // 1. جلب النصوص المعروضة في حقول الإدخال
+        // **********************************************
+        const degreeText = document.getElementById("degreeType").selectedOptions[0].textContent;
+        const workShiftText = document.getElementById("workShift").selectedOptions[0].textContent;
+        const socialText = document.getElementById("social").selectedOptions[0].textContent; 
+        const kidsText = document.getElementById("kids").value; 
+        
+        // تنسيق تاريخ التعيين إلى yyyy/mm/dd
+        const formattedDate = dateOfAppointment ? dateOfAppointment.replace(/-/g, '/') : "غير مُدخل"; 
+        
+        // جلب نصوص المنصب وتصنيف الوظيفة
+        const positionText = document.getElementById("position").selectedOptions[0].textContent; 
+        const workTypeText = document.getElementById("workType").selectedOptions[0].textContent;
+        
         
         let certFactor = 0;
         switch (degree) {
@@ -801,7 +827,16 @@
             default: certFactor = 0;
         }
         let riskFactor = workType === 'field' ? 0.3 : 0.25;
-        let conditionalFactor = degree === 'diploma' ? 0 : (workType === 'field' ? 0.50 : 0.35);
+        
+        // ** التعديل المطلوب: إخفاء المخصص الخاص للدبلوم **
+        let conditionalFactor = 0; 
+        let conditionalFactorName = "مخصصات هندسية";
+        if (degree !== 'diploma') {
+            conditionalFactor = workType === 'field' ? 0.50 : 0.35;
+            conditionalFactorName = "مخصصات هندسية";
+        }
+        // **************************************************
+        
         let fixedOtherAllowanceFactor = 0.3;
         
         const certAmount = Math.round(currentNominal * certFactor);
@@ -833,22 +868,55 @@
 
         // عرض بدل الساعات الإضافية - تم تبسيط العرض لإظهار النتيجة فقط
         let specialAllowanceText = '';
+        // ** تم حذف منطق عرض تفاصيل الشفتات من المخصصات هنا **
         if (specialAllowance > 0) {
-             // تم توحيد العرض لاسم "بدل الساعات الإضافية" والقيمة النهائية فقط
-             specialAllowanceText = `<li>بدل الساعات الإضافية: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
+             specialAllowanceText = `<li>بدل الساعات الإضافية/المناوبة: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
+        }
+        
+        // تحديد نص عدد الشفتات ليظهر فقط إذا كان الدوام مناوباً وعدد الشفتات ليس 6
+        let shiftsDetailText = '';
+        if (workShift === 'shift' && shifts !== 6) {
+            shiftsDetailText = `<li>عدد الشفتات المُحتسب: <span>${shifts}</span> شفت</li>`;
+        }
+
+        // إنشاء سطر المخصص الخاص (المخصص الهندسي)
+        let conditionalAllowanceLine = '';
+        if (conditionalFactor > 0) {
+            conditionalAllowanceLine = `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>`;
         }
 
 
+        // **********************************************
+        // 2. تحديث المحتوى بإضافة القيم الجديدة
+        // **********************************************
         document.getElementById("detailsBox").innerHTML =
             "<h3> قصاصة الراتب:</h3>" + 
+            "<div style='background: #f1f1f1; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;'>" +
+            "<strong>البيانات الأساسية:</strong>" +
+            "<ul>" +
+            `<li>تاريخ التعيين: <span>${formattedDate}</span></li>` +
+            `<li>الدرجة: <span>${grade}</span>، المرحلة: <span>${stage}</span></li>` +
+            `<li>الشهادة: <span>${degreeText}</span></li>` +
+            
+            `<li>المنصب الحالي: <span>${positionText}</span></li>` +
+            `<li>تصنيف الوظيفة: <span>${workTypeText}</span></li>` +
+            
+            `<li>نوع الدوام: <span>${workShiftText}</span></li>` +
+            (shiftsDetailText ? shiftsDetailText : '') + // إضافة عدد الشفتات بشرط المناوبة وعدم كونها 6
+            
+            `<li>الحالة الاجتماعية: <span>${socialText}</span></li>` +
+            `<li>عدد الأطفال: <span>${kidsText}</span></li>` +
+            "</ul>" +
+            "</div>" +
+            
             "<strong>الراتب الاسمي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<h4> المخصصات:</h4>" +
             "<ul> " + 
                 `<li>مخصصات شهادة (${(certFactor * 100).toFixed(0)}%): <span>${certAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات خطورة (${(riskFactor * 100).toFixed(0)}%): <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
-                `<li>مخصصات ثابتة (${(fixedOtherAllowanceFactor * 100).toFixed(0)}%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
-                `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
+                `<li>مخصصات ثابتة (30%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
+                (conditionalAllowanceLine ? conditionalAllowanceLine : '') + // عرض المخصص الخاص (يُعرض فقط إذا كان العامل أكبر من صفر)
                 `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
                 (responsibilityText ? responsibilityText : '') +
                 (bonusText ? bonusText : '') +
@@ -866,8 +934,6 @@
                 `<li>دعم مستشفى الطفل: <span>${DEDUCTIONS.CHILD_HOSPITAL_SUPPORT.toLocaleString()}</span> دينار</li>` +
                 `<li>ما قبله: <span>${DEDUCTIONS.PREVIOUS_DEDUCTION.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
-            "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-            "<strong>إجمالي الاستقطاعات :</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار<br>" +
             "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + // خط فاصل واضح
             `<strong>الراتب الكلي:</strong> <span>${grossSalary.toLocaleString()}</span> دينار<br>` +
             "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + // خط فاصل واضح
@@ -902,7 +968,9 @@
         document.getElementById("workShift").value = "morning";
         document.getElementById("shifts").value = "6";
         
-        document.getElementById("kidsBox").classList.add('hidden');
+        // تم إزالة الكلاس hidden من kidsBox لضمان ظهوره عند اختيار متزوج
+        document.getElementById("kidsBox").classList.add('hidden'); // يجب إعادته مخفياً افتراضياً، وسيتم إظهاره إذا تم اختيار متزوج
+
         
         // إظهار وإخفاء عند التصفير لضمان التوافق مع القيمة الافتراضية
         toggleShiftsAndOvertime();
