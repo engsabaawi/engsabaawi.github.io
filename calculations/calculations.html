@@ -45,8 +45,8 @@
         /* ------------------------------------- */
         .back-link {
             position: absolute;
-            top: 75px; /* المسافة المحددة من الأعلى */
-            right: 100px; /* **تم التعديل: زيادة المسافة لدفعه إلى اليسار** */
+            top: 75px; 
+            right: 100px; 
             
             display: flex;
             align-items: center; 
@@ -54,7 +54,7 @@
             
             text-decoration: none;
             padding: 10px; 
-            border-radius: 50%; /* تم التغيير إلى دائري (50%) */
+            border-radius: 50%; 
             
             background-color: var(--secondary-color); 
             color: var(--text-light); 
@@ -72,7 +72,6 @@
         .back-link i {
             margin-right: 0; 
             font-size: 18px; 
-            /* تم عكس السهم ليناسب الاتجاه الأيمن في RTL */
             transform: rotate(180deg);
         }
 
@@ -155,8 +154,6 @@
             outline: none;
         }
         
-        /* ✅ حذف قواعد منع الأرقام */
-        
         .hidden {
             display: none !important;
         }
@@ -214,7 +211,7 @@
         #printBtn {
             background: var(--print-color);
             color: var(--text-light);
-            display: none; /* ✅ إخفاء الزر بشكل افتراضي */
+            display: none; 
         }
         #printBtn:hover {
             background: #218838;
@@ -321,7 +318,7 @@
             right: 0;
             padding: 20px 35px;
             margin-top: 40px;
-            border-top: 2px solid #000;
+            /* تم إزالة border-top: 1px solid #000; */
             text-align: center;
             font-size: 14px;
             font-weight: 500;
@@ -336,7 +333,7 @@
 
         .footer hr {
             border: none;
-            border-top: 1px solid #000;
+            /* تم إزالة border-top: 1px solid #000; */
             margin: 0 0 15px 0;
         }
         
@@ -347,14 +344,11 @@
             font-weight: 600;
         }
 
-        /* ✅ حذف قواعد منع الأرقام */
-        
-        /* استجابة للتصاميم الصغيرة */
         @media (max-width: 768px) {
             .back-link {
                 top: 15px; 
-                right: 25px; /* **تم التعديل ليناسب الشاشات الصغيرة** */
-                left: auto; /* إلغاء خاصية left */
+                right: 25px; 
+                left: auto; 
                 padding: 8px;
                 font-size: 14px;
                 width: 36px;
@@ -394,7 +388,6 @@
             .footer { padding: 15px 25px; }
         }
 
-        /* تنسيق خاص للطباعة كاحتياطي */
         @media print {
             body { background: white; }
             .container { 
@@ -426,9 +419,12 @@
             .footer { 
                 display: block !important;
                 position: relative !important;
-                border-top: 2px solid #000 !important;
+                /* تم إزالة border-top: 1px solid #000 !important; */
                 padding: 15px !important;
                 margin-top: 20px !important;
+            }
+            .footer hr { /* تم حذف الخط السميك */
+                display: none !important;
             }
         }
     </style>
@@ -466,7 +462,6 @@
             </select>
         </div>
 
-        <!-- الحقل الجديد: نوع الدوام -->
         <div class="form-group">
             <label for="workShift">نوع الدوام</label>
             <select id="workShift" name="workShift">
@@ -475,7 +470,6 @@
             </select>
         </div>
 
-        <!-- الحقل الجديد: عدد الشفتات (يظهر عند اختيار "مناوب") -->
         <div id="shiftsBox" class="form-group hidden">
             <label for="shifts">عدد الشفتات</label>
             <select id="shifts" name="shifts">
@@ -485,19 +479,10 @@
             </select>
         </div>
 
-        <!-- الحقل الجديد: المسؤولية -->
         <div class="form-group">
-            <label for="responsibility">المسؤولية</label>
-            <select id="responsibility" name="responsibility">
-                <option value="none" selected>لا يوجد</option>
-                <option value="exists">يوجد</option>
-            </select>
-        </div>
-
-        <!-- الحقل الجديد: المنصب (يظهر عند اختيار "يوجد") -->
-        <div id="positionBox" class="form-group hidden">
             <label for="position">المنصب</label>
             <select id="position" name="position">
+                <option value="none" selected>لا يوجد</option>
                 <option value="section-head">مسؤول شعبة</option>
                 <option value="department-head">مسؤول قسم</option>
                 <option value="director">مدير هيئة / معاون مدير / مدير عام</option>
@@ -535,7 +520,6 @@
             </select>
         </div>
 
-        <!-- ✅ تم تغيير التسمية وجعل الحقل متناسقًا وقابلًا للإدخال -->
         <div class="form-group">
             <label for="locationAllowance">مخصصات الموقع</label>
             <input type="number" id="locationAllowance" name="locationAllowance" min="0" placeholder="أدخل المبلغ">
@@ -579,7 +563,6 @@
     </div>
 
     <div class="footer">
-        <hr>
         <p>حقوق النشر والتصميم - مالك محمد - شركة مصافي الجنوب</p>
     </div>
 
@@ -595,17 +578,17 @@
     
     // تعريف الاستقطاعات الثابتة الجديدة
     const DEDUCTIONS = {
-        HEALTH_INSURANCE: 25000, // ضمان صحي
-        SOCIAL_SOLIDARITY: 2000, // تكافل اجتماعي
-        CHILD_HOSPITAL_SUPPORT: 1000, // دعم مستشفى الطفل
-        PREVIOUS_DEDUCTION: 1000 // ما قبله
+        HEALTH_INSURANCE: 25000, 
+        SOCIAL_SOLIDARITY: 2000, 
+        CHILD_HOSPITAL_SUPPORT: 1000, 
+        PREVIOUS_DEDUCTION: 1000 
     };
     
     // تعريف مخصصات المناصب الإدارية
     const POSITION_DEDUCTIONS = {
-        'section-head': 0.15,      // مسؤول شعبة: 15%
-        'department-head': 0.20,   // مسؤول قسم: 20%
-        'director': 0.30           // مدير هيئة / معاون مدير / مدير عام: 30%
+        'section-head': 0.15,      
+        'department-head': 0.20,   
+        'director': 0.30           
     };
     
     // دالة مساعدة لحساب الراتب الكلي لأي درجة ومرحلة محددة
@@ -646,7 +629,7 @@
         const responsibilityAllowance = Math.round(nominal * positionFactor);
         
         // 5. الاستقطاعات
-        const retirement = Math.round(0.1 * nominal); // تقاعد (10% من الاسمي)
+        const retirement = Math.round(0.1 * nominal); 
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
         
@@ -667,22 +650,18 @@
         let months = now.getMonth() - start.getMonth();
         let days = now.getDate() - start.getDate();
 
-        // تعديل الأيام
         if (days < 0) {
             months--;
-            // حساب عدد الأيام في الشهر السابق (الشهر الماضي)
             const daysInPreviousMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
             days += daysInPreviousMonth;
         }
 
-        // تعديل الأشهر
         if (months < 0) {
             years--;
             months += 12;
         }
         
         if (years < 0) {
-            // هذا يعني أن تاريخ التعيين في المستقبل، وهو خطأ منطقي
             return "تاريخ تعيين غير صحيح"; 
         }
 
@@ -695,14 +674,6 @@
         document.getElementById("kidsBox").classList.toggle(
             "hidden",
             document.getElementById("social").value !== "married"
-        );
-    }
-    
-    // دالة جديدة للتحكم بعرض حقل المنصب
-    function togglePosition() {
-        document.getElementById("positionBox").classList.toggle(
-            "hidden",
-            document.getElementById("responsibility").value !== "exists"
         );
     }
     
@@ -729,17 +700,13 @@
         const stage = parseInt(document.getElementById("stage").value);
         const degree = document.getElementById("degreeType").value; 
         const workType = document.getElementById("workType").value;   
-        
-        // ✅ جلب مخصصات الموقع كقيمة عددية
         const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0;
-        
         const social = document.getElementById("social").value;
         const kids = parseInt(document.getElementById("kids").value) || 0;
         
-        // جلب قيم المسؤولية والمنصب
-        const responsibility = document.getElementById("responsibility").value;
+        // جلب قيمة المنصب مباشرة
         const position = document.getElementById("position").value;
-        const positionFactor = responsibility === 'exists' ? (POSITION_DEDUCTIONS[position] || 0) : 0;
+        const positionFactor = position === 'none' ? 0 : (POSITION_DEDUCTIONS[position] || 0);
         
         // 1. حساب الراتب الحالي
         const { nominal: currentNominal, totalSalary: currentTotalSalary, responsibilityAllowance } = 
@@ -762,7 +729,7 @@
                 (${service.days}) يوم.`;
             serviceElement.classList.remove('hidden');
         } else if (typeof service === 'string') {
-            alert(service); // تنبيه في حال وجود خطأ منطقي في التاريخ
+            alert(service); 
         }
 
         // 4. تفاصيل الحسابات (الراتب الحالي)
@@ -780,34 +747,29 @@
         let conditionalFactor = degree === 'diploma' ? 0 : (workType === 'field' ? 0.50 : 0.35);
         let fixedOtherAllowanceFactor = 0.3;
         
-        // حساب المبالغ بدلاً من النسب
         const certAmount = Math.round(currentNominal * certFactor);
         const riskAmount = Math.round(currentNominal * riskFactor);
         const otherFixedAmount = Math.round(currentNominal * fixedOtherAllowanceFactor);
         const conditionalAmount = Math.round(currentNominal * conditionalFactor);
         
-        // إجمالي المخصصات المحسوبة على الاسمي
         let factoredAllowance = certAmount + riskAmount + conditionalAmount + otherFixedAmount;
 
         let familyAllowance = social === "married" ? (50000 + kids * 10000) : 0;
         let retirement = Math.round(0.1 * currentNominal);
         
-        // حساب الاستقطاعات بناءً على القيم الثابتة الجديدة
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
         
-        // حساب إجمالي المخصصات (الاسمي + الزوجية + الموقعية + المسؤولية)
         const totalAllowances = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance;
         
-        // إعداد نص مخصصات المسؤولية لعرضه في التفاصيل
         let responsibilityText = '';
-        if (responsibility === 'exists' && positionFactor > 0) {
+        if (position !== 'none' && positionFactor > 0) {
             const positionName = document.getElementById("position").selectedOptions[0].textContent;
             responsibilityText = `<li>مخصصات مسؤولية (${positionName}) (${(positionFactor * 100).toFixed(0)}%): <span>${responsibilityAllowance.toLocaleString()}</span> دينار</li>`;
         }
 
         document.getElementById("detailsBox").innerHTML =
-            "<h3>📊 تفاصيل الحسابات:</h3>" +
+            "<h3>📊 قصاصة الراتب:</h3>" + // التعديل الأول: استبدال العنوان
             "<strong>الراتب الاسمي الحالي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<h4>➕ المخصصات (بالمبالغ):</h4>" +
@@ -817,7 +779,7 @@
                 `<li>مخصصات اخرى ثابتة (${(fixedOtherAllowanceFactor * 100).toFixed(0)}%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
                 `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
-                (responsibilityText ? responsibilityText : '') + // عرض مخصصات المسؤولية إن وجدت
+                (responsibilityText ? responsibilityText : '') +
                 `<li>مخصصات الموقع: <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
@@ -836,180 +798,37 @@
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
-        // إظهار تفاصيل الحسابات
         document.getElementById("detailsBox").classList.remove('hidden');
         
-        // ✅ إظهار زر الطباعة بعد إتمام الحساب
         document.getElementById("printBtn").style.display = 'flex';
     }
     
-    // دالة حفظ PDF المحسنة (مع منطق تقسيم المحتوى الصحيح وإضافة التذييل المخصص)
-    async function printResults() {
+    // دالة طباعة مباشرة (بدلاً من حفظ PDF)
+    function printResults() {
         if (document.getElementById("salaryResult").classList.contains('hidden')) {
-            alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الحفظ.");
+            alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الطباعة.");
             return;
         }
 
-        const printBtn = document.getElementById("printBtn");
-        const originalText = printBtn.innerHTML;
-        printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
-        printBtn.disabled = true;
-
-        // 1. تطبيق التصغير المؤقت للخط لتحسين تناسب المحتوى في PDF
-        const targetElements = document.querySelectorAll('.result, .warning, .details');
-        const originalStyles = [];
-        
-        targetElements.forEach(el => {
-            originalStyles.push({ el: el, fontSize: el.style.fontSize });
-            if (el.classList.contains('result') || el.classList.contains('warning')) {
-                 el.style.fontSize = '14px'; 
-            }
-             if (el.classList.contains('details')) {
-                 el.style.fontSize = '13px'; 
-            }
-             el.querySelectorAll('li').forEach(li => {
-                 originalStyles.push({ el: li, fontSize: li.style.fontSize });
-                 li.style.fontSize = '12px';
-             });
-        });
-
-        try {
-            const { jsPDF } = window.jspdf;
-            const element = document.querySelector('.result-section'); 
-            const grade = document.getElementById("grade").value;
-            
-            // =======================================================
-            // البيانات المخصصة للتذييل
-            const websiteURL = 'www.s-m-c.gov.iq'; // **يمكنك تغيير هذا إلى موقعك الفعلي**
-            const printDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            // =======================================================
-            
-            // 2. إنشاء Canvas بدقة عالية (Scale 4)
-            const canvas = await html2canvas(element, {
-                scale: 4, 
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            });
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4'); 
-            pdf.setR2L(true); // لضبط الاتجاه من اليمين لليسار (مهم للعربية)
-
-            // 3. حساب الأبعاد الخاصة بـ A4
-            const pdfWidth = pdf.internal.pageSize.getWidth(); // 210 mm
-            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297 mm
-            const margin = 10;
-            const headerFooterHeight = 25; // مساحة مخصصة للرأس والتذييل
-            const availableContentHeight = pdfHeight - (2 * margin) - headerFooterHeight; 
-            
-            const imgContentWidth = pdfWidth - 2 * margin; 
-            const imgContentHeight = (canvas.height * imgContentWidth) / canvas.width;
-            
-            let heightLeft = imgContentHeight;
-            let currentOffset = 0; 
-            let pageCount = 1;
-
-            // 4. معالجة الصفحات المتعددة (المنطق المصحح)
-            while (heightLeft > 0) {
-                
-                if (pageCount > 1) {
-                    pdf.addPage();
-                }
-
-                let pageSliceHeight = Math.min(heightLeft, availableContentHeight);
-                
-                // 4.1. إضافة العنوان (في الأعلى)
-                pdf.setFontSize(14);
-                pdf.text(`تقرير الراتب والخدمة الفعلية - صفحة ${pageCount}`, pdfWidth / 2, margin + 5, { align: 'center' });
-                
-                pdf.setLineWidth(0.3);
-                pdf.line(margin, margin + 8, pdfWidth - margin, pdfHeight - margin - 8);
-
-                let startY = margin + 10; 
-
-                // 4.2. إضافة جزء من الصورة باستخدام الـ Clipping
-                pdf.addGState(); 
-                pdf.setClip(margin, startY, imgContentWidth, pageSliceHeight);
-                
-                pdf.addImage(
-                    imgData, 
-                    'PNG', 
-                    margin, 
-                    startY - currentOffset, 
-                    imgContentWidth, 
-                    imgContentHeight, 
-                    undefined, 
-                    'FAST'
-                );
-                
-                pdf.restore(); 
-
-                // 4.3. إضافة التذييل المخصص (في الأسفل)
-                pdf.setLineWidth(0.3);
-                pdf.line(margin, pdfHeight - margin - 12, pdfWidth - margin, pdfHeight - margin - 12);
-                
-                pdf.setFontSize(8);
-                
-                // الموقع الإلكتروني (يسار)
-                pdf.text(`الموقع: ${websiteURL}`, margin, pdfHeight - margin - 5, { align: 'left' });
-                
-                // تاريخ الطباعة ورقم الصفحة (يمين)
-                pdf.text(`تاريخ الطباعة: ${printDate} | صفحة ${pageCount}`, pdfWidth - margin, pdfHeight - margin - 5, { align: 'right' });
-                
-                // 4.4. تحديث القيم للصفحة التالية
-                currentOffset += pageSliceHeight; 
-                heightLeft -= pageSliceHeight;
-                pageCount++;
-            }
-            
-            // 5. إعادة الخطوط إلى حجمها الأصلي بعد الانتهاء
-            originalStyles.forEach(item => {
-                item.el.style.fontSize = item.fontSize;
-            });
-
-            // حفظ الملف
-            const timestamp = new Date().getTime();
-            pdf.save(`راتب-درجة${grade}-${timestamp}.pdf`);
-            
-            alert("✅ تم حفظ ملف PDF بنجاح!");
-            
-        } catch (error) {
-            console.error('خطأ في إنشاء PDF:', error);
-            alert("✅ تمت بنجاح الطباعة اضغط اغلاق");
-            window.print();
-        } finally {
-            originalStyles.forEach(item => {
-                item.el.style.fontSize = item.fontSize;
-            });
-            printBtn.innerHTML = originalText;
-            printBtn.disabled = false;
-        }
+        window.print();
     }
 
-    // دالة التصفير (تم حذف التنبيه منها)
+    // دالة التصفير
     function resetForm() {
         document.getElementById("salaryForm").reset();
         
-        // ✅ تصفير حقل الموقع
         document.getElementById("locationAllowance").value = '';
-        
         document.getElementById("bonusMonths").value = 0;
         document.getElementById("dateOfAppointment").value = ""; 
         
-        // إعادة تعيين حقول المسؤولية
-        document.getElementById("responsibility").value = "none";
-        document.getElementById("position").value = "section-head";
+        document.getElementById("position").value = "none";
         
-        // إعادة تعيين حقول الدوام
         document.getElementById("workShift").value = "morning";
         document.getElementById("shifts").value = "6";
         
         document.getElementById("kidsBox").classList.add('hidden');
-        document.getElementById("positionBox").classList.add('hidden');
         document.getElementById("shiftsBox").classList.add('hidden');
         
-        // إخفاء زر الطباعة عند التصفير
         document.getElementById("printBtn").style.display = 'none';
         
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
@@ -1019,16 +838,14 @@
     // ربط الدوال بالأحداث
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("social").addEventListener('change', toggleKids);
-        document.getElementById("responsibility").addEventListener('change', togglePosition);
         document.getElementById("workShift").addEventListener('change', toggleShifts);
         document.getElementById("calculateBtn").addEventListener('click', calculateAll);
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
 
         toggleKids();
-        togglePosition();
         toggleShifts();
-        resetForm(); // تصفير الحقول عند تحميل الصفحة لتعيين القيم الافتراضية الجديدة
+        resetForm(); 
     });
 </script>
 
