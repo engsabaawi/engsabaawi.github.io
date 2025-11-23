@@ -436,7 +436,7 @@
 </a>
 <div class="container">
 
-    <h2><i class="fas fa-calculator"></i> قصاصة الراتب</h2>
+    <h2>قصاصة الراتب</h2>
 
     <form id="salaryForm">
         <div class="form-group">
@@ -470,10 +470,15 @@
             </select>
         </div>
 
+        <div id="overtimeHoursBox" class="form-group">
+            <label for="overtimeHoursInput">عدد الساعات الإضافية</label>
+            <input type="number" id="overtimeHoursInput" name="overtimeHoursInput" min="0" value="" placeholder="أدخل عدد الساعات">
+        </div>
+
         <div id="shiftsBox" class="form-group hidden">
             <label for="shifts">عدد الشفتات</label>
             <select id="shifts" name="shifts">
-                <option value="6" selected>6 شفتات</option>
+                <option value="6" selected>لا توجد ساعات إضافية</option>
                 <option value="7">7 شفتات</option>
                 <option value="8">8 شفتات</option>
             </select>
@@ -552,7 +557,7 @@
         <div class="btn-group">
             <button type="button" id="calculateBtn"><i class="fas fa-hand-holding-usd"></i> احسب النتائج</button>
             <button type="button" id="resetBtn"><i class="fas fa-redo-alt"></i> تصفير الحقول</button>
-            <button type="button" id="printBtn"><i class="fas fa-print"></i> طباعة/حفظ PDF</button>
+            <button type="button" id="printBtn"><i class="fas fa-print"></i> طباعة القصاصة PDF</button>
         </div>
     </form>
 
@@ -563,7 +568,7 @@
     </div>
 
     <div class="footer">
-        <p>حقوق النشر والتصميم - مالك محمد - شركة مصافي الجنوب</p>
+        <p>تم تصميم الموقع كلياً بواسطة المهندس مالك محمد</p>
     </div>
 
 </div>
@@ -591,8 +596,24 @@
         'director': 0.30           
     };
     
-    // دالة مساعدة لحساب الراتب الكلي لأي درجة ومرحلة محددة
-    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids, positionFactor = 0) {
+    // تعريف أسعار الساعات الإضافية/المناوبة حسب الدرجة
+    const OVERTIME_RATES = {
+        'high_grade': 5000, // للدرجات 4 و 3 و 2 و 1
+        'low_grade': 4000   // للدرجات 8 و 7 و 6 و 5
+    };
+
+    // دالة لتحديد سعر الساعة بناءً على الدرجة
+    function getRatePerHoure(grade) {
+        if (grade >= 5 && grade <= 8) {
+            return OVERTIME_RATES.low_grade; // 4000 دينار للدرجات 8-5
+        } else if (grade >= 1 && grade <= 4) {
+            return OVERTIME_RATES.high_grade; // 5000 دينار للدرجات 4-1
+        }
+        return 0;
+    }
+    
+    // دالة مساعدة لحساب الراتب الكلي
+    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids, positionFactor = 0, bonusMonths = 0, workShift = 'morning', overtimeHoursInput = 0, shifts = 6) {
         // 1. الراتب الاسمي
         const nominal = gradeBase[targetGrade] + ((targetStage - 1) * stageAddLogic(targetGrade));
 
@@ -617,7 +638,7 @@
         const fixedOtherAllowanceFactor = 0.3; 
 
         const totalFactors = certFactor + riskFactor + conditionalFactor + fixedOtherAllowanceFactor;
-        const factoredAllowance = nominal * totalFactors; 
+        const factoredAllowance = Math.round(nominal * totalFactors); 
 
         // 3. مخصصات الزوجية والأطفال
         let familyAllowance = 0;
@@ -628,15 +649,45 @@
         // 4. مخصصات المسؤولية
         const responsibilityAllowance = Math.round(nominal * positionFactor);
         
-        // 5. الاستقطاعات
-        const retirement = Math.round(0.1 * nominal); 
+        // 5. مخصصات "أشهر القدم" (كتب الشكر)
+        const bonusAmount = Math.round(nominal * (bonusMonths / 12));
+        
+        // 6. حساب بدل الساعات الإضافية أو المناوبة
+        let specialAllowance = 0;
+        let specialAllowanceDetails = {
+            type: 'None', 
+            hours: 0, 
+            rate: 0
+        };
+        
+        const ratePerHoure = getRatePerHoure(targetGrade);
+
+        if (workShift === 'morning' && overtimeHoursInput > 0) {
+            // حساب الساعات الإضافية (صباحي)
+            specialAllowance = overtimeHoursInput * ratePerHoure;
+            specialAllowanceDetails.type = 'Overtime';
+            specialAllowanceDetails.hours = overtimeHoursInput;
+            specialAllowanceDetails.rate = ratePerHoure;
+        } else if (workShift === 'shift') {
+            // حساب بدل المناوبة (مناوب)
+            const hours = (shifts * 24) - 154;
+            if (hours > 0) {
+                 specialAllowance = hours * ratePerHoure;
+            }
+            specialAllowanceDetails.type = 'Shift';
+            specialAllowanceDetails.hours = hours;
+            specialAllowanceDetails.rate = ratePerHoure;
+        }
+
+        // 7. الاستقطاعات
+        const retirement = Math.round(0.1 * nominal);
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
         
-        // 6. الراتب الكلي
-        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance) - totalDeductions;
+        // 8. الراتب الكلي (الصافي) 
+        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + bonusAmount + specialAllowance) - totalDeductions;
         
-        return { nominal, totalSalary, responsibilityAllowance };
+        return { nominal, totalSalary, responsibilityAllowance, totalDeductions, bonusAmount, factoredAllowance, specialAllowance, specialAllowanceDetails };
     }
 
     // دالة جديدة لحساب سنوات الخدمة الفعلية بدقة
@@ -677,17 +728,17 @@
         );
     }
     
-    // دالة جديدة للتحكم بعرض حقل الشفتات
-    function toggleShifts() {
+    // دالة للتحكم بعرض حقل الشفتات والساعات الإضافية
+    function toggleShiftsAndOvertime() {
         const workShift = document.getElementById("workShift").value;
+        
+        // إظهار حقل الساعات الإضافية للصباحي
+        document.getElementById("overtimeHoursBox").classList.toggle("hidden", workShift !== 'morning');
+        
+        // إظهار حقل الشفتات للمناوب
         document.getElementById("shiftsBox").classList.toggle("hidden", workShift !== 'shift');
     }
     
-    // دالة مساعدة لتنسيق التاريخ
-    function formatDate(date) {
-        return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
     // دالة حساب جميع النتائج
     function calculateAll() {
         // الإخفاء الأولي لكل العناصر القابلة للإخفاء
@@ -703,19 +754,25 @@
         const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0;
         const social = document.getElementById("social").value;
         const kids = parseInt(document.getElementById("kids").value) || 0;
+        const bonusMonths = parseInt(document.getElementById("bonusMonths").value) || 0;
+        const workShift = document.getElementById("workShift").value;
+        
+        // جلب قيم الساعات/الشفتات (يجب التحويل إلى رقم، واستخدام صفر إذا كان فارغاً)
+        const overtimeHoursInput = parseInt(document.getElementById("overtimeHoursInput").value) || 0;
+        const shifts = parseInt(document.getElementById("shifts").value) || 6;
         
         // جلب قيمة المنصب مباشرة
         const position = document.getElementById("position").value;
         const positionFactor = position === 'none' ? 0 : (POSITION_DEDUCTIONS[position] || 0);
         
-        // 1. حساب الراتب الحالي
-        const { nominal: currentNominal, totalSalary: currentTotalSalary, responsibilityAllowance } = 
-            calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids, positionFactor);
+        // 1. حساب الراتب الحالي (الصافي) 
+        const { nominal: currentNominal, totalSalary: currentTotalSalary, responsibilityAllowance, totalDeductions, bonusAmount, factoredAllowance, specialAllowance, specialAllowanceDetails } = 
+            calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids, positionFactor, bonusMonths, workShift, overtimeHoursInput, shifts);
         
         // 2. عرض نتائج الراتب
         document.getElementById("salaryResult").classList.remove('hidden');
         document.getElementById("salaryResult").innerHTML =
-            "الراتب الكلي الحالي (الصافي): <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+            "الراتب الصافي: <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
             
         // 3. حساب وعرض سنوات الخدمة
         const service = calculateServiceDuration(dateOfAppointment);
@@ -752,51 +809,69 @@
         const otherFixedAmount = Math.round(currentNominal * fixedOtherAllowanceFactor);
         const conditionalAmount = Math.round(currentNominal * conditionalFactor);
         
-        let factoredAllowance = certAmount + riskAmount + conditionalAmount + otherFixedAmount;
-
         let familyAllowance = social === "married" ? (50000 + kids * 10000) : 0;
         let retirement = Math.round(0.1 * currentNominal);
         
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
-        const totalDeductions = retirement + fixedDeductions;
         
-        const totalAllowances = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance;
+        // إجمالي المخصصات التي تدخل في الراتب الصافي
+        const totalAllowancesWithoutNominal = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + bonusAmount + specialAllowance;
         
+        // الراتب الكلي (الإجمالي) = الراتب الصافي + الاستقطاعات
+        const grossSalary = currentTotalSalary + totalDeductions;
+
         let responsibilityText = '';
         if (position !== 'none' && positionFactor > 0) {
             const positionName = document.getElementById("position").selectedOptions[0].textContent;
             responsibilityText = `<li>مخصصات مسؤولية (${positionName}) (${(positionFactor * 100).toFixed(0)}%): <span>${responsibilityAllowance.toLocaleString()}</span> دينار</li>`;
         }
+        
+        let bonusText = '';
+        if (bonusMonths > 0) {
+            bonusText = `<li>مكافأة أشهر القدم (${bonusMonths} شهر): <span>${bonusAmount.toLocaleString()}</span> دينار</li>`;
+        }
+
+        // عرض بدل الساعات الإضافية - تم تبسيط العرض لإظهار النتيجة فقط
+        let specialAllowanceText = '';
+        if (specialAllowance > 0) {
+             // تم توحيد العرض لاسم "بدل الساعات الإضافية" والقيمة النهائية فقط
+             specialAllowanceText = `<li>بدل الساعات الإضافية: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
+        }
+
 
         document.getElementById("detailsBox").innerHTML =
-            "<h3>📊 قصاصة الراتب:</h3>" + // التعديل الأول: استبدال العنوان
-            "<strong>الراتب الاسمي الحالي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
+            "<h3> قصاصة الراتب:</h3>" + 
+            "<strong>الراتب الاسمي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-            "<h4>➕ المخصصات (بالمبالغ):</h4>" +
+            "<h4> المخصصات:</h4>" +
             "<ul> " + 
                 `<li>مخصصات شهادة (${(certFactor * 100).toFixed(0)}%): <span>${certAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات خطورة (${(riskFactor * 100).toFixed(0)}%): <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
-                `<li>مخصصات اخرى ثابتة (${(fixedOtherAllowanceFactor * 100).toFixed(0)}%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
+                `<li>مخصصات ثابتة (${(fixedOtherAllowanceFactor * 100).toFixed(0)}%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
                 `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
                 `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
                 (responsibilityText ? responsibilityText : '') +
+                (bonusText ? bonusText : '') +
+                (specialAllowanceText ? specialAllowanceText : '') + // عرض بدل الساعات الإضافية/المناوبة (النتيجة فقط)
                 `<li>مخصصات الموقع: <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-            "<strong>إجمالي المخصصات الكلي:</strong> <span>" + totalAllowances.toLocaleString() + "</span> دينار<br>" + 
+            "<strong>إجمالي المخصصات الصافية:</strong> <span>" + totalAllowancesWithoutNominal.toLocaleString() + "</span> دينار<br>" + 
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
             "<h4>➖ الاستقطاعات:</h4>" +
             "<ul> " + 
-                `<li>تقاعد (10% من الاسمي): <span>${retirement.toLocaleString()}</span> دينار</li>` +
+                `<li>تقاعدة(10%): <span>${retirement.toLocaleString()}</span> دينار</li>` +
                 `<li>ضمان صحي: <span>${DEDUCTIONS.HEALTH_INSURANCE.toLocaleString()}</span> دينار</li>` +
                 `<li>تكافل اجتماعي: <span>${DEDUCTIONS.SOCIAL_SOLIDARITY.toLocaleString()}</span> دينار</li>` +
                 `<li>دعم مستشفى الطفل: <span>${DEDUCTIONS.CHILD_HOSPITAL_SUPPORT.toLocaleString()}</span> دينار</li>` +
                 `<li>ما قبله: <span>${DEDUCTIONS.PREVIOUS_DEDUCTION.toLocaleString()}</span> دينار</li>` +
             "</ul>" +
             "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-            "<strong>إجمالي الاستقطاعات الكلي:</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار<br>" +
-            "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-            "<strong>صافي الراتب الكلي الحالي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+            "<strong>إجمالي الاستقطاعات :</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار<br>" +
+            "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + // خط فاصل واضح
+            `<strong>الراتب الكلي:</strong> <span>${grossSalary.toLocaleString()}</span> دينار<br>` +
+            "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + // خط فاصل واضح
+            "<strong>الراتب الصافي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
         document.getElementById("detailsBox").classList.remove('hidden');
         
@@ -820,6 +895,7 @@
         document.getElementById("locationAllowance").value = '';
         document.getElementById("bonusMonths").value = 0;
         document.getElementById("dateOfAppointment").value = ""; 
+        document.getElementById("overtimeHoursInput").value = ""; 
         
         document.getElementById("position").value = "none";
         
@@ -827,7 +903,9 @@
         document.getElementById("shifts").value = "6";
         
         document.getElementById("kidsBox").classList.add('hidden');
-        document.getElementById("shiftsBox").classList.add('hidden');
+        
+        // إظهار وإخفاء عند التصفير لضمان التوافق مع القيمة الافتراضية
+        toggleShiftsAndOvertime();
         
         document.getElementById("printBtn").style.display = 'none';
         
@@ -838,13 +916,13 @@
     // ربط الدوال بالأحداث
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("social").addEventListener('change', toggleKids);
-        document.getElementById("workShift").addEventListener('change', toggleShifts);
+        document.getElementById("workShift").addEventListener('change', toggleShiftsAndOvertime);
         document.getElementById("calculateBtn").addEventListener('click', calculateAll);
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
 
         toggleKids();
-        toggleShifts();
+        // يتم استدعاء resetForm في النهاية لضبط القيم الافتراضية وتفعيل toggle
         resetForm(); 
     });
 </script>
