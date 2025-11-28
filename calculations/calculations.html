@@ -41,7 +41,7 @@
             color: var(--text-dark);
             direction: rtl; 
             position: relative; 
-            min-height: 100vh;
+            min-height: 10vh;
         }
         
         .back-link {
@@ -128,7 +128,7 @@
         }
 
         input[type="number"],
-        input[type="date"],
+        input[type="text"],
         select {
             flex-grow: 1; 
             width: 100%; 
@@ -142,9 +142,13 @@
             appearance: none; 
             -webkit-appearance: none;
             -moz-appearance: none;
+            direction: ltr; /* لضمان كتابة التاريخ من اليسار لليمين */
+            text-align: left; /* لضمان ظهور النص من اليسار */
         }
         
         select {
+            direction: rtl; /* إعادة اتجاه القائمة المنسدلة للغة العربية */
+            text-align: right;
             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%20197.8L146.2%2057%205.4%20197.8z%22%2F%3E%3C%2Fsvg%3E');
             background-repeat: no-repeat;
             background-position: left 10px center; 
@@ -348,6 +352,9 @@
             font-family: 'Rubik', sans-serif;
             font-weight: 600;
             margin-left: 5px;
+            direction: ltr; /* لضمان عرض التواريخ والارقام بالانجليزي */
+            text-align: left;
+            display: inline-block;
         }
         
         .promo-list {
@@ -439,6 +446,15 @@
             padding-bottom: 10px;
             font-size: 20px;
         }
+        
+        .print-only-header {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+        }
 
         @media (max-width: 768px) {
             .back-link {
@@ -468,7 +484,7 @@
                 margin-bottom: 5px;
             }
             input[type="number"],
-            input[type="date"],
+            input[type="text"],
             select {
                 width: 100%; 
             }
@@ -484,42 +500,105 @@
             .footer { padding: 15px 25px; }
         }
 
+        /* ************************************** */
+        /* تعديلات خاصة بالطباعة (وضع الطباعة) */
+        /* ************************************** */
         @media print {
-            body { background: white; }
-            .container { 
-                box-shadow: none; 
-                margin: 0; 
-                padding: 0;
-                max-width: 100%;
+            body { 
+                background: white !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-            .form-group, .btn-group, h2, .back-link, .loading-indicator { display: none !important; }
-            .result-section { border-top: none; padding-top: 0; }
-            .result, .warning, .details {
+            .container { 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                padding: 20px !important;
+                max-width: 100% !important;
+                min-height: auto !important; /* لإزالة ارتفاع الشاشة */
+            }
+            
+            /* إخفاء عناصر الإدخال والأزرار والمؤشرات */
+            .form-group, .btn-group, h2, .back-link, 
+            .loading-indicator, .field-group, 
+            .footer { 
+                display: none !important; 
+            }
+            
+            .print-only-header {
+                display: block !important;
+                font-size: 28px !important;
+                color: #000 !important;
+                margin-top: 0 !important;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #333;
+            }
+            
+            .result-section { 
+                border-top: none !important; 
+                padding-top: 0 !important; 
+            }
+            
+            /* تنسيق صناديق النتائج للطباعة */
+            .result, #serviceDuration {
+                page-break-inside: avoid;
+                border: 1px solid #888 !important;
+                background: #f9f9f9 !important;
+                padding: 12px !important;
+                margin-bottom: 10px !important;
+                color: #000 !important; /* لون الخط أسود */
+                font-weight: 600 !important;
+            }
+            
+            #salaryResult {
+                background: #e9f5ff !important;
+                border-left: 5px solid var(--secondary-color) !important;
+            }
+            
+            #serviceDuration {
+                background: #fff7e6 !important;
+                border-left: 5px solid var(--warning-color) !important;
+            }
+
+            .details {
                 page-break-inside: avoid;
                 border: 1px solid #333 !important;
-                background: #f9f9f9 !important;
-                padding: 10px !important;
+                background: #ffffff !important;
+                padding: 15px !important;
+                border-radius: 0 !important;
+            }
+            
+            .details h3, .details h4 {
+                color: #000 !important;
+                border-bottom: 1px solid #ccc !important;
+                padding-bottom: 5px !important;
+            }
+            
+            .details strong {
+                color: #000 !important;
+                font-weight: 700 !important;
+            }
+
+            .details ul { 
+                padding-right: 20px !important; 
+                list-style-position: outside !important;
+                margin-top: 5px !important;
                 margin-bottom: 10px !important;
             }
-            .details ul { 
-                padding-right: 25px !important; 
-                direction: rtl !important; 
-                text-align: right !important;
-                list-style-position: outside !important;
-            }
+            
             .details li {
-                direction: rtl !important; 
-                text-align: right !important;
+                padding-right: 0 !important;
+                border-bottom: 1px dotted #eee; /* فاصل خفيف بين العناصر */
+                padding-top: 5px;
+                padding-bottom: 5px;
             }
-            .promo-list { list-style: none; padding-right: 0; }
-            .footer { 
-                display: block !important;
-                position: relative !important;
-                padding: 15px !important;
-                margin-top: 20px !important;
-            }
-            .footer hr {
-                display: none !important;
+            
+            .promotion-info-box {
+                background: #f0fff0 !important;
+                border: 1px solid #ccc !important;
+                border-left: 5px solid #4caf50 !important;
+                margin-top: 10px !important;
+                margin-bottom: 20px !important;
+                color: #000 !important;
             }
         }
     </style>
@@ -531,20 +610,20 @@
 </a>
 <div class="container">
 
-    <h2>قصاصة الراتب</h2>
+    <h2 class="no-print">قصاصة الراتب</h2>
+    <div class="print-only-header">قصاصة الراتب</div>
 
-    <form id="salaryForm">
-        <!-- مجموعة البيانات الأساسية -->
+    <form id="salaryForm" class="no-print">
         <div class="field-group">
             <h3>البيانات الأساسية</h3>
             <div class="form-group">
                 <label for="dateOfAppointment">تاريخ التعيين</label>
-                <input type="date" id="dateOfAppointment" name="dateOfAppointment">
+                <input type="text" id="dateOfAppointment" name="dateOfAppointment" placeholder="YYYY/MM/DD">
             </div>
 
             <div class="form-group">
-                <label for="lastPromotionDate">تاريخ آخر ترقية</label>
-                <input type="date" id="lastPromotionDate" name="lastPromotionDate">
+                <label for="lastPromotionDate">تاريخ آخر ترقية/علاوة</label>
+                <input type="text" id="lastPromotionDate" name="lastPromotionDate" placeholder="YYYY/MM/DD">
             </div>
 
             <div class="form-group">
@@ -558,7 +637,6 @@
             </div>
         </div>
         
-        <!-- مجموعة تصنيف الوظيفة -->
         <div class="field-group">
             <h3>تصنيف الوظيفة</h3>
             <div class="form-group">
@@ -592,7 +670,6 @@
             </div>
         </div>
         
-        <!-- مجموعة الدرجة والمرحلة -->
         <div class="field-group">
             <h3>الدرجة والمرحلة</h3>
             <div class="form-group" id="positionBox">
@@ -640,7 +717,6 @@
             </div>
         </div>
         
-        <!-- مجموعة المخصصات -->
         <div class="field-group">
             <h3>المخصصات والإضافات</h3>
             <div class="form-group">
@@ -672,7 +748,6 @@
             </div>
         </div>
 
-        <!-- مؤشر التحميل -->
         <div id="loadingIndicator" class="loading-indicator hidden">
             <i class="fas fa-spinner"></i> جاري حساب الراتب...
         </div>
@@ -736,52 +811,91 @@
         'leadership': 5000
     };
 
-    // دالة جديدة لحساب العلاوة السنوية والترقية بالمعادلات الصحيحة
+    /**
+     * دالة مساعدة لتهيئة التاريخ للصيغة yyyy/mm/dd
+     * @param {Date} dateObj - كائن التاريخ
+     * @returns {string} التاريخ بالصيغة المطلوبة (YYYY/MM/DD)
+     */
+    function formatDate(dateObj) {
+        if (!(dateObj instanceof Date) || isNaN(dateObj)) return "غير محدد";
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
+
+    /**
+     * دالة لحساب العلاوة السنوية والترقية مع خصم أشهر القدم
+     * @param {string} lastPromotionDate - تاريخ آخر ترقية (بصيغة YYYY-MM-DD بعد التعديل)
+     * @param {string} currentGrade - الدرجة الحالية
+     * @param {number} currentStage - المرحلة الحالية
+     * @param {number} bonusMonths - عدد أشهر القدم (كتب الشكر)
+     */
     function calculatePromotions(lastPromotionDate, currentGrade, currentStage, bonusMonths) {
         if (!lastPromotionDate) return null;
         
-        const lastDate = new Date(lastPromotionDate);
+        const lastDate = new Date(lastPromotionDate); // يجب أن يكون lastPromotionDate بصيغة YYYY-MM-DD
         const today = new Date();
+        // لضمان أن اليوم يبدأ من منتصف الليل ليوم أمس لأغراض المقارنة
+        today.setHours(0, 0, 0, 0); 
+        
         const bonusYears = bonusMonths / 12;
         
         // إذا كانت درجة قيادية
         if (LEADERSHIP_GRADES.includes(currentGrade)) {
             return {
                 type: 'leadership',
-                message: 'درجة قيادية - لا توجد ترقية تلقائية'
+                message: 'درجة قيادية - لا توجد ترقية أو علاوة سنوية تلقائية'
             };
         }
         
         const gradeNumber = parseInt(currentGrade);
-        let originalYears = 0; // السنوات الأصلية قبل خصم أشهر القدم
+        let originalYears = 0; // السنوات الأصلية للترقية
         let nextGrade = currentGrade;
         let nextStage = 1;
         let nextPromotionDate = null;
         
-        // ✅ التعديل: الفترة ثابتة بغض النظر عن المرحلة الحالية
+        // فترة الترقية ثابتة
         if (gradeNumber >= 6 && gradeNumber <= 8) {
-            // للدرجات 8-6: الترقية كل 4 سنوات من تاريخ آخر ترقية
             originalYears = 4;
             nextGrade = gradeNumber > 6 ? (gradeNumber - 1).toString() : "5";
-            
         } else if (gradeNumber >= 1 && gradeNumber <= 5) {
-            // للدرجات 5-1: الترقية كل 5 سنوات من تاريخ آخر ترقية
             originalYears = 5;
             nextGrade = gradeNumber > 1 ? (gradeNumber - 1).toString() : "GM";
         }
         
-        // ✅ تطبيق تأثير أشهر القدم (تقليل فترة الانتظار)
+        // **********************************
+        // 1. حساب الترقية القادمة (خصم سنوات من فترة الانتظار)
+        // **********************************
         const effectiveYears = Math.max(0, originalYears - bonusYears);
-
-        if (effectiveYears > 0) {
-            nextPromotionDate = new Date(lastDate);
-            nextPromotionDate.setFullYear(lastDate.getFullYear() + effectiveYears);
-        }
         
-        // ✅ التعديل الجديد: حساب العلاوة السنوية = آخر ترقية + (المرحلة * 365 يوم)
+        if (originalYears > 0) { // فقط إذا كانت هناك ترقية ممكنة أصلاً
+            nextPromotionDate = new Date(lastDate);
+            
+            const totalMonthsToWait = Math.round(effectiveYears * 12);
+            
+            // إضافة السنوات والأشهر المتبقية للانتظار
+            nextPromotionDate.setFullYear(lastDate.getFullYear() + Math.floor(totalMonthsToWait / 12));
+            nextPromotionDate.setMonth(lastDate.getMonth() + (totalMonthsToWait % 12));
+            nextPromotionDate.setHours(0, 0, 0, 0); 
+        }
+
+        // **********************************
+        // 2. حساب العلاوة السنوية القادمة (تم التعديل حسب الملاحظة 1)
+        // **********************************
+        
+        // العلاوة تعتمد على (المرحلة * 1 سنة)
+        const annualYears = currentStage;
+        
         let nextAnnualIncreaseDate = new Date(lastDate);
-        const daysToAdd = currentStage * 365;
-        nextAnnualIncreaseDate.setDate(lastDate.getDate() + daysToAdd);
+        
+        // إضافة سنوات المرحلة الحالية
+        nextAnnualIncreaseDate.setFullYear(lastDate.getFullYear() + annualYears);
+        
+        // التراجع بعدد أشهر القدم المكتسبة (يتم تحويل الشهر إلى 30.4375 يوم تقريباً للتراجع الدقيق)
+        const DAYS_IN_MONTH = 30.4375; 
+        nextAnnualIncreaseDate.setDate(nextAnnualIncreaseDate.getDate() - (bonusMonths * DAYS_IN_MONTH));
+        nextAnnualIncreaseDate.setHours(0, 0, 0, 0); 
         
         // التحقق من حالة العلاوة السنوية
         const annualTimeDiff = nextAnnualIncreaseDate.getTime() - today.getTime();
@@ -808,8 +922,10 @@
         
         return {
             type: 'regular',
-            originalYears, // ✅ إضافة الفترة الأصلية للعرض
+            originalYears, 
+            bonusMonths, 
             // معلومات العلاوة السنوية
+            annualYears, // لإظهارها في التفاصيل
             nextAnnualIncreaseDate: nextAnnualIncreaseDate,
             annualStatus: annualStatus,
             annualDaysRemaining: annualDaysDiff,
@@ -856,7 +972,6 @@
         const riskFactor = workType === 'field' ? 0.3 : 0.25;
         
         let conditionalFactor = 0; 
-        let conditionalFactorName = "مخصصات هندسية";
         
         if (degree !== 'diploma') {
             conditionalFactor = workType === 'field' ? 0.50 : 0.35;
@@ -876,8 +991,8 @@
         // 4. مخصصات المسؤولية
         const responsibilityAllowance = Math.round(nominal * positionFactor);
         
-        // 5. مخصصات "أشهر القدم"
-        const bonusAmount = Math.round(nominal * (bonusMonths / 12));
+        // 5. مخصصات "أشهر القدم" (مستبعدة حالياً من الحساب الفعلي للراتب)
+        const bonusAmount = 0; 
         
         // 6. حساب بدل الساعات الإضافية أو المناوبة
         let specialAllowance = 0;
@@ -896,7 +1011,7 @@
             specialAllowanceDetails.hours = overtimeHoursInput;
             specialAllowanceDetails.rate = ratePerHoure;
         } else if (workShift === 'shift') {
-            const hours = (shifts * 24) - 154;
+            const hours = (shifts * 24) - 154; // افتراض ساعات العمل الاعتيادية 154 ساعة 
             if (hours > 0) {
                  specialAllowance = hours * ratePerHoure;
             }
@@ -919,7 +1034,8 @@
         const totalDeductions = retirement + fixedDeductions;
         
         // 8. الراتب الكلي (الصافي) 
-        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + bonusAmount + specialAllowance) - totalDeductions;
+        // المخصصات: factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance
+        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance) - totalDeductions;
         
         return { nominal, totalSalary, responsibilityAllowance, totalDeductions, bonusAmount, factoredAllowance, specialAllowance, specialAllowanceDetails };
     }
@@ -928,7 +1044,7 @@
     function calculateServiceDuration(startDate) {
         if (!startDate) return null;
         
-        const start = new Date(startDate);
+        const start = new Date(startDate); // يجب أن يكون startDate بصيغة YYYY-MM-DD
         const now = new Date();
 
         let years = now.getFullYear() - start.getFullYear();
@@ -977,12 +1093,31 @@
         // الإخفاء الأولي لكل العناصر القابلة للإخفاء
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
+        document.getElementById("printBtn").style.display = 'none';
+
         
         // استخدام setTimeout لمحاكاة عملية حساب قد تستغرق وقتاً
         setTimeout(() => {
-            // جلب المدخلات
-            const dateOfAppointment = document.getElementById("dateOfAppointment").value;
-            const lastPromotionDate = document.getElementById("lastPromotionDate").value;
+            // جلب المدخلات وتعديل الصيغة من yyyy/mm/dd إلى yyyy-mm-dd لـ Date() constructor
+            const dateOfAppointmentInput = document.getElementById("dateOfAppointment").value.trim();
+            const lastPromotionDateInput = document.getElementById("lastPromotionDate").value.trim();
+
+            // التحقق من صيغة التاريخ
+            const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
+            if (dateOfAppointmentInput && !dateRegex.test(dateOfAppointmentInput)) {
+                alert("⚠️ صيغة تاريخ التعيين غير صحيحة. يجب أن تكون YYYY/MM/DD.");
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return;
+            }
+            if (lastPromotionDateInput && !dateRegex.test(lastPromotionDateInput)) {
+                alert("⚠️ صيغة تاريخ آخر ترقية/علاوة غير صحيحة. يجب أن تكون YYYY/MM/DD.");
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return;
+            }
+
+            const dateOfAppointment = dateOfAppointmentInput ? dateOfAppointmentInput.replace(/\//g, '-') : '';
+            const lastPromotionDate = lastPromotionDateInput ? lastPromotionDateInput.replace(/\//g, '-') : '';
+            
             const grade = document.getElementById("grade").value; 
             const isLeadership = LEADERSHIP_GRADES.includes(grade);
             
@@ -1044,8 +1179,9 @@
             const socialText = document.getElementById("social").selectedOptions[0].textContent; 
             const kidsText = document.getElementById("kids").value; 
             
-            const formattedDate = dateOfAppointment ? dateOfAppointment.replace(/-/g, '/') : "غير مُدخل";
-            const formattedLastPromotionDate = lastPromotionDate ? lastPromotionDate.replace(/-/g, '/') : "غير مُدخل";
+            // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
+            const formattedDate = dateOfAppointment ? formatDate(new Date(dateOfAppointment)) : "غير مُدخل";
+            const formattedLastPromotionDate = lastPromotionDate ? formatDate(new Date(lastPromotionDate)) : "غير مُدخل";
             
             let positionText;
             if (isLeadership) {
@@ -1085,7 +1221,7 @@
             
             const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
             
-            const totalAllowancesWithoutNominal = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + bonusAmount + specialAllowance;
+            const totalAllowancesWithoutNominal = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance;
             const grossSalary = currentTotalSalary + totalDeductions;
 
             let responsibilityText = '';
@@ -1096,12 +1232,13 @@
             
             let specialAllowanceText = '';
             if (specialAllowance > 0) {
-                 specialAllowanceText = `<li>بدل الساعات الإضافية/المناوبة: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
+                 let allowanceType = (workShift === 'morning' && overtimeHoursInput > 0) ? 'ساعات إضافية' : 'مناوبة';
+                 specialAllowanceText = `<li>بدل ${allowanceType}: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
             }
             
             let shiftsDetailText = '';
             if (workShift === 'shift' && shifts !== 6) {
-                shiftsDetailText = `<li>عدد الشفتات المُحتسب: <span>${shifts}</span> شفت</li>`;
+                shiftsDetailText = `<li>عدد الشفتات المُحتسب: <span>${shifts}</span> شفت (${specialAllowanceDetails.hours} ساعة إضافية)</li>`;
             }
 
             let conditionalAllowanceLine = '';
@@ -1111,7 +1248,7 @@
             
             let gradeStageDisplay = `<li>الدرجة: <span>${gradeText}</span>، المرحلة: <span>${stage}</span></li>`;
 
-            // ✅ إعداد نص معلومات العلاوة والترقية مع توضيح تأثير أشهر القدم
+            // ✅ إعداد نص معلومات العلاوة والترقية 
             let promotionTextInfo = '';
             if (promotionInfo) {
                 if (promotionInfo.type === 'leadership') {
@@ -1125,29 +1262,31 @@
                         </div>
                     `;
                 } else {
-                    const formattedAnnualDate = promotionInfo.nextAnnualIncreaseDate.toLocaleDateString('ar-IQ');
+                    // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
+                    const formattedAnnualDate = formatDate(promotionInfo.nextAnnualIncreaseDate);
+                    
                     const nextGradeText = promotionInfo.nextGrade;
                     const nextGradeDisplay = nextGradeText === 'GM' ? 'المدير العام' : 
                                            nextGradeText === 'SP' ? 'الدرجة الخاصة' : 
                                            nextGradeText === 'UM' ? 'وكيل وزارة' : `درجة ${nextGradeText}`;
                     
                     let annualStatusText = '';
+                    let reductionTextAnnual = '';
+                    
                     if (promotionInfo.annualStatus === 'مستحقة الآن') {
                         annualStatusText = `<li style="color: #d9534f; font-weight: bold;">حالة العلاوة السنوية: <span>${promotionInfo.annualStatus}</span></li>`;
                     } else {
-                        annualStatusText = `<li>حالة العلاوة السنوية: <span>${promotionInfo.annualStatus}</span> (${promotionInfo.annualDaysRemaining} يوم متبقي)</li>`;
+                        // إضافة توضيح عن التخفيض بسبب أشهر القدم للعلاوة السنوية
+                        reductionTextAnnual = promotionInfo.bonusMonths > 0 
+                            ? ` (مخفضة ${promotionInfo.bonusMonths} شهر بسبب كتب الشكر)` 
+                            : '';
+                        annualStatusText = `<li>حالة العلاوة السنوية: <span>${promotionInfo.annualStatus}</span> (${promotionInfo.annualDaysRemaining} يوم متبقي)${reductionTextAnnual} - بناءً على ${promotionInfo.annualYears} سنة</li>`;
                     }
                     
                     let promotionInfoText = '';
                     if (promotionInfo.nextPromotionDate) {
-                        const formattedPromotionDate = promotionInfo.nextPromotionDate.toLocaleDateString('ar-IQ');
-                        const yearsText = promotionInfo.yearsToPromotion === 1 ? 'سنة' : 'سنوات';
-                        
-                        // ✅ إضافة توضيح عن التخفيض بسبب أشهر القدم
-                        const reductionAmount = (promotionInfo.originalYears - promotionInfo.yearsToPromotion).toFixed(1);
-                        const reductionText = bonusMonths > 0 
-                            ? ` (تم تخفيضها من ${promotionInfo.originalYears} سنوات بسبب ${bonusMonths} شهر كتب)` 
-                            : '';
+                        // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
+                        const formattedPromotionDate = formatDate(promotionInfo.nextPromotionDate);
                         
                         let promotionStatusText = '';
                         if (promotionInfo.promotionStatus === 'مستحقة الآن') {
@@ -1157,7 +1296,7 @@
                         }
                         
                         promotionInfoText = `
-                            <li>فترة الانتظار للترقية: <span>${promotionInfo.yearsToPromotion.toFixed(1)}</span> ${yearsText}${reductionText}</li>
+                            <li>عدد أشهر القدم المخصومة: <span>${promotionInfo.bonusMonths}</span> شهر</li>
                             <li>تاريخ الترقية القادمة: <span>${formattedPromotionDate}</span></li>
                             <li>الدرجة والمرحلة بعد الترقية: <span>${nextGradeDisplay} - مرحلة ${promotionInfo.nextStage}</span></li>
                             ${promotionStatusText}
@@ -1170,7 +1309,7 @@
                         <div class="promotion-info-box">
                             <strong>معلومات العلاوة والترقية:</strong>
                             <ul style="margin-top: 10px; margin-bottom: 0;">
-                                <li>تاريخ آخر ترقية: <span>${formattedLastPromotionDate}</span></li>
+                                <li>تاريخ آخر ترقية/علاوة: <span>${formattedLastPromotionDate}</span></li>
                                 <li>تاريخ العلاوة السنوية القادمة: <span>${formattedAnnualDate}</span></li>
                                 ${annualStatusText}
                                 ${promotionInfoText}
@@ -1181,7 +1320,7 @@
             }
 
             document.getElementById("detailsBox").innerHTML =
-                "<h3> قصاصة الراتب:</h3>" + 
+                "<h3>📄 تفاصيل قصاصة الراتب:</h3>" + 
                 "<div style='background: #f1f1f1; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;'>" +
                 "<strong>البيانات الأساسية:</strong>" +
                 "<ul>" +
@@ -1201,7 +1340,7 @@
                 
                 "<strong>الراتب الاسمي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
                 "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-                "<h4> المخصصات:</h4>" +
+                "<h4>➕ المخصصات:</h4>" +
                 "<ul> " + 
                     `<li>مخصصات شهادة (${(certFactor * 100).toFixed(0)}%): <span>${certAmount.toLocaleString()}</span> دينار</li>` +
                     `<li>مخصصات خطورة (${(riskFactor * 100).toFixed(0)}%): <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
@@ -1213,20 +1352,10 @@
                     `<li>مخصصات الموقع: <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
                 "</ul>" +
                 "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-                "<strong>إجمالي المخصصات الصافية:</strong> <span>" + totalAllowancesWithoutNominal.toLocaleString() + "</span> دينار<br>" + 
-                "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-                "<h4>➖ الاستقطاعات:</h4>" +
-                "<ul> " + 
-                    `<li>تقاعدة(10%): <span>${retirement.toLocaleString()}</span> دينار</li>` +
-                    `<li>ضمان صحي: <span>${DEDUCTIONS.HEALTH_INSURANCE.toLocaleString()}</span> دينار</li>` +
-                    `<li>تكافل اجتماعي: <span>${DEDUCTIONS.SOCIAL_SOLIDARITY.toLocaleString()}</span> دينار</li>` +
-                    `<li>دعم مستشفى الطفل: <span>${DEDUCTIONS.CHILD_HOSPITAL_SUPPORT.toLocaleString()}</span> دينار</li>` +
-                    `<li>ما قبله: <span>${DEDUCTIONS.PREVIOUS_DEDUCTION.toLocaleString()}</span> دينار</li>` +
-                "</ul>" +
-                "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + 
-                `<strong>الراتب الكلي:</strong> <span>${grossSalary.toLocaleString()}</span> دينار<br>` +
-                "<hr style='margin: 8px 0; border-top: 1px solid var(--primary-color);'>" + 
-                "<strong>الراتب الصافي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+                "<strong>إجمالي المخصصات:</strong> <span>" + totalAllowancesWithoutNominal.toLocaleString() + "</span> دينار<br>" + 
+                "<strong>الراتب الكلي (قبل الاستقطاع):</strong> <span>" + grossSalary.toLocaleString() + "</span> دينار<br>" +
+                "<hr style='margin: 8px 0; border-top: 2px solid var(--primary-color);'>" + 
+                "<strong>الراتب الصافي النهائي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
             document.getElementById("detailsBox").classList.remove('hidden');
             document.getElementById("printBtn").style.display = 'flex';
@@ -1246,7 +1375,7 @@
     // دالة التصفير
     function resetForm() {
         document.getElementById("salaryForm").reset();
-        document.getElementById("locationAllowance").value = '';
+        document.getElementById("locationAllowance").value = ''; // تم تفريغه
         document.getElementById("bonusMonths").value = 0;
         document.getElementById("dateOfAppointment").value = ""; 
         document.getElementById("overtimeHoursInput").value = ""; 
@@ -1272,7 +1401,7 @@
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
         toggleKids();
-        resetForm();
+        resetForm(); // لضمان تصفير الموقعية في البداية
     });
 </script>
 
