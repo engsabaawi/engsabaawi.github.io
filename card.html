@@ -246,73 +246,57 @@
         }
 
         /* ======================================= */
-        /* تحسينات الطباعة - البطاقة فقط في المنتصف */
+        /* تحسينات الطباعة لتطابق البطاقة المدخلة */
         /* ======================================= */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0 !important;
-                padding: 0 !important;
+                margin: 15mm;
             }
 
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: transparent !important;
-            }
-            
             /* إخفاء كل شيء ما عدا البطاقة */
             body * {
                 visibility: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
             }
             
-            /* إظهار البطاقة فقط في وسط الصفحة */
-            .business-card.print-ready {
+            /* إظهار البطاقة فقط */
+            .business-card.print-ready,
+            .business-card.print-ready * {
                 visibility: visible !important;
+            }
+            
+            .controls-container,
+            .print-button {
+                display: none !important;
+            }
+
+            /* تصميم البطاقة المطبوعة - تطابق البطاقة الأصلية */
+            .business-card.print-ready {
                 width: 400px !important;
                 height: 240px !important;
+                background: white !important;
+                border-radius: 16px !important;
                 position: absolute !important;
                 left: 50% !important;
                 top: 50% !important;
                 transform: translate(-50%, -50%) !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                box-shadow: none !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            /* إظهار جميع عناصر البطاقة */
-            .business-card.print-ready * {
-                visibility: visible !important;
-            }
-            
-            /* إخفاء العناصر الأخرى */
-            .controls-container,
-            .print-button,
-            .card-wrapper:not(.print-ready),
-            .pattern-overlay,
-            .geometric-bg,
-            .geometric-bg2 {
-                display: none !important;
-                visibility: hidden !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+                border: 1px solid rgba(0, 0, 0, 0.1) !important;
+                overflow: hidden !important;
             }
 
-            /* تصميم البطاقة المطبوعة */
+            /* تصميم داخلي مطابق */
             .business-card.print-ready .card-front {
                 padding: 28px 32px !important;
                 height: 100% !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
+                position: relative !important;
+                z-index: 2 !important;
                 background: white !important;
-                border-radius: 16px !important;
-                border: 1px solid rgba(0, 0, 0, 0.05) !important;
             }
 
             /* شريط التمييز */
@@ -413,6 +397,31 @@
                 justify-content: center !important;
                 font-size: 14px !important;
                 flex-shrink: 0 !important;
+            }
+
+            /* إخفاء العناصر الزخرفية غير الضرورية للطباعة */
+            .business-card.print-ready .pattern-overlay,
+            .business-card.print-ready .geometric-bg,
+            .business-card.print-ready .geometric-bg2 {
+                display: none !important;
+            }
+
+            /* ضمان جودة الطباعة */
+            .business-card.print-ready {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            /* ضبط تدرجات الألوان للطباعة */
+            .business-card.print-ready .logo,
+            .business-card.print-ready .accent-bar {
+                background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%) !important;
+            }
+            
+            /* ضمان ظهور الظلال */
+            .business-card.print-ready .logo {
+                box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
             }
         }
 
@@ -602,70 +611,32 @@
         function printCard() {
             const card = cardElements.dynamicCard;
             
+            // حفظ التصميم الحالي للبطاقة
+            const originalStyles = {
+                width: card.style.width,
+                height: card.style.height,
+                position: card.style.position,
+                left: card.style.left,
+                top: card.style.top,
+                transform: card.style.transform,
+                margin: card.style.margin
+            };
+            
             // إضافة كلاس خاص للطباعة
             card.classList.add('print-ready');
             
-            // طباعة البطاقة فقط
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="ar" dir="rtl">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>طباعة بطاقة العمل</title>
-                    <style>
-                        @page {
-                            size: A4 portrait;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        body {
-                            margin: 0;
-                            padding: 0;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            min-height: 100vh;
-                            background: transparent;
-                            font-family: 'Tajawal', 'Cairo', sans-serif;
-                        }
-                        ${document.querySelector('style').textContent}
-                        
-                        /* إخفاء كل شيء غير البطاقة */
-                        body > :not(.business-card) {
-                            display: none !important;
-                        }
-                        
-                        .business-card {
-                            width: 400px !important;
-                            height: 240px !important;
-                            position: relative !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            box-shadow: none !important;
-                            border: none !important;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                        }
-                    </style>
-                </head>
-                <body>
-                    ${card.outerHTML}
-                    <script>
-                        window.onload = function() {
-                            window.print();
-                            setTimeout(() => window.close(), 100);
-                        };
-                    <\/script>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
+            // استدعاء نافذة الطباعة
+            window.print();
             
             // إزالة الكلاس بعد الطباعة
             setTimeout(() => {
                 card.classList.remove('print-ready');
-            }, 1000);
+                
+                // استعادة التصميم الأصلي
+                Object.keys(originalStyles).forEach(key => {
+                    card.style[key] = originalStyles[key];
+                });
+            }, 100);
         }
         
         // نسخ إلى الحافظة
