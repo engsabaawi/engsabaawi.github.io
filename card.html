@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="بطاقة عمل د. زينب محمد وطان - طبيبة أسنان متخصصة">
+    <title>بطاقة عمل د. زينب محمد وطان</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ======================================= */
+        /* 1. CSS Variables & Theming */
+        /* ======================================= */
+        :root {
+            --primary-color: #0ea5e9; 
+            --secondary-color: #06b6d4; 
+            --accent-color: #0891b2; 
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --bg-body-light: #f0f2f5; 
+            --bg-card: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --color-icon-bg-light: #f1f5f9;
+            --shadow-default: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 10px rgba(14, 165, 233, 0.1);
+            --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 20px rgba(14, 165, 233, 0.3);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --bg-body-light: #0f172a; 
+                --bg-card: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+                --color-icon-bg-light: #334155; 
+                --shadow-default: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+                --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 10px rgba(14, 165, 233, 0.1);
+            }
+        }
+
+        /* ======================================= */
+        /* 2. Global Resets & Body */
+        /* ======================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-body-light); 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-primary);
+        }
+        
+        /* ======================================= */
+        /* 3. Card Container */
+        /* ======================================= */
+        .card-wrapper {
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .business-card {
+            width: 400px;
+            height: 240px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-default);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05); 
+        }
+
+        /* ======================================= */
+        /* 4. Controls/Form Styles */
+        /* ======================================= */
+        .controls-container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-default);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-item {
+            flex: 1 1 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-item label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .input-item input {
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            background: var(--color-icon-bg-light);
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+        }
+
+        .input-item input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+        
+        /* Dark mode for form inputs */
+        @media (prefers-color-scheme: dark) {
+            .input-item input {
+                border-color: #334155;
+                background: #1e293b;
+                color: var(--text-primary);
+            }
+        }
+
+        .print-button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            align-self: flex-start;
+        }
+        
+        .print-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .print-button:active {
+            transform: translateY(0);
+        }
+
+        /* ======================================= */
+        /* 5. Card Elements */
+        /* ======================================= */
+        .accent-bar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+        }
+
+        .card-front {
+            padding: 28px 32px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 15px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.3;
+        }
+
+        .title-section h1 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .title-section h2 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-color);
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+        }
+
+        .specialty {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+
+        .decorative-line {
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, transparent 100%);
+            margin: 14px 0;
+            border-radius: 2px;
+        }
+
+        .contact-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+            transition: var(--transition-fast);
+        }
+
+        .contact-item:hover {
+            color: var(--primary-color);
+            transform: translateX(-5px);
+        }
+
+        .contact-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--color-icon-bg-light) 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: var(--transition-fast);
+        }
+
+        .business-card:hover .contact-icon {
+            background: var(--primary-gradient);
+            transform: scale(1.1);
+        }
+
+        .geometric-bg {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .geometric-bg2 {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .pattern-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, var(--primary-color) 10px, var(--primary-color) 11px);
+            pointer-events: none;
+        }
+
+        /* ======================================= */
+        /* 6. Print Styles - تحسينات الطباعة */
+        /* ======================================= */
+        @media print {
+            /* إعدادات الصفحة */
+            @page {
+                size: A4 portrait;
+                margin: 0; /* إزالة الهوامش الافتراضية */
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0;
+            }
+            
+            /* إخفاء جميع العناصر ما عدا البطاقة المخصصة للطباعة */
+            .controls-container, .card-wrapper, .business-card:not(.printable-card) { 
+                display: none !important;
+            }
+            
+            /* إظهار فقط البطاقة المطباعية مع الأبعاد القياسية */
+            .printable-card {
+                display: block !important;
+                width: 90mm; /* البعد القياسي الدولي */
+                height: 50mm;
+                /* تصحيح الهوامش: هامش 10mm من كل جانب ليتوسط في A4 */
+                margin: 50mm auto !important;
+                padding: 4mm; /* مساحة تنفس داخلية من جميع الجوانب */
+                
+                /* إطار خفيف للقص */
+                border: 0.5pt dashed #ccc !important;
+                outline: 1pt solid #000 !important; /* خط خارجي واضح للقص بالسكين */
+                outline-offset: -1mm; /* وضع الخط على حافة البطاقة */
+                
+                box-shadow: none !important;
+                background: white !important;
+                transform: none !important;
+                page-break-after: always;
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* ضبط حشوة الداخلية للبطاقة */
+            .printable-card .card-front {
+                padding: 3mm 4mm !important; /* مساحة تنفس متوازنة */
+                justify-content: space-between;
+            }
+
+            /* إخفاء العناصر الزخرفية */
+            .printable-card .pattern-overlay,
+            .printable-card .geometric-bg,
+            .printable-card .geometric-bg2 {
+                display: none !important;
+            }
+
+            /* تقليل حجم الشريط الجانبي وإزالة gradient */
+            .printable-card .accent-bar {
+                width: 3pt !important;
+                background: var(--primary-color) !important;
+            }
+
+            /* تقليل حجم الشعار قليلاً ليتناسب مع المساحة */
+            .printable-card .logo {
+                width: 12mm !important;
+                height: 12mm !important;
+                font-size: 7pt !important;
+            }
+
+            /* تقليل أحجام الخطوص للطباعة الواضحة */
+            .printable-card .title-section h1 {
+                font-size: 11pt !important; /* 14-16pt مثالي للطباعة */
+                margin-bottom: 1pt;
+            }
+
+            .printable-card .title-section h2 {
+                font-size: 8pt !important;
+            }
+
+            .printable-card .specialty {
+                font-size: 6.5pt !important;
+                margin-top: 1pt;
+            }
+
+            .printable-card .decorative-line {
+                height: 1pt !important;
+                width: 10mm !important;
+                margin: 3mm 0 !important;
+            }
+
+            /* تعديل قسم الاتصال */
+            .printable-card .contact-item {
+                font-size: 7pt !important; /* حجم قياسي للطباعة */
+                gap: 2mm !important;
+                margin-bottom: 1mm;
+            }
+
+            /* تقليل حجم أيقونات الاتصال */
+            .printable-card .contact-icon {
+                width: 5mm !important;
+                height: 5mm !important;
+                font-size: 3.5pt !important;
+                border-radius: 1pt !important;
+                background: var(--color-icon-bg-light) !important; /* إزالة gradient */
+            }
+
+            /* التأكد من أن النصوص تكون واضحة وغير مشوشة */
+            .printable-card * {
+                color: #000 !important; /* نصوص سوداء واضحة */
+                text-shadow: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        /* ======================================= */
+        /* 7. Animations & Accessibility */
+        /* ======================================= */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .business-card:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 4px;
+        }
+
+        /* ======================================= */
+        /* 8. Responsive */
+        /* ======================================= */
+        @media (max-width: 768px) {
+            .card-wrapper {
+                gap: 20px;
+            }
+            
+            .business-card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .business-card {
+                height: auto;
+                min-height: 240px;
+            }
+            
+            .card-front {
+                padding: 24px;
+            }
+            
+            .logo-section {
+                gap: 12px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+                font-size: 28px;
+            }
+            
+            .title-section h1 {
+                font-size: 22px;
+            }
+            
+            .contact-item {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="controls-container">
+        <h2>🎛️ تعديل معلومات البطاقة</h2>
+        <div class="input-group">
+            <div class="input-item">
+                <label for="input-name">الاسم الكامل</label>
+                <input type="text" id="input-name" value="د. زينب محمد وطان">
+            </div>
+            <div class="input-item">
+                <label for="input-title">الوصف الوظيفي</label>
+                <input type="text" id="input-title" value="طبيبة الأسنان">
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="input-item">
+                <label for="input-specialty">التخصص</label>
+                <input type="text" id="input-specialty" value="أخصائية طب وجراحة الفم والأسنان">
+            </div>
+             <div class="input-item">
+                <label for="input-phone">الهاتف</label>
+                <input type="text" id="input-phone" value="+966 50 123 4567">
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="input-item">
+                <label for="input-email">البريد الإلكتروني</label>
+                <input type="email" id="input-email" value="dr.zainab.wattan@dental.sa">
+            </div>
+            <div class="input-item">
+                <label for="input-address">العنوان</label>
+                <input type="text" id="input-address" value="مجمع العيادات الطبية المتقدمة - الرياض">
+            </div>
+        </div>
+        
+        <button class="print-button" onclick="printCard()">🖨️ طباعة البطاقة</button>
+    </div>
+    
+    <main class="card-wrapper" role="main" aria-label="بطاقة العمل الديناميكية">
+        <article class="business-card" id="dynamic-card" role="article" tabindex="0" aria-labelledby="card-name">
+            <div class="pattern-overlay"></div>
+            <div class="geometric-bg"></div>
+            <div class="geometric-bg2"></div>
+            <div class="accent-bar"></div> 
+
+            <div class="card-front">
+                <header>
+                    <div class="logo-section">
+                        <div class="logo" aria-hidden="true">🦷</div>
+                        <div class="title-section">
+                            <h1 id="card-name">د. زينب محمد وطان</h1>
+                            <h2 id="card-title">طبيبة الأسنان</h2>
+                            <p class="specialty" id="card-specialty" aria-label="التخصص">أخصائية طب وجراحة الفم والأسنان</p>
+                        </div>
+                    </div>
+                    <div class="decorative-line" aria-hidden="true"></div>
+                </header>
+
+                <section class="contact-section" aria-label="معلومات الاتصال">
+                    <div class="contact-item" itemprop="telephone">
+                        <div class="contact-icon" aria-hidden="true">📱</div>
+                        <span id="card-phone">+966 50 123 4567</span>
+                    </div>
+                    <div class="contact-item" itemprop="email">
+                        <div class="contact-icon" aria-hidden="true">✉️</div>
+                        <span id="card-email">dr.zainab.wattan@dental.sa</span>
+                    </div>
+                    <div class="contact-item" itemprop="address">
+                        <div class="contact-icon" aria-hidden="true">📍</div>
+                        <span id="card-address">مجمع العيادات الطبية المتقدمة - الرياض</span>
+                    </div>
+                </section>
+            </div>
+        </article>
+    </main>
+
+    <div id="printable-card-holder"></div>
+
+
+    <script>
+        // تحديث البطاقة ديناميكياً
+        const cardElements = {
+            name: document.getElementById('card-name'),
+            title: document.getElementById('card-title'),
+            specialty: document.getElementById('card-specialty'),
+            phone: document.getElementById('card-phone'),
+            email: document.getElementById('card-email'),
+            address: document.getElementById('card-address'),
+            dynamicCard: document.getElementById('dynamic-card')
+        };
+        
+        const inputElements = {
+            name: document.getElementById('input-name'),
+            title: document.getElementById('input-title'),
+            specialty: document.getElementById('input-specialty'),
+            phone: document.getElementById('input-phone'),
+            email: document.getElementById('input-email'),
+            address: document.getElementById('input-address')
+        };
+
+        function updateCard() {
+            cardElements.name.textContent = inputElements.name.value;
+            cardElements.title.textContent = inputElements.title.value;
+            cardElements.specialty.textContent = inputElements.specialty.value;
+            cardElements.phone.textContent = inputElements.phone.value;
+            cardElements.email.textContent = inputElements.email.value;
+            cardElements.address.textContent = inputElements.address.value;
+        }
+
+        Object.values(inputElements).forEach(input => {
+            input.addEventListener('input', updateCard);
+        });
+        
+        updateCard();
+
+        // دالة الطباعة المحسّنة
+        function printCard() {
+            const cardToPrint = cardElements.dynamicCard;
+            const cardHolder = document.getElementById('printable-card-holder');
+
+            // إنشاء نسخة للطباعة
+            const printContent = cardToPrint.cloneNode(true);
+            printContent.id = 'print-version';
+            printContent.classList.add('printable-card');
+            
+            // تطبيق الأبعاد الدقيقة للطباعة
+            const printWindow = window.open('', '_blank');
+            const printDocument = printWindow.document;
+            
+            printDocument.write('<!DOCTYPE html><html dir="rtl"><head>');
+            printDocument.write('<title>بطاقة عمل - طباعة</title>');
+            printDocument.write('<style>');
+            printDocument.write('@page { size: A4 portrait; margin: 0; }');
+            printDocument.write('body { margin: 0; padding: 0; }');
+            printDocument.write('.printable-card { width: 90mm; height: 50mm; margin: 50mm auto; border: 0.5pt dashed #ccc !important; outline: 1pt solid #000 !important; outline-offset: -1mm; }');
+            printDocument.write('</style>');
+            printDocument.write('</head><body>');
+            printDocument.write(printContent.outerHTML);
+            printDocument.write('</body></html>');
+            printDocument.close();
+            
+            // طباعة بعد تحميل المحتوى
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 250);
+        }
+        
+        // نسخ إلى الحافظة
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const text = this.querySelector('span').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const icon = this.querySelector('.contact-icon');
+                    const originalIcon = icon.innerHTML;
+                    icon.innerHTML = '✓';
+                    icon.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    
+                    setTimeout(() => {
+                        icon.innerHTML = originalIcon;
+                        icon.style.background = '';
+                    }, 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
