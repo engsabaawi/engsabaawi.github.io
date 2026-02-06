@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابات أبعاد الصحن والأذرع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --system-bg: #f5f5f7;
+            --system-card: rgba(255, 255, 255, 0.72);
+            --system-card-solid: #ffffff;
+            --system-label: #1d1d1f;
+            --system-label-secondary: #86868b;
+            --system-label-tertiary: #a1a1a6;
+            --system-blue: #0071e3;
+            --system-blue-hover: #0077ed;
+            --system-indigo: #5856d6;
+            --system-purple: #af52de;
+            --system-gray: #8e8e93;
+            --system-gray4: #d1d1d6;
+            --system-gray5: #e5e5ea;
+            --system-gray6: #f2f2f7;
+            --system-red: #ff3b30;
+            
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-highlight: inset 0 0.5px 0 0 rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
+            background: var(--system-bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--system-label);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(at 0% 0%, rgba(88, 86, 214, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(175, 82, 222, 0.06) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 113, 227, 0.06) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(90, 200, 250, 0.05) 0px, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            background: var(--system-card);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 680px;
+            width: 100%;
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .icon-wrapper {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--system-blue) 0%, var(--system-indigo) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 4px 16px rgba(0, 113, 227, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+        }
+
+        .icon-wrapper svg {
+            width: 36px;
+            height: 36px;
+            fill: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--system-label);
+            margin-bottom: 8px;
+            letter-spacing: -0.021em;
+        }
+
+        .subtitle {
+            font-size: 17px;
+            color: var(--system-label-secondary);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            background: var(--system-gray6);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--system-gray5);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--system-label-secondary);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .mode-btn.active {
+            background: var(--system-card-solid);
+            color: var(--system-label);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: var(--system-label);
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        .input-group:nth-child(1) { animation-delay: 0.05s; }
+        .input-group:nth-child(2) { animation-delay: 0.1s; }
+        .input-group:nth-child(3) { animation-delay: 0.15s; }
+        .input-group:nth-child(4) { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--system-label);
+            font-weight: 500;
+            font-size: 15px;
+            letter-spacing: -0.016em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--system-card-solid);
+            border: 1px solid var(--system-gray4);
+            border-radius: 12px;
+            font-size: 17px;
+            font-family: inherit;
+            font-weight: 400;
+            color: var(--system-label);
+            transition: all 0.2s ease;
+            text-align: right;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="number"]::placeholder {
+            color: var(--system-label-tertiary);
+        }
+
+        input[type="number"]:hover, select:hover {
+            border-color: var(--system-gray3);
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--system-blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 16px center;
+            padding-left: 40px;
+        }
+
+        .unit {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--system-label-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            background: var(--system-gray6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--system-gray5);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--system-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculate-btn:hover {
+            background: var(--system-blue-hover);
+            transform: scale(1.01);
+        }
+
+        .calculate-btn:active {
+            transform: scale(0.99);
+        }
+
+        .results {
+            margin-top: 32px;
+            padding: 28px;
+            background: var(--system-gray6);
+            border-radius: 20px;
+            border: 1px solid var(--system-gray5);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--system-label-secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--system-gray5);
+        }
+
+        .result-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .result-item {
+            background: var(--system-card-solid);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--system-gray5);
+            transition: all 0.2s ease;
+        }
+
+        .result-item:hover {
+            border-color: var(--system-gray4);
+            transform: translateX(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--system-label-secondary);
+            font-size: 15px;
+        }
+
+        .result-value {
+            font-size: 22px;
+            color: var(--system-blue);
+            font-weight: 600;
+            letter-spacing: -0.021em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-value.secondary {
+            color: var(--system-indigo);
+        }
+
+        .result-value.accent {
+            color: var(--system-purple);
+        }
+
+        .print-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--system-blue);
+            border: 1px solid var(--system-blue);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .print-btn:hover {
+            background: rgba(0, 113, 227, 0.05);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--system-gray5);
+            text-align: center;
+            color: var(--system-label-tertiary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .error {
+            color: var(--system-red);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+            display: none;
+            padding: 10px 14px;
+            background: rgba(255, 59, 48, 0.06);
+            border-radius: 8px;
+            border-right: 3px solid var(--system-red);
+        }
+
+        .error.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Print Styles - A4 Optimized */
+        @media print {
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                display: block !important;
+            }
+
+            body::before {
+                display: none !important;
+            }
+
+            .container {
+                background: white !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                margin: 0 auto !important;
+            }
+
+            .header {
+                margin-bottom: 30px !important;
+                padding-bottom: 20px !important;
+                border-bottom: 2px solid #000 !important;
+            }
+
+            .icon-wrapper {
+                display: none !important;
+            }
+
+            h1 {
+                color: #000 !important;
+                font-size: 24pt !important;
+                margin-bottom: 8px !important;
+            }
+
+            .subtitle {
+                color: #333 !important;
+                font-size: 12pt !important;
+            }
+
+            .calculate-btn, 
+            .print-btn, 
+            .mode-selector, 
+            .input-group,
+            .formula-info {
+                display: none !important;
+            }
+
+            .results {
+                display: block !important;
+                background: white !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                margin-top: 20px !important;
+                padding: 20px !important;
+                page-break-inside: avoid !important;
+            }
+
+            .results.show {
+                display: block !important;
+                animation: none !important;
+            }
+
+            .result-header {
+                color: #000 !important;
+                border-bottom: 1px solid #000 !important;
+                font-size: 11pt !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 10px !important;
+            }
+
+            .result-grid {
+                gap: 10px !important;
+            }
+
+            .result-item {
+                background: white !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                padding: 15px !important;
+                page-break-inside: avoid !important;
+            }
+
+            .result-label {
+                color: #333 !important;
+                font-size: 11pt !important;
+            }
+
+            .result-value {
+                color: #000 !important;
+                font-size: 14pt !important;
+                font-weight: 700 !important;
+            }
+
+            .result-value.secondary,
+            .result-value.accent {
+                color: #000 !important;
+            }
+
+            /* Footer for print */
+            .footer {
+                display: block !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                margin-top: 0 !important;
+                padding: 15px 0 !important;
+                border-top: 1px solid #000 !important;
+                color: #000 !important;
+                font-size: 10pt !important;
+                text-align: center !important;
+                background: white !important;
+            }
+
+            /* Ensure results are visible */
+            #results-old:not(.show),
+            #results-expansion:not(.show) {
+                display: none !important;
+            }
+
+            #results-old.show,
+            #results-expansion.show {
+                display: block !important;
+            }
+
+            /* Add print header with date */
+            .results::before {
+                content: "تقرير حسابات الصحن اللاقط";
+                display: block;
+                text-align: center;
+                font-size: 14pt;
+                font-weight: 700;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #000;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 16px;
+                background: var(--system-gray6);
+            }
+
+            .container {
+                padding: 28px 24px;
+                border-radius: 20px;
+                background: var(--system-card-solid);
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .icon-wrapper {
+                width: 60px;
+                height: 60px;
+                border-radius: 16px;
+            }
+
+            .icon-wrapper svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .mode-selector {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .mode-btn {
+                padding: 14px;
+            }
+
+            input[type="number"], select {
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            .result-item {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .result-value {
+                font-size: 20px;
+            }
+
+            .footer {
+                margin-top: 32px;
+                font-size: 12px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" opacity="0.3"/>
+                </svg>
+            </div>
+            <h1>تطوير الصحون وتكبيرها</h1>
+            <p class="subtitle">احسب البعد البؤري ودرجة الانحناء وطول الذراع وألواح التكبير</p>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('old')" data-mode="old">
+                صحن قديم
+            </button>
+            <button class="mode-btn" onclick="setMode('expansion')" data-mode="expansion">
+                تكبير صحن
+            </button>
+        </div>
+
+        <!-- حقول الصحن القديم -->
+        <div id="old-dish-fields">
+            <div class="input-group">
+                <label>قطر الصحن</label>
+                <div class="input-wrapper">
+                    <input type="number" id="diameter" placeholder="أدخل قطر الصحن" step="0.01" min="0">
+                    <span class="unit">سم</span>
+                </div>
+                <div class="error" id="diameter-error">الرجاء إدخال قيمة صحيحة أكبر من صفر</div>
+            </div>
+
+            <div class="input-group">
+                <label>عمق الصحن</label>
+                <div class="input-wrapper">
+                    <input type="number" id="depth" placeholder="أدخل عمق الصحن" step="0.01" min="0">
+                    <span class="unit">سم</span>
+                </div>
+                <div class="error" id="depth-error">الرجاء إدخال قيمة صحيحة أكبر من صفر</div>
+            </div>
+        </div>
+
+        <!-- حقول تكبير الصحن -->
+        <div id="expansion-fields" class="hidden">
+            <div class="input-group">
+                <label>قطر الصحن القديم</label>
+                <div class="input-wrapper">
+                    <input type="number" id="old-diameter" placeholder="أدخل قطر الصحن القديم" step="0.01" min="0">
+                    <span class="unit">سم</span>
+                </div>
+                <div class="error" id="old-diameter-error">الرجاء إدخال قيمة صحيحة</div>
+            </div>
+
+            <div class="input-group">
+                <label>قطر الصحن الجديد</label>
+                <div class="input-wrapper">
+                    <input type="number" id="new-diameter" placeholder="أدخل قطر الصحن الجديد" step="0.01" min="0">
+                    <span class="unit">سم</span>
+                </div>
+                <div class="error" id="new-diameter-error">يجب أن يكون أكبر من القطر القديم</div>
+            </div>
+
+            <div class="input-group">
+                <label>البعد البؤري القديم (f)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="old-focal" placeholder="أدخل البعد البؤري القديم" step="0.01" min="0">
+                    <span class="unit">سم</span>
+                </div>
+                <div class="error" id="old-focal-error">الرجاء إدخال قيمة صحيحة</div>
+            </div>
+
+            <div class="input-group">
+                <label>عدد الألواح المضافة</label>
+                <div class="input-wrapper">
+                    <input type="number" id="panel-count" placeholder="أدخل عدد الألواح" step="1" min="1">
+                    <span class="unit">لوح</span>
+                </div>
+                <div class="error" id="panel-count-error">الرجاء إدخال عدد صحيح</div>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">
+            <span id="btn-text">احسب النتيجة</span>
+        </button>
+
+        <!-- نتائج الصحن القديم -->
+        <div class="results" id="results-old">
+            <div class="result-header">النتائج</div>
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="result-label">البعد البؤري (f)</span>
+                    <span class="result-value" id="focal-length">--</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">طول الذراع (L)</span>
+                    <span class="result-value secondary" id="arm-length">--</span>
+                </div>
+            </div>
+            <button class="print-btn" onclick="printResults()">
+                طباعة النتائج
+            </button>
+        </div>
+
+        <!-- نتائج تكبير الصحن -->
+        <div class="results" id="results-expansion">
+            <div class="result-header">النتائج</div>
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="result-label">طول اللوح</span>
+                    <span class="result-value" id="panel-length">--</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">عرض اللوح الداخلي</span>
+                    <span class="result-value secondary" id="inner-width">--</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">عرض اللوح الخارجي</span>
+                    <span class="result-value secondary" id="outer-width">--</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">درجة الانحناء (Z)</span>
+                    <span class="result-value accent" id="curve-degree">--</span>
+                </div>
+            </div>
+            <button class="print-btn" onclick="printResults()">
+                طباعة النتائج
+            </button>
+        </div>
+
+        <div class="footer">
+            تصميم وتطوير: المهندس مالك محمد
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'old';
+
+        function convertArabicToEnglishNumbers(str) {
+            const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            
+            let result = str;
+            for (let i = 0; i < 10; i++) {
+                result = result.replace(new RegExp(arabicNumbers[i], 'g'), englishNumbers[i]);
+            }
+            return result;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const cursorPosition = this.selectionStart;
+                    const oldValue = this.value;
+                    const newValue = convertArabicToEnglishNumbers(oldValue);
+                    
+                    if (oldValue !== newValue) {
+                        this.value = newValue;
+                        this.setSelectionRange(cursorPosition, cursorPosition);
+                    }
+                });
+            });
+        });
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.mode === mode) btn.classList.add('active');
+            });
+
+            const oldFields = document.getElementById('old-dish-fields');
+            const expansionFields = document.getElementById('expansion-fields');
+            
+            if (mode === 'old') {
+                oldFields.classList.remove('hidden');
+                expansionFields.classList.add('hidden');
+            } else {
+                oldFields.classList.add('hidden');
+                expansionFields.classList.remove('hidden');
+            }
+
+            document.getElementById('results-old').classList.remove('show');
+            document.getElementById('results-expansion').classList.remove('show');
+            document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
+        }
+
+        function calculate() {
+            const btnText = document.getElementById('btn-text');
+            const originalText = btnText.textContent;
+            btnText.innerHTML = '<span class="loading"></span> جاري الحساب...';
+            
+            setTimeout(() => {
+                if (currentMode === 'old') {
+                    calculateOldDish();
+                } else {
+                    calculateExpansion();
+                }
+                btnText.textContent = 'تم الحساب';
+                
+                setTimeout(() => {
+                    btnText.textContent = originalText;
+                }, 1500);
+            }, 400);
+        }
+
+        function calculateOldDish() {
+            const diameter = parseFloat(convertArabicToEnglishNumbers(document.getElementById('diameter').value));
+            const depth = parseFloat(convertArabicToEnglishNumbers(document.getElementById('depth').value));
+            
+            document.getElementById('diameter-error').classList.remove('show');
+            document.getElementById('depth-error').classList.remove('show');
+            
+            let isValid = true;
+            
+            if (isNaN(diameter) || diameter <= 0) {
+                document.getElementById('diameter-error').classList.add('show');
+                isValid = false;
+            }
+            
+            if (isNaN(depth) || depth <= 0) {
+                document.getElementById('depth-error').classList.add('show');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                document.getElementById('results-old').classList.remove('show');
+                return;
+            }
+            
+            const focalLength = (diameter * diameter) / (16 * depth);
+            const radius = diameter / 2;
+            const armLength = Math.sqrt((radius * radius) + Math.pow((focalLength - depth), 2));
+            
+            document.getElementById('focal-length').textContent = focalLength.toFixed(2) + ' سم';
+            document.getElementById('arm-length').textContent = armLength.toFixed(2) + ' سم';
+            document.getElementById('results-old').classList.add('show');
+        }
+
+        function calculateExpansion() {
+            const FIXED_RATIO = 3.14159;
+            
+            const oldDiameter = parseFloat(convertArabicToEnglishNumbers(document.getElementById('old-diameter').value));
+            const newDiameter = parseFloat(convertArabicToEnglishNumbers(document.getElementById('new-diameter').value));
+            const oldFocal = parseFloat(convertArabicToEnglishNumbers(document.getElementById('old-focal').value));
+            const panelCount = parseFloat(convertArabicToEnglishNumbers(document.getElementById('panel-count').value));
+            
+            document.getElementById('old-diameter-error').classList.remove('show');
+            document.getElementById('new-diameter-error').classList.remove('show');
+            document.getElementById('old-focal-error').classList.remove('show');
+            document.getElementById('panel-count-error').classList.remove('show');
+            
+            let isValid = true;
+            
+            if (isNaN(oldDiameter) || oldDiameter <= 0) {
+                document.getElementById('old-diameter-error').classList.add('show');
+                isValid = false;
+            }
+            
+            if (isNaN(newDiameter) || newDiameter <= 0) {
+                document.getElementById('new-diameter-error').textContent = 'الرجاء إدخال قيمة صحيحة';
+                document.getElementById('new-diameter-error').classList.add('show');
+                isValid = false;
+            } else if (newDiameter <= oldDiameter) {
+                document.getElementById('new-diameter-error').textContent = 'القطر الجديد يجب أن يكون أكبر من القديم';
+                document.getElementById('new-diameter-error').classList.add('show');
+                isValid = false;
+            }
+
+            if (isNaN(oldFocal) || oldFocal <= 0) {
+                document.getElementById('old-focal-error').classList.add('show');
+                isValid = false;
+            }
+
+            if (isNaN(panelCount) || panelCount <= 0 || !Number.isInteger(panelCount)) {
+                document.getElementById('panel-count-error').classList.add('show');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                document.getElementById('results-expansion').classList.remove('show');
+                return;
+            }
+            
+            const panelLength = (newDiameter - oldDiameter) / 2;
+            const innerWidth = (oldDiameter * FIXED_RATIO) / panelCount;
+            const outerWidth = (newDiameter * FIXED_RATIO) / panelCount;
+            
+            const newRadius = newDiameter / 2;
+            const curveDegree = (newRadius * newRadius) / (4 * oldFocal);
+            
+            document.getElementById('panel-length').textContent = panelLength.toFixed(2) + ' سم';
+            document.getElementById('inner-width').textContent = innerWidth.toFixed(2) + ' سم';
+            document.getElementById('outer-width').textContent = outerWidth.toFixed(2) + ' سم';
+            document.getElementById('curve-degree').textContent = curveDegree.toFixed(2) + ' سم';
+            document.getElementById('results-expansion').classList.add('show');
+        }
+
+        function printResults() {
+            window.print();
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculate();
+        });
+    </script>
+</body>
+</html>
