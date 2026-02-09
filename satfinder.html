@@ -209,7 +209,7 @@
             font-weight: 600;
             color: var(--apple-light-blue);
             font-variant-numeric: tabular-nums;
-            min-width: 60px;
+            min-width: 70px;
             text-align: left;
         }
 
@@ -669,7 +669,7 @@
     <div class="app-container">
         <div class="app-header">
             <h1 class="header-title">دليل الأقمار الصناعية</h1>
-            <p class="header-subtitle">اختر القمر لعرض الاتجاه الصحيح من الشمال</p>
+            <p class="header-subtitle">اختر القمر لعرض اتجاهه من موقعك</p>
             
             <div class="location-bar">
                 <button class="location-btn" onclick="getLocation()">
@@ -698,7 +698,7 @@
             <div class="info-section">
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="info-label">الاتجاه من الشمال</span>
+                        <span class="info-label">اتجاه القمر</span>
                         <span class="info-value highlight" id="infoAz">—</span>
                     </div>
                     <div class="info-item">
@@ -718,8 +718,8 @@
 
             <div class="compass-section">
                 <div class="compass-header">
-                    <div class="compass-title">🧭 وجه الجهاز نحو هذا الاتجاه</div>
-                    <div class="compass-hint">دور الجهاز حتى يشير السهم الأحمر نحو ▲</div>
+                    <div class="compass-title">🧭 وجه الجهاز نحو الاتجاه المطلوب</div>
+                    <div class="compass-hint">دور الجهاز حتى تصل للزاوية المستهدفة</div>
                 </div>
 
                 <div class="alignment-status far" id="alignStatus">
@@ -774,9 +774,7 @@
     </div>
 
     <script>
-        // ✅ بيانات الأقمار مع إحداثياتها المدارية الكاملة
-        // الموقع المداري: خط الطول (longitude)، خط العرض = 0 (على خط الاستواء)
-        // الارتفاع: ~35,786 كم (المدار الجغرافي الثابت)
+        // ✅ بيانات الأقمار مرتبة حسب الزاوية القديمة (من الغرب للشرق)
         const satellites = [
             { name: "Hispasat 30W-6", pos: "30.0° W", lon: -30.0, lat: 0, alt: 35786, freq: "11.731-12.722 GHz" },
             { name: "Hispasat 30W-5", pos: "30.0° W", lon: -30.0, lat: 0, alt: 35786, freq: "11.470-12.750 GHz" },
@@ -828,6 +826,7 @@
         let audioCtx = null;
         let soundOn = true;
         let lastUpdate = 0;
+        let lastBeep = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
             renderList();
@@ -836,25 +835,48 @@
             }, { once: true });
         });
 
-        // ✅ حساب الأزيموث الصحيح باستخدام الإحداثيات ثلاثية الأبعاد
-        function calculateAzimuth(sat) {
-            // ✅ تحويل إحداثيات المستخدم إلى ديكارتية
-            const user = latLonAltToXYZ(userLat, userLon, userAlt);
+        // ✅ تحويل الإحداثيات الكروية إلى ديكارتية
+        function latLonAltToXYZ(lat, lon, alt) {
+            const latRad = lat * Math.PI / 180;
+            const lonRad = lon * Math.PI / 180;
+            const R = 6371 + alt;
+            return {
+                x: R * Math.cos(latRad) * Math.cos(lonRad),
+                y: R * Math.cos(latRad) * Math.sin(lonRad),
+                z: R * Math.sin(latRad)
+            };
+        }
+
+        // ✅ تحويل المتجه العالمي إلى إحداثيات محلية (شمال، شرق، أعلى)
+        function globalToLocal(dx, dy, dz, lat, lon) {
+            const latRad = lat * Math.PI / 180;
+            const lonRad = lon * Math.PI / 180;
             
-            // ✅ تحويل إحداثيات القمر إلى ديكارتية
+            // دوران حول محور Z (خط الطول)
+            const x1 = dx * Math.cos(-lonRad) - dy * Math.sin(-lonRad);
+            const y1 = dx * Math.sin(-lonRad) + dy * Math.cos(-lonRad);
+            const z1 = dz;
+            
+            // دوران حول محور Y (خط العرض)
+            const x2 = x1 * Math.cos(latRad) + z1 * Math.sin(latRad);
+            const y2 = y1;
+            const z2 = -x1 * Math.sin(latRad) + z1 * Math.cos(latRad);
+            
+            return { east: x2, north: y2, up: z2 };
+        }
+
+        // ✅ حساب الأزيموث (الاتجاه من الشمال 0° باتجاه الشرق)
+        function calculateAzimuth(sat) {
+            const user = latLonAltToXYZ(userLat, userLon, userAlt);
             const satellite = latLonAltToXYZ(sat.lat, sat.lon, sat.alt);
             
-            // ✅ متجه من المستخدم إلى القمر
             const dx = satellite.x - user.x;
             const dy = satellite.y - user.y;
             const dz = satellite.z - user.z;
             
-            // ✅ تحويل المتجه إلى الإحداثيات المحلية للمستخدم
-            // المحور X: شرق، المحور Y: شمال، المحور Z: أعلى
             const local = globalToLocal(dx, dy, dz, userLat, userLon);
             
-            // ✅ حساب الأزيموث من الشمال (0°) باتجاه الشرق
-            // atan2(شرق، شمال) يعطي الزاوية الصحيحة
+            // ✅ atan2(شرق، شمال) يعطي الزاوية من الشمال باتجاه الشرق
             let azimuth = Math.atan2(local.east, local.north) * 180 / Math.PI;
             
             // ✅ تطبيع إلى 0-360
@@ -863,50 +885,7 @@
             return azimuth;
         }
 
-        // ✅ تحويل خط الطول/العرض/الارتفاع إلى إحداثيات ديكارتية
-        function latLonAltToXYZ(lat, lon, alt) {
-            const latRad = lat * Math.PI / 180;
-            const lonRad = lon * Math.PI / 180;
-            const R = 6371 + alt; // نصف قطر الأرض + الارتفاع
-            
-            return {
-                x: R * Math.cos(latRad) * Math.cos(lonRad),
-                y: R * Math.cos(latRad) * Math.sin(lonRad),
-                z: R * Math.sin(latRad)
-            };
-        }
-
-        // ✅ تحويل المتجه العالمي إلى الإحداثيات المحلية
-        function globalToLocal(dx, dy, dz, lat, lon) {
-            const latRad = lat * Math.PI / 180;
-            const lonRad = lon * Math.PI / 180;
-            
-            // دوران حول محور Z (خط الطول) بمقدار -lon
-            // ثم دوران حول محور Y بمقدار lat
-            
-            // أولاً: دوران حول Z
-            const x1 = dx * Math.cos(-lonRad) - dy * Math.sin(-lonRad);
-            const y1 = dx * Math.sin(-lonRad) + dy * Math.cos(-lonRad);
-            const z1 = dz;
-            
-            // ثانياً: دوران حول Y
-            const x2 = x1 * Math.cos(latRad) + z1 * Math.sin(latRad);
-            const y2 = y1;
-            const z2 = -x1 * Math.sin(latRad) + z1 * Math.cos(latRad);
-            
-            // الآن:
-            // x2 = شرق (East)
-            // y2 = شمال (North)  
-            // z2 = أعلى (Up)
-            
-            return {
-                east: x2,
-                north: y2,
-                up: z2
-            };
-        }
-
-        // ✅ حساب زاوية الارتفاع (Elevation)
+        // ✅ حساب زاوية الارتفاع
         function calculateElevation(sat) {
             const user = latLonAltToXYZ(userLat, userLon, userAlt);
             const satellite = latLonAltToXYZ(sat.lat, sat.lon, sat.alt);
@@ -917,10 +896,7 @@
             
             const local = globalToLocal(dx, dy, dz, userLat, userLon);
             
-            // المسافة الأفقية
             const horizontal = Math.sqrt(local.east ** 2 + local.north ** 2);
-            
-            // زاوية الارتفاع
             let elevation = Math.atan2(local.up, horizontal) * 180 / Math.PI;
             
             return Math.max(0, elevation);
@@ -938,21 +914,15 @@
             return Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
         }
 
+        // ✅ عرض القائمة مرتبة حسب الزاوية القديمة (من الغرب للشرق)
         function renderList() {
             const list = document.getElementById('satList');
             let currentHemisphere = '';
 
-            // ✅ ترتيب الأقمار حسب الزاوية المحسوبة
-            let sortedSats = satellites;
-            if (userLat !== null) {
-                sortedSats = [...satellites].sort((a, b) => {
-                    const azA = calculateAzimuth(a);
-                    const azB = calculateAzimuth(b);
-                    return azA - azB;
-                });
-            }
+            // ✅ الترتيب الثابت: من الغرب للشرق (حسب خط الطول)
+            // لا نغير الترتيب، نعرض كما هو في المصفوفة
 
-            list.innerHTML = sortedSats.map((sat, i) => {
+            list.innerHTML = satellites.map((sat, idx) => {
                 const hasLoc = userLat !== null;
                 const az = hasLoc ? calculateAzimuth(sat).toFixed(1) + '°' : '—';
                 
@@ -964,10 +934,8 @@
                     separator = `<div class="list-header"><span>أقمار ${hemisphere}</span><span>${count} قمر</span></div>`;
                 }
 
-                const originalIndex = satellites.indexOf(sat);
-
                 return separator + `
-                    <div class="satellite-item" onclick="openModal(${originalIndex})">
+                    <div class="satellite-item" onclick="openModal(${idx})">
                         <div class="item-content">
                             <div class="satellite-icon">🛰️</div>
                             <div class="satellite-info">
@@ -1016,6 +984,7 @@
             const el = calculateElevation(currentSat);
             const dist = calculateDistance(currentSat);
 
+            // ✅ تعبئة المعلومات
             document.getElementById('modalTitle').textContent = currentSat.name;
             document.getElementById('modalSubtitle').textContent = currentSat.pos;
             document.getElementById('infoAz').textContent = targetAzimuth.toFixed(1) + '°';
@@ -1024,11 +993,13 @@
             document.getElementById('infoFreq').textContent = currentSat.freq;
             document.getElementById('valTarget').textContent = targetAzimuth.toFixed(1) + '°';
 
+            // ✅ إظهار النافذة
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('modalSheet').classList.add('active');
 
             drawDegreeMarks();
 
+            // ✅ طلب إذن iOS
             if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
                 try {
                     const perm = await DeviceOrientationEvent.requestPermission();
@@ -1051,68 +1022,126 @@
         }
 
         function startCompass() {
-            window.addEventListener('deviceorientation', handler);
-            window._compassHandler = handler;
-
-            function handler(e) {
+            const handler = (e) => {
                 const now = Date.now();
                 if (now - lastUpdate < 50) return;
                 lastUpdate = now;
 
+                // ✅ قراءة اتجاه الجهاز
                 let heading = e.webkitCompassHeading ?? (360 - e.alpha);
-                if (heading === null) return;
+                if (heading === null || isNaN(heading)) return;
+                
+                // ✅ تطبيع إلى 0-360
                 heading = (heading + 360) % 360;
 
+                // ✅ تحديث البوصلة (دوران عكسي لأن الإبرة ثابتة والوجه يدور)
                 document.getElementById('compassRing').style.transform = `rotate(${-heading}deg)`;
                 document.getElementById('valHead').textContent = heading.toFixed(1) + '°';
 
+                // ✅ حساب الفرق بين اتجاه الجهاز واتجاه القمر
                 let diff = Math.abs(targetAzimuth - heading);
                 if (diff > 180) diff = 360 - diff;
+                
                 document.getElementById('valDiff').textContent = diff.toFixed(1) + '°';
 
-                const status = document.getElementById('alignStatus');
-                const ring = document.getElementById('statusRing');
-                
-                status.className = 'alignment-status';
-                ring.className = 'status-ring';
+                // ✅ تحديث الحالة والتنبيه
+                updateStatus(diff, heading);
+            };
 
-                if (diff <= 2) {
-                    status.classList.add('perfect');
-                    status.textContent = '🎯 محاذاة مثالية!';
-                    ring.classList.add('perfect');
-                    playBeep(800, 0.3);
-                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                } else if (diff <= 10) {
-                    status.classList.add('close');
-                    status.textContent = `✅ قريب (${diff.toFixed(1)}°)`;
-                    ring.classList.add('close');
-                    playBeep(600, 0.2);
-                } else {
-                    status.classList.add('far');
-                    status.textContent = `🔍 بعيد (${diff.toFixed(1)}°)`;
-                    ring.classList.add('far');
+            window.addEventListener('deviceorientation', handler);
+            window._compassHandler = handler;
+        }
+
+        function updateStatus(diff, currentHeading) {
+            const status = document.getElementById('alignStatus');
+            const ring = document.getElementById('statusRing');
+            
+            status.className = 'alignment-status';
+            ring.className = 'status-ring';
+
+            // ✅ تنبيه عند الوصول للزاوية المطلوبة
+            if (diff <= 2) {
+                // ✅ محاذاة مثالية
+                status.classList.add('perfect');
+                status.textContent = `🎯 محاذاة مثالية! ${currentHeading.toFixed(1)}° = ${targetAzimuth.toFixed(1)}°`;
+                ring.classList.add('perfect');
+                
+                // ✅ صوت تنبيه مستمر عند المحاذاة
+                const now = Date.now();
+                if (soundOn && now - lastBeep > 200) {
+                    playBeep(1000, 0.4);
+                    lastBeep = now;
                 }
+                
+                // ✅ اهتزاز
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+            } else if (diff <= 10) {
+                // ✅ قريب
+                status.classList.add('close');
+                status.textContent = `✅ قريب جداً! الفرق: ${diff.toFixed(1)}°`;
+                                   lastBeep = now;
+                }
+                
+                // ✅ اهتزاز
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+            } else if (diff <= 10) {
+                // ✅ قريب
+                status.classList.add('close');
+                status.textContent = `✅ قريب جداً! الفرق: ${diff.toFixed(1)}°`;
+                ring.classList.add('close');
+                
+                // ✅ صوت تنبيه متقطع
+                const now = Date.now();
+                if (soundOn && now - lastBeep > 500) {
+                    playBeep(600, 0.2);
+                    lastBeep = now;
+                }
+                
+            } else if (diff <= 30) {
+                // ✅ متوسط
+                status.classList.add('far');
+                status.textContent = `↗️ اقترب... الفرق: ${diff.toFixed(1)}°`;
+                ring.classList.add('far');
+                
+            } else {
+                // ✅ بعيد
+                status.classList.add('far');
+                status.textContent = `🔍 بعيد. وجه الجهاز نحو ${targetAzimuth.toFixed(1)}°`;
+                ring.classList.add('far');
             }
         }
 
         function playBeep(freq, vol) {
             if (!soundOn || !audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
+            
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.frequency.value = freq;
+                osc.type = 'sine';
+                
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {
+                console.error('Audio error:', e);
+            }
         }
 
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
             document.getElementById('modalSheet').classList.remove('active');
+            
             if (window._compassHandler) {
                 window.removeEventListener('deviceorientation', window._compassHandler);
+                window._compassHandler = null;
             }
         }
 
@@ -1124,6 +1153,7 @@
         function resetCompass() {
             document.getElementById('alignStatus').textContent = '🔄 تم إعادة الضبط';
             document.getElementById('alignStatus').className = 'alignment-status far';
+            document.getElementById('statusRing').className = 'status-ring far';
         }
     </script>
 </body>
