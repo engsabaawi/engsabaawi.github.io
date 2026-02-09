@@ -414,6 +414,13 @@
         box-shadow: 0 0 50px rgba(0, 217, 255, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.5);
     }
 
+    .compass-ring {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+
     .compass-needle {
         position: absolute;
         top: 50%;
@@ -425,7 +432,25 @@
         transform: translate(-50%, -100%);
         border-radius: 10px;
         box-shadow: 0 0 20px var(--accent-primary);
-        transition: transform 0.5s ease;
+        transition: transform 0.3s ease;
+    }
+
+    .target-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 140px;
+        background: linear-gradient(to top, transparent, var(--warning), var(--warning), transparent);
+        transform-origin: bottom center;
+        transform: translate(-50%, -100%);
+        border-radius: 10px;
+        opacity: 0.7;
+        z-index: 0;
+    }
+
+    .compass-needle {
+        z-index: 1;
     }
 
     .compass-center {
@@ -550,6 +575,98 @@
         border-color: var(--accent-secondary);
         transform: translateX(-5px);
     }
+
+    /* Alert System */
+    .alignment-alert {
+        text-align: center;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        border-radius: 15px;
+        font-family: 'Cairo', sans-serif;
+        font-weight: 700;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        display: none;
+    }
+
+    .alignment-alert.success {
+        display: block;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+        border: 2px solid var(--success);
+        color: var(--success);
+        animation: pulse 1s infinite;
+    }
+
+    .alignment-alert.close {
+        display: block;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.4));
+        border: 2px solid var(--warning);
+        color: var(--warning);
+    }
+
+    .alignment-alert.searching {
+        display: block;
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(123, 44, 191, 0.2));
+        border: 2px solid var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    @keyframes pulse {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        50% { 
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
+        }
+    }
+
+    .degree-difference {
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--accent-primary);
+        margin: 1rem 0;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .compass-status {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border-radius: 15px;
+    }
+
+    .status-item {
+        text-align: center;
+    }
+
+    .status-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .status-value {
+        color: var(--accent-primary);
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    /* Vibration indicator */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .vibrating {
+        animation: shake 0.5s infinite;
+    }
 </style>
 ```
 
@@ -605,22 +722,62 @@
     <div class="modal-content">
         <button class="close-btn" onclick="closeCompass()">✕</button>
         <h2 style="text-align: center; margin-bottom: 1rem; font-family: 'Cairo', sans-serif;">
-            🧭 بوصلة التوجيه
+            🧭 بوصلة التوجيه المباشر
         </h2>
         <div id="satelliteInfo" style="text-align: center; margin-bottom: 1rem; color: var(--text-secondary);">
         </div>
-        <div class="compass">
-            <div class="compass-needle" id="compassNeedle"></div>
-            <div class="compass-center"></div>
-            <div class="compass-directions">
-                <div class="direction n">شمال</div>
-                <div class="direction e">شرق</div>
-                <div class="direction s">جنوب</div>
-                <div class="direction w">غرب</div>
+        
+        <!-- Alignment Alert -->
+        <div class="alignment-alert" id="alignmentAlert">
+            <div id="alertContent"></div>
+        </div>
+        
+        <!-- Compass -->
+        <div class="compass" id="compassContainer">
+            <div class="compass-ring" id="compassRing">
+                <div class="target-indicator" id="targetIndicator"></div>
+                <div class="compass-needle" id="compassNeedle"></div>
+                <div class="compass-center"></div>
+                <div class="compass-directions">
+                    <div class="direction n">شمال</div>
+                    <div class="direction e">شرق</div>
+                    <div class="direction s">جنوب</div>
+                    <div class="direction w">غرب</div>
+                </div>
             </div>
         </div>
-        <div class="azimuth-display">
-            الاتجاه: <span id="azimuthValue">0°</span>
+        
+        <!-- Status Display -->
+        <div class="compass-status">
+            <div class="status-item">
+                <span class="status-label">الاتجاه الحالي</span>
+                <span class="status-value" id="currentDirection">0°</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">هدف القمر</span>
+                <span class="status-value" id="targetDirection">0°</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">الفرق</span>
+                <span class="status-value" id="differenceDegree">0°</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(0, 217, 255, 0.1); border-radius: 10px;">
+            <small style="color: var(--text-secondary);">
+                💡 قم بتدوير جهازك ببطء حتى تتطابق الإبرة الزرقاء مع المؤشر الأصفر
+            </small>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button id="soundToggle" onclick="toggleSound()" 
+                style="flex: 1; padding: 0.8rem; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 15px; color: white; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: all 0.3s ease;">
+                🔊 إيقاف الصوت
+            </button>
+            <button onclick="resetCompass()" 
+                style="flex: 1; padding: 0.8rem; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 15px; color: white; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: all 0.3s ease;">
+                🔄 إعادة ضبط
+            </button>
         </div>
     </div>
 </div>
@@ -1353,6 +1510,13 @@
         return `${skew.toFixed(1)}°`;
     }
 
+    // Compass variables
+    let targetAzimuth = 0;
+    let currentHeading = 0;
+    let compassActive = false;
+    let audioContext = null;
+    let beepInterval = null;
+
     // Show compass modal
     function showCompass(satellite) {
         if (!userLat || !userLon) {
@@ -1362,27 +1526,230 @@
         
         const modal = document.getElementById('compassModal');
         const satelliteInfo = document.getElementById('satelliteInfo');
-        const azimuthValue = document.getElementById('azimuthValue');
-        const needle = document.getElementById('compassNeedle');
+        const targetDirection = document.getElementById('targetDirection');
         
-        const azimuth = parseFloat(calculateAzimuth(satellite.longitude));
+        targetAzimuth = parseFloat(calculateAzimuth(satellite.longitude));
         
         satelliteInfo.innerHTML = `
             <strong style="color: var(--accent-primary); font-size: 1.3rem;">${satellite.name}</strong><br>
             <span style="font-size: 0.9rem;">الموقع: ${satellite.position}</span>
         `;
         
-        azimuthValue.textContent = `${azimuth.toFixed(1)}°`;
+        targetDirection.textContent = `${targetAzimuth.toFixed(1)}°`;
         
-        // Rotate needle to azimuth
-        needle.style.transform = `translate(-50%, -100%) rotate(${azimuth}deg)`;
+        // Set target indicator position
+        const targetIndicator = document.getElementById('targetIndicator');
+        targetIndicator.style.transform = `translate(-50%, -100%) rotate(${targetAzimuth}deg)`;
         
         modal.classList.add('active');
+        compassActive = true;
+        
+        // Start compass tracking
+        startCompass();
+    }
+
+    // Start compass with device orientation
+    function startCompass() {
+        if (!compassActive) return;
+        
+        // Check if DeviceOrientationEvent is supported
+        if (window.DeviceOrientationEvent) {
+            // Request permission for iOS 13+
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        } else {
+                            showAlertMessage('searching', '⚠️ يرجى السماح بالوصول للبوصلة في إعدادات الجهاز');
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // For non-iOS devices
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        } else {
+            showAlertMessage('searching', 'البوصلة غير مدعومة على هذا الجهاز. استخدم بوصلة خارجية.');
+        }
+    }
+
+    // Handle device orientation
+    function handleOrientation(event) {
+        if (!compassActive) return;
+        
+        let heading = event.alpha; // Compass direction (0-360)
+        
+        // For Android devices, use webkitCompassHeading if available
+        if (event.webkitCompassHeading) {
+            heading = event.webkitCompassHeading;
+        } else if (event.alpha) {
+            // Convert alpha to compass heading (iOS)
+            heading = 360 - event.alpha;
+        }
+        
+        if (heading !== null) {
+            currentHeading = heading;
+            updateCompass(heading);
+        }
+    }
+
+    // Update compass display
+    function updateCompass(heading) {
+        const compassRing = document.getElementById('compassRing');
+        const compassNeedle = document.getElementById('compassNeedle');
+        const currentDirection = document.getElementById('currentDirection');
+        const differenceDegree = document.getElementById('differenceDegree');
+        const alignmentAlert = document.getElementById('alignmentAlert');
+        const compassContainer = document.getElementById('compassContainer');
+        
+        // Rotate the compass ring (opposite direction to keep North pointing up)
+        compassRing.style.transform = `rotate(${-heading}deg)`;
+        
+        // Update current direction display
+        currentDirection.textContent = `${heading.toFixed(1)}°`;
+        
+        // Calculate difference
+        let difference = Math.abs(targetAzimuth - heading);
+        if (difference > 180) {
+            difference = 360 - difference;
+        }
+        
+        differenceDegree.textContent = `${difference.toFixed(1)}°`;
+        
+        // Update alert based on difference
+        if (difference <= 3) {
+            // Perfect alignment!
+            showAlertMessage('success', `🎯 محاذاة مثالية! الفرق: ${difference.toFixed(1)}°`);
+            compassContainer.classList.add('vibrating');
+            playSuccessBeep();
+        } else if (difference <= 10) {
+            // Very close
+            showAlertMessage('close', `✅ قريب جداً! الفرق: ${difference.toFixed(1)}°`);
+            compassContainer.classList.remove('vibrating');
+            playCloseBeep();
+        } else if (difference <= 30) {
+            // Getting closer
+            showAlertMessage('close', `↗️ اقترب أكثر... الفرق: ${difference.toFixed(1)}°`);
+            compassContainer.classList.remove('vibrating');
+            stopBeep();
+        } else {
+            // Still searching
+            showAlertMessage('searching', `🔍 استمر في التدوير... الفرق: ${difference.toFixed(1)}°`);
+            compassContainer.classList.remove('vibrating');
+            stopBeep();
+        }
+    }
+
+    // Show alert message
+    function showAlertMessage(type, message) {
+        const alertElement = document.getElementById('alignmentAlert');
+        const alertContent = document.getElementById('alertContent');
+        
+        alertElement.className = 'alignment-alert ' + type;
+        alertContent.textContent = message;
+    }
+
+    // Audio feedback system
+    function playSuccessBeep() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // Clear any existing interval
+        stopBeep();
+        
+        // Play rapid beeps for success
+        beepInterval = setInterval(() => {
+            playBeep(800, 100, 0.3);
+        }, 200);
+        
+        // Also vibrate if supported
+        if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100]);
+        }
+    }
+
+    function playCloseBeep() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        stopBeep();
+        
+        // Play slower beeps when close
+        beepInterval = setInterval(() => {
+            playBeep(600, 100, 0.2);
+        }, 500);
+    }
+
+    function playBeep(frequency, duration, volume) {
+        if (!audioContext) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = frequency;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + duration / 1000);
+    }
+
+    function stopBeep() {
+        if (beepInterval) {
+            clearInterval(beepInterval);
+            beepInterval = null;
+        }
+    }
+
+    // Sound control
+    let soundEnabled = true;
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('soundToggle');
+        
+        if (soundEnabled) {
+            btn.textContent = '🔊 إيقاف الصوت';
+        } else {
+            btn.textContent = '🔇 تشغيل الصوت';
+            stopBeep();
+        }
+    }
+
+    // Reset compass
+    function resetCompass() {
+        stopBeep();
+        showAlertMessage('searching', '🔍 جاهز للبحث عن القمر الصناعي...');
+        document.getElementById('compassContainer').classList.remove('vibrating');
+    }
+
+    // Override sound functions to check if enabled
+    const originalPlaySuccessBeep = playSuccessBeep;
+    const originalPlayCloseBeep = playCloseBeep;
+
+    playSuccessBeep = function() {
+        if (soundEnabled) originalPlaySuccessBeep();
+    }
+
+    playCloseBeep = function() {
+        if (soundEnabled) originalPlayCloseBeep();
     }
 
     // Close compass modal
     function closeCompass() {
+        compassActive = false;
+        stopBeep();
+        window.removeEventListener('deviceorientation', handleOrientation);
         document.getElementById('compassModal').classList.remove('active');
+        document.getElementById('compassContainer').classList.remove('vibrating');
     }
 
     // Close modal on background click
