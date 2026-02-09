@@ -4,914 +4,486 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>Satellite Finder - دليل الأقمار الصناعية</title>
+    <title>Satellite Finder Pro</title>
     <style>
-        /* Apple Design System - Colors & Variables */
         :root {
-            /* Apple System Colors */
-            --apple-black: #000000;
-            --apple-white: #ffffff;
-            --apple-gray-6: #f5f5f7;
-            --apple-gray-5: #e8e8ed;
-            --apple-gray-4: #d2d2d7;
-            --apple-gray-3: #86868b;
-            --apple-gray-2: #636366;
-            --apple-gray: #48484a;
-            --apple-dark-gray: #1d1d1f;
-            --apple-label: rgba(0, 0, 0, 0.85);
-            --apple-secondary-label: rgba(0, 0, 0, 0.55);
-            --apple-tertiary-label: rgba(0, 0, 0, 0.25);
-            --apple-quaternary-label: rgba(0, 0, 0, 0.1);
-            
-            /* Apple Blue */
-            --apple-blue: #0071e3;
-            --apple-blue-hover: #0077ed;
-            --apple-blue-pressed: #0068d1;
-            --apple-light-blue: #2997ff;
-            
-            /* Apple Accent Colors */
-            --apple-green: #34c759;
-            --apple-orange: #ff9500;
-            --apple-pink: #ff2d55;
-            --apple-purple: #af52de;
-            --apple-red: #ff3b30;
-            --apple-teal: #5ac8fa;
-            --apple-yellow: #ffcc00;
-            --apple-indigo: #5856d6;
-            
-            /* Dark Mode Colors */
-            --apple-dark-bg: #000000;
-            --apple-dark-elevated: #1c1c1e;
-            --apple-dark-secondary: #2c2c2e;
-            --apple-dark-tertiary: #3a3a3c;
-            
-            /* Glassmorphism */
-            --glass-light: rgba(255, 255, 255, 0.72);
-            --glass-dark: rgba(29, 29, 31, 0.72);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-border-dark: rgba(255, 255, 255, 0.1);
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
-            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
-            
-            /* Typography */
-            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-            
-            /* Spacing */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
-            --space-2xl: 48px;
-            
-            /* Border Radius */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            --text-primary: #ffffff;
+            --text-secondary: #86868b;
+            --accent-blue: #0a84ff;
+            --accent-green: #30d158;
+            --accent-orange: #ff9f0a;
+            --accent-red: #ff453a;
+            --divider: rgba(84, 84, 88, 0.65);
+            --safe-area-top: env(safe-area-inset-top);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: var(--font-stack);
-            background: var(--apple-dark-bg);
-            color: var(--apple-white);
-            line-height: 1.47059;
-            font-size: 17px;
-            letter-spacing: -0.022em;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
             overflow-x: hidden;
+            height: 100vh;
         }
 
-        /* Dynamic Island / Notch Area */
-        .status-bar {
-            height: 44px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-            backdrop-filter: saturate(180%) blur(20px);
+        /* --- Header & Search --- */
+        .app-header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        /* Hero Section - Apple Style */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 20px 80px;
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #000000 70%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 50%);
-            animation: pulse-glow 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 980px;
-        }
-
-        .hero-eyebrow {
-            font-size: 21px;
-            font-weight: 600;
-            color: var(--apple-orange);
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .hero-title {
-            font-size: 80px;
-            line-height: 1.05;
-            font-weight: 700;
-            letter-spacing: -0.015em;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #ffffff 0%, #86868b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 28px;
-            line-height: 1.28577;
-            font-weight: 400;
-            letter-spacing: 0.007em;
-            color: var(--apple-gray-3);
-            margin-bottom: 40px;
-        }
-
-        /* Apple Button Styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 36px;
-            font-size: 17px;
-            font-weight: 600;
-            border-radius: var(--radius-full);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            font-family: inherit;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--apple-blue);
-            color: var(--apple-white);
-            box-shadow: 0 4px 16px rgba(0, 113, 227, 0.4);
-        }
-
-        .btn-primary:hover {
-            background: var(--apple-blue-hover);
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0, 113, 227, 0.5);
-        }
-
-        .btn-primary:active {
-            background: var(--apple-blue-pressed);
-            transform: scale(0.98);
-        }
-
-        .btn-secondary {
-            background: var(--glass-dark);
-            color: var(--apple-white);
-            border: 1px solid var(--glass-border-dark);
+            top: 0; left: 0; right: 0;
+            background: rgba(28, 28, 30, 0.95);
             backdrop-filter: blur(20px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-large {
-            padding: 20px 48px;
-            font-size: 19px;
-        }
-
-        /* Search Section - iOS Style */
-        .search-section {
-            padding: 40px 20px;
-            background: var(--apple-dark-bg);
-            position: sticky;
-            top: 0;
             z-index: 100;
-            backdrop-filter: saturate(180%) blur(20px);
-            background-color: rgba(0, 0, 0, 0.8);
-            border-bottom: 0.5px solid var(--glass-border-dark);
+            padding: calc(10px + var(--safe-area-top)) 16px 16px;
+            border-bottom: 0.5px solid var(--divider);
         }
 
-        .search-container {
-            max-width: 680px;
-            margin: 0 auto;
-        }
-
-        .search-box {
-            position: relative;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--apple-gray-3);
-            font-size: 20px;
-            z-index: 2;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 16px 20px 16px 52px;
-            background: var(--apple-dark-tertiary);
-            border: 1px solid transparent;
-            border-radius: var(--radius-full);
-            color: var(--apple-white);
-            font-size: 17px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            background: var(--apple-dark-secondary);
-            border-color: var(--apple-blue);
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
-        }
-
-        .search-input::placeholder {
-            color: var(--apple-gray-3);
-        }
-
-        /* Location Chip */
-        .location-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 16px;
-            padding: 10px 20px;
-            background: var(--apple-dark-secondary);
-            border-radius: var(--radius-full);
-            font-size: 15px;
-            color: var(--apple-gray-3);
-            border: 1px solid var(--glass-border-dark);
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-        }
-
-        .location-chip.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .location-chip.success {
-            color: var(--apple-green);
-            border-color: rgba(52, 199, 89, 0.3);
-        }
-
-        /* Satellites Grid - Apple Card Style */
-        .satellites-section {
-            padding: 60px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-title {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: -0.003em;
-            margin-bottom: 12px;
-        }
-
-        .section-subtitle {
-            font-size: 21px;
-            color: var(--apple-gray-3);
-        }
-
-        .satellites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 24px;
-        }
-
-        /* Apple Card Component */
-        .apple-card {
-            background: var(--apple-dark-elevated);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            border: 0.5px solid var(--glass-border-dark);
-            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            position: relative;
-        }
-
-        .apple-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .card-header {
-            padding: 24px;
-            background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, transparent 100%);
-            border-bottom: 0.5px solid var(--glass-border-dark);
-        }
-
-        .card-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            background: rgba(0, 113, 227, 0.2);
-            color: var(--apple-light-blue);
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: var(--radius-full);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .card-title {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.015em;
-            margin-bottom: 4px;
-        }
-
-        .card-subtitle {
-            font-size: 17px;
-            color: var(--apple-gray-3);
-        }
-
-        .card-content {
-            padding: 24px;
-        }
-
-        /* Apple Table Style */
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .info-row {
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 0.5px solid var(--glass-border-dark);
+            margin-bottom: 12px;
         }
 
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-            color: var(--apple-gray-3);
-        }
-
-        .info-value {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--apple-white);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Compass Toggle Button */
-        .compass-toggle {
-            width: 100%;
-            margin-top: 20px;
-            padding: 16px;
-            background: var(--apple-dark-tertiary);
-            border: 1px solid var(--glass-border-dark);
-            border-radius: var(--radius-md);
-            color: var(--apple-white);
-            font-size: 17px;
+        .app-title { font-size: 22px; font-weight: 700; }
+        
+        .location-btn {
+            background: rgba(10, 132, 255, 0.15);
+            color: var(--accent-blue);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+        }
+
+        .search-bar {
+            background: #2c2c2e;
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
         }
 
-        .compass-toggle:hover {
-            background: var(--apple-dark-secondary);
-            border-color: var(--apple-blue);
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+            text-align: right;
         }
 
-        .compass-toggle.active {
-            background: var(--apple-blue);
-            border-color: var(--apple-blue);
-            color: var(--apple-white);
+        /* --- Satellite List --- */
+        .sat-list-container {
+            padding-top: 130px;
+            padding-bottom: 40px;
+            padding-left: 16px;
+            padding-right: 16px;
         }
 
-        /* Compass Section - Apple Style Integration */
-        .compass-section {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-            background: var(--apple-black);
+        .sat-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+            cursor: pointer;
         }
 
-        .compass-section.active {
-            max-height: 600px;
+        .sat-item:active { transform: scale(0.98); background: #2c2c2e; }
+
+        .sat-info h3 { font-size: 17px; margin-bottom: 4px; }
+        .sat-info p { font-size: 13px; color: var(--text-secondary); }
+        
+        .sat-arrow { 
+            color: var(--text-secondary); 
+            font-size: 20px;
+            opacity: 0.5;
         }
 
-        .compass-inner {
-            padding: 32px 24px;
+        /* --- Full Screen Modal (Compass) --- */
+        .compass-modal {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Apple Style Compass */
-        .compass-container {
+        .compass-modal.active { transform: translateY(0); }
+
+        .modal-header {
+            padding: calc(20px + var(--safe-area-top)) 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: #3a3a3c;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-title { text-align: center; }
+        .modal-title h2 { font-size: 18px; }
+        .modal-title span { font-size: 12px; color: var(--text-secondary); }
+
+        /* --- Compass UI --- */
+        .compass-area {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
-        }
-
-        .compass-wrapper {
+            justify-content: center;
             position: relative;
-            width: 280px;
-            height: 280px;
         }
 
-        .compass-outer {
+        /* Phone Header Indicator (Fixed) */
+        .phone-indicator {
             position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, #2a2a2a, #1a1a1a, #2a2a2a, #1a1a1a, #2a2a2a);
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.8),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            top: 20px;
+            width: 4px;
+            height: 30px;
+            background: var(--accent-orange);
+            border-radius: 2px;
+            z-index: 50;
+            box-shadow: 0 0 10px var(--accent-orange);
+        }
+        .phone-indicator::after {
+            content: 'رأس الهاتف';
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 11px;
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        /* The Rotating Compass */
+        .compass-container {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            margin-top: 40px;
         }
 
         .compass-face {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #3a3a3c 0%, #1c1c1e 100%);
+            background: radial-gradient(circle at center, #2c2c2e 0%, #000 100%);
+            border: 2px solid #3a3a3c;
             position: relative;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transition: transform 0.1s linear; /* Smooth rotation */
         }
 
-        /* Compass Markings */
-        .compass-markings {
+        /* Ticks */
+        .tick {
             position: absolute;
-            inset: 0;
-            border-radius: 50%;
+            left: 50%; top: 0;
+            width: 1px; height: 10px;
+            background: #555;
+            transform-origin: 50% 150px; /* Half of container size */
         }
-
-        .degree-tick {
+        .tick.major { height: 15px; background: #fff; width: 2px; }
+        
+        .direction-label {
             position: absolute;
-            left: 50%;
-            top: 8px;
-            width: 2px;
-            height: 8px;
-            background: var(--apple-gray-3);
-            transform-origin: 50% 132px;
-            border-radius: 1px;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            transform-origin: center;
         }
+        .n { top: 20px; left: 50%; transform: translateX(-50%); color: var(--accent-red); }
+        .s { bottom: 20px; left: 50%; transform: translateX(-50%); }
+        .e { right: 20px; top: 50%; transform: translateY(-50%); }
+        .w { left: 20px; top: 50%; transform: translateY(-50%); }
 
-        .degree-tick.major {
-            width: 3px;
-            height: 12px;
-            background: var(--apple-white);
-            top: 6px;
-        }
-
-        .compass-direction {
+        /* The Satellite Target (Rotates with face) */
+        .satellite-marker {
             position: absolute;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--apple-white);
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease;
         }
 
-        .compass-direction.n { top: 20px; left: 50%; transform: translateX(-50%); color: var(--apple-red); }
-        .compass-direction.e { right: 20px; top: 50%; transform: translateY(-50%); }
-        .compass-direction.s { bottom: 20px; left: 50%; transform: translateX(-50%); }
-        .compass-direction.w { left: 20px; top: 50%; transform: translateY(-50%); }
-
-        /* Target Indicator */
-        .target-marker {
+        .sat-icon {
             position: absolute;
-            top: 12px;
+            top: 5px; /* On the rim */
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 14px solid var(--apple-orange);
-            z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(255, 149, 0, 0.4));
-        }
-
-        /* Rotating Ring */
-        .compass-rotating {
-            position: absolute;
-            inset: 40px;
+            width: 30px; height: 30px;
+            background: var(--accent-green);
+            border: 2px solid white;
             border-radius: 50%;
-            transition: transform 0.1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 0 15px var(--accent-green);
+            z-index: 10;
+        }
+        
+        .sat-line {
+            position: absolute;
+            top: 35px; left: 50%;
+            width: 2px; height: 115px;
+            background: linear-gradient(to bottom, var(--accent-green), transparent);
+            transform: translateX(-50%);
         }
 
-        /* Needle */
-        .compass-needle {
+        /* Crosshair in center */
+        .center-cross {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 4px;
-            height: 80px;
-            background: linear-gradient(to top, var(--apple-red) 0%, #ff453a 100%);
-            transform: translate(-50%, -100%);
-            transform-origin: bottom center;
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
-            z-index: 5;
-        }
-
-        .compass-needle::after {
-            content: '';
-            position: absolute;
-            bottom: -80px;
-            left: 0;
-            width: 4px;
-            height: 80px;
-            background: linear-gradient(to bottom, var(--apple-gray-4) 0%, var(--apple-gray-3) 100%);
-            border-radius: 2px;
-        }
-
-        .needle-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle at 30% 30%, var(--apple-gray-4) 0%, var(--apple-gray) 100%);
-            border-radius: 50%;
-            border: 2px solid var(--apple-white);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            z-index: 10;
         }
 
-        /* Status Ring */
-        .status-ring {
-            position: absolute;
-            inset: -10px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
+        /* Info Panel in Modal */
+        .info-panel {
+            background: #1c1c1e;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 16px;
         }
 
-        .status-ring.perfect {
-            border-color: var(--apple-green);
-            box-shadow: 0 0 30px rgba(52, 199, 89, 0.3);
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2c2c2e;
         }
+        .data-row:last-child { border: none; margin: 0; padding: 0; }
+        
+        .data-label { color: var(--text-secondary); font-size: 14px; }
+        .data-value { font-weight: 700; font-family: monospace; font-size: 16px; }
 
-        .status-ring.close {
-            border-color: var(--apple-orange);
-        }
-
-        .status-ring.far {
-            border-color: var(--apple-gray-3);
-        }
-
-        /* Apple Style Metrics */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            width: 100%;
-        }
-
-        .metric-card {
-            background: var(--apple-dark-elevated);
-            border-radius: var(--radius-lg);
-            padding: 16px;
+        .status-bar {
             text-align: center;
-            border: 0.5px solid var(--glass-border-dark);
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            background: #2c2c2e;
+            color: var(--text-secondary);
+            transition: background 0.3s;
         }
+        .status-bar.aligned { background: var(--accent-green); color: black; }
+        .status-bar.close { background: var(--accent-orange); color: black; }
 
-        .metric-label {
-            font-size: 12px;
-            color: var(--apple-gray-3);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--apple-white);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .metric-value.target {
-            color: var(--apple-light-blue);
-        }
-
-        .metric-value.diff {
-            color: var(--apple-orange);
-        }
-
-        /* Alignment Status - Apple Style */
-        .alignment-pill {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border-radius: var(--radius-full);
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .alignment-pill.perfect {
-            background: rgba(52, 199, 89, 0.15);
-            color: var(--apple-green);
-            border: 1px solid rgba(52, 199, 89, 0.3);
-        }
-
-        .alignment-pill.close {
-            background: rgba(255, 149, 0, 0.15);
-            color: var(--apple-orange);
-            border: 1px solid rgba(255, 149, 0, 0.3);
-        }
-
-        .alignment-pill.far {
-            background: rgba(134, 134, 139, 0.15);
-            color: var(--apple-gray-3);
-            border: 1px solid rgba(134, 134, 139, 0.3);
-        }
-
-        /* Control Buttons - iOS Style */
-        .controls-row {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .control-btn {
-            flex: 1;
-            padding: 12px;
-            background: var(--apple-dark-tertiary);
-            border: 0.5px solid var(--glass-border-dark);
-            border-radius: var(--radius-md);
-            color: var(--apple-white);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .control-btn:hover {
-            background: var(--apple-dark-secondary);
-        }
-
-        .control-btn.active {
-            background: var(--apple-blue);
-            color: var(--apple-white);
-        }
-
-        /* Empty State - Apple Style */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--apple-gray-3);
-        }
-
-        .empty-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        /* Animations */
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: fade-in-up 0.6s ease forwards;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 48px; }
-            .hero-subtitle { font-size: 21px; }
-            .section-title { font-size: 32px; }
-            .satellites-grid { grid-template-columns: 1fr; }
-            .compass-wrapper { width: 240px; height: 240px; }
-            .degree-tick { transform-origin: 50% 112px; }
-        }
-
-        /* Scrollbar - Apple Style */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--apple-gray);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--apple-gray-3);
-        }
+        /* Helpers */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <!-- Status Bar -->
-    <div class="status-bar">
-        <span>📡 Satellite Finder</span>
-    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-eyebrow">Pro Orientation System</div>
-            <h1 class="hero-title">دليل الأقمار الصناعية</h1>
-            <p class="hero-subtitle">نظام متقدم لتوجيه أطباق الاستقبال الفضائية بدقة عالية</p>
-            <button class="btn btn-primary btn-large" onclick="scrollToSearch()">
-                ابدأ الاستخدام
+    <header class="app-header">
+        <div class="header-top">
+            <div class="app-title">Satellite Finder Pro 📡</div>
+            <button class="location-btn" onclick="getLocation()">
+                <span id="loc-status">📍 تحديد الموقع</span>
             </button>
         </div>
-    </section>
+        <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" class="search-input" placeholder="ابحث عن قمر (مثال: Nilesat)..." oninput="filterSatellites(this.value)">
+        </div>
+    </header>
 
-    <!-- Search Section -->
-    <section class="search-section" id="searchSection">
-        <div class="search-container">
-            <div class="search-box">
-                <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن القمر الصناعي...">
+    <div class="sat-list-container" id="sat-list">
+        </div>
+
+    <div class="compass-modal" id="compassModal">
+        <div class="modal-header">
+            <button class="close-btn" onclick="closeModal()">✕</button>
+            <div class="modal-title">
+                <h2 id="modal-sat-name">Nilesat</h2>
+                <span id="modal-sat-pos">7.0° W</span>
+            </div>
+            <div style="width: 36px;"></div> </div>
+
+        <div class="compass-area">
+            <div class="phone-indicator"></div>
+            
+            <div class="compass-container">
+                <div class="compass-face" id="compassFace">
+                    <div class="direction-label n">N</div>
+                    <div class="direction-label e">E</div>
+                    <div class="direction-label s">S</div>
+                    <div class="direction-label w">W</div>
+                    
+                    <div class="satellite-marker" id="satMarker">
+                        <div class="sat-icon">🛰️</div>
+                        <div class="sat-line"></div>
+                    </div>
+
+                    <div class="center-cross"></div>
                 </div>
-                <button class="btn btn-secondary" onclick="getUserLocation()">
-                    📍 تحديد الموقع
-                </button>
-            </div>
-            <div class="location-chip" id="locationChip">
-                <span id="locationText">جاري تحديد الموقع...</span>
             </div>
         </div>
-    </section>
 
-    <!-- Satellites Section -->
-    <section class="satellites-section">
-        <div class="section-header">
-            <h2 class="section-title">الأقمار المتاحة</h2>
-            <p class="section-subtitle">اختر القمر لعرض البوصلة التفاعلية</p>
+        <div class="status-bar" id="alignStatus">
+            يرجى تحديد الموقع أولاً
         </div>
-        <div class="satellites-grid" id="satellitesGrid">
-            <!-- Cards will be inserted here -->
+
+        <div class="info-panel">
+            <div class="data-row">
+                <span class="data-label">اتجاه السمت (Azimuth)</span>
+                <span class="data-value" id="val-az">---</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">الارتفاع (Elevation)</span>
+                <span class="data-value" id="val-el">---</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">اتجاهك الحالي</span>
+                <span class="data-value" id="val-head">---</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">الفرق</span>
+                <span class="data-value" id="val-diff">---</span>
+            </div>
         </div>
-    </section>
+    </div>
 
     <script>
-        // Apple Design System Implementation
+        // --- 1. Data Source (West to East) ---
         const satellites = [
-            { name: "Hispasat 30W-6", position: "30.0° W", longitude: -30.0, freq: "11.731-12.722 GHz", band: "Ku" },
-            { name: "Nilesat 201", position: "7.0° W", longitude: -7.0, freq: "10.727-12.729 GHz", band: "Ku" },
-            { name: "Eutelsat 8 West B", position: "8.0° W", longitude: -8.0, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Hot Bird 13F", position: "13.0° E", longitude: 13.0, freq: "10.700-12.750 GHz", band: "Ku" },
-            { name: "Hot Bird 13G", position: "13.0° E", longitude: 13.0, freq: "10.700-12.750 GHz", band: "Ku" },
-            { name: "Astra 1KR", position: "19.2° E", longitude: 19.2, freq: "10.700-12.750 GHz", band: "Ku" },
-            { name: "Astra 3B", position: "23.5° E", longitude: 23.5, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Arabsat Badr-4", position: "26.0° E", longitude: 26.0, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Arabsat Badr-5", position: "26.0° E", longitude: 26.0, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Astra 2E", position: "28.2° E", longitude: 28.2, freq: "10.700-12.750 GHz", band: "Ku" },
-            { name: "Arabsat 5A", position: "30.5° E", longitude: 30.5, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Türksat 4A", position: "42.0° E", longitude: 42.0, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Intelsat 10-02", position: "47.5° E", longitude: 47.5, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "NSS-12", position: "57.0° E", longitude: 57.0, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "Intelsat 20", position: "68.5° E", longitude: 68.5, freq: "11.470-12.750 GHz", band: "Ku" },
-            { name: "ABS-2A", position: "75.0° E", longitude: 75.0, freq: "11.470-12.750 GHz", band: "Ku" }
+            { name: "Hispasat 30W-6", pos: "30.0° W", lon: -30.0 },
+            { name: "Intelsat 905", pos: "24.5° W", lon: -24.5 },
+            { name: "NSS 7", pos: "20.0° W", lon: -20.0 },
+            { name: "Telstar 12", pos: "15.0° W", lon: -15.0 },
+            { name: "Express AM8", pos: "14.0° W", lon: -14.0 },
+            { name: "Eutelsat 8 West B", pos: "8.0° W", lon: -8.0 },
+            { name: "Nilesat 201", pos: "7.0° W", lon: -7.0 },
+            { name: "Eutelsat 5 West B", pos: "5.0° W", lon: -5.0 },
+            { name: "Amos 3/7", pos: "4.0° W", lon: -4.0 },
+            { name: "Thor 5/6/7", pos: "0.8° W", lon: -0.8 },
+            { name: "Eutelsat 3B", pos: "3.1° E", lon: 3.1 },
+            { name: "Astra 4A", pos: "4.8° E", lon: 4.8 },
+            { name: "Eutelsat 7C", pos: "7.0° E", lon: 7.0 },
+            { name: "Eutelsat 9B", pos: "9.0° E", lon: 9.0 },
+            { name: "Eutelsat 10A", pos: "10.0° E", lon: 10.0 },
+            { name: "Hot Bird 13F/13G", pos: "13.0° E", lon: 13.0 },
+            { name: "Eutelsat 16A", pos: "16.0° E", lon: 16.0 },
+            { name: "Astra 1KR/1L/1M", pos: "19.2° E", lon: 19.2 },
+            { name: "Astra 3B", pos: "23.5° E", lon: 23.5 },
+            { name: "Eutelsat 25B / Es'hail 1", pos: "25.5° E", lon: 25.5 },
+            { name: "Arabsat Badr 4/5/6", pos: "26.0° E", lon: 26.0 },
+            { name: "Astra 2E/2F/2G", pos: "28.2° E", lon: 28.2 },
+            { name: "Arabsat 5A", pos: "30.5° E", lon: 30.5 },
+            { name: "Eutelsat 33E", pos: "33.1° E", lon: 33.1 },
+            { name: "Eutelsat 36B", pos: "36.0° E", lon: 36.0 },
+            { name: "Paksat 1R", pos: "38.0° E", lon: 38.0 },
+            { name: "Hellas Sat 3/4", pos: "39.0° E", lon: 39.0 },
+            { name: "Türksat 3A/4A", pos: "42.0° E", lon: 42.0 },
+            { name: "AzerSpace 1", pos: "46.0° E", lon: 46.0 },
+            { name: "Yahsat 1B", pos: "52.5° E", lon: 52.5 },
+            { name: "Express AM6", pos: "53.0° E", lon: 53.0 },
+            { name: "Yamal 402", pos: "55.0° E", lon: 55.0 },
+            { name: "NSS 12", pos: "57.0° E", lon: 57.0 },
+            { name: "Intelsat 33e", pos: "60.0° E", lon: 60.0 },
+            { name: "Intelsat 17", pos: "66.0° E", lon: 66.0 },
+            { name: "Intelsat 20", pos: "68.5° E", lon: 68.5 },
+            { name: "Eutelsat 70B", pos: "70.5° E", lon: 70.5 },
+            { name: "ABS 2", pos: "75.0° E", lon: 75.0 },
+            { name: "Apstar 7", pos: "76.5° E", lon: 76.5 },
+            { name: "Thaicom 6", pos: "78.5° E", lon: 78.5 },
+            { name: "Express AM2", pos: "80.0° E", lon: 80.0 },
+            { name: "Insat 4A", pos: "83.0° E", lon: 83.0 },
+            { name: "Horizons 2", pos: "85.0° E", lon: 85.0 },
+            { name: "ChinaSat 12", pos: "87.5° E", lon: 87.5 },
+            { name: "ST 2", pos: "88.0° E", lon: 88.0 },
+            { name: "Yamal 401", pos: "90.0° E", lon: 90.0 },
+            { name: "Measat 3", pos: "91.5° E", lon: 91.5 },
+            { name: "ChinaSat 11", pos: "98.0° E", lon: 98.0 },
+            { name: "AsiaSat 5", pos: "100.5° E", lon: 100.5 },
+            { name: "AsiaSat 7", pos: "105.5° E", lon: 105.5 },
+            { name: "SES 7/9", pos: "108.2° E", lon: 108.2 }
         ];
 
+        // --- 2. State & initialization ---
         let userLat = null;
         let userLon = null;
-        let activeCompass = null;
+        let currentTarget = null;
+        let watchId = null;
         let audioCtx = null;
-        let soundOn = true;
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            renderSatellites();
-            setupSearch();
-            
-            // Initialize audio on first interaction
-            document.addEventListener('click', initAudio, { once: true });
+            renderList(satellites);
+            initCompassTicks();
+            document.body.addEventListener('click', initAudio, { once: true });
         });
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        // --- 3. UI Functions ---
+        function renderList(list) {
+            const container = document.getElementById('sat-list');
+            container.innerHTML = list.map((sat, index) => `
+                <div class="sat-item" onclick="openCompass(${index}, '${sat.name}', '${sat.pos}', ${sat.lon})">
+                    <div class="sat-info">
+                        <h3>${sat.name}</h3>
+                        <p>${sat.pos}</p>
+                    </div>
+                    <div class="sat-arrow">›</div>
+                </div>
+            `).join('');
+        }
+
+        function filterSatellites(query) {
+            const term = query.toLowerCase();
+            const filtered = satellites.filter(s => 
+                s.name.toLowerCase().includes(term) || s.pos.toLowerCase().includes(term)
+            );
+            renderList(filtered);
+        }
+
+        function initCompassTicks() {
+            const face = document.getElementById('compassFace');
+            for (let i = 0; i < 360; i += 5) {
+                if (i % 90 === 0) continue; // Skip cardinals
+                const tick = document.createElement('div');
+                tick.className = i % 10 === 0 ? 'tick major' : 'tick';
+                tick.style.transform = `rotate(${i}deg)`;
+                face.appendChild(tick);
             }
         }
 
-        function scrollToSearch() {
-            document.getElementById('searchSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function setupSearch() {
-            const input = document.getElementById('searchInput');
-            input.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = satellites.filter(s => 
-                    s.name.toLowerCase().includes(term) || 
-                    s.position.toLowerCase().includes(term)
-                );
-                renderSatellites(filtered);
-            });
-        }
-
-        function getUserLocation() {
-            const chip = document.getElementById('locationChip');
-            const text = document.getElementById('locationText');
-            
-            chip.classList.add('active');
-            text.textContent = '⏳ جاري تحديد الموقع...';
+        // --- 4. Location & Math ---
+        function getLocation() {
+            const status = document.getElementById('loc-status');
+            status.textContent = 'جاري التحديد...';
             
             if (!navigator.geolocation) {
-                text.textContent = '❌ المتصفح لا يدعم تحديد الموقع';
+                alert('المتصفح لا يدعم تحديد الموقع');
                 return;
             }
 
@@ -919,308 +491,174 @@
                 (pos) => {
                     userLat = pos.coords.latitude;
                     userLon = pos.coords.longitude;
-                    text.textContent = `✅ ${userLat.toFixed(4)}°N, ${userLon.toFixed(4)}°E`;
-                    chip.classList.add('success');
-                    renderSatellites();
+                    status.textContent = `✅ ${userLat.toFixed(2)}, ${userLon.toFixed(2)}`;
+                    status.parentElement.style.background = 'rgba(48, 209, 88, 0.2)';
+                    status.parentElement.style.color = '#30d158';
+                    
+                    // If modal is open, update calculation
+                    if (currentTarget) updateCalculations(currentTarget);
                 },
                 (err) => {
-                    text.textContent = '❌ يرجى السماح بالوصول للموقع';
+                    status.textContent = '❌ فشل التحديد';
+                    alert('يرجى تفعيل GPS');
                 },
-                { enableHighAccuracy: true, timeout: 10000 }
+                { enableHighAccuracy: true }
             );
         }
 
-        // Geometric Calculations
         function calcAzimuth(satLon) {
+            if (userLat === null) return 0;
             const latRad = userLat * Math.PI / 180;
             const dLon = (satLon - userLon) * Math.PI / 180;
             const y = Math.sin(dLon);
             const x = Math.cos(dLon) * Math.sin(latRad);
             let az = Math.atan2(y, x) * 180 / Math.PI;
-            return (az + 360) % 360;
+            return (az + 360) % 360; // Normalize 0-360
         }
 
         function calcElevation(satLon) {
-            const R = 6371, h = 35786;
+            if (userLat === null) return 0;
+            const R = 6371; // Earth radius
+            const h = 35786; // Orbit height
             const latRad = userLat * Math.PI / 180;
             const dLon = (satLon - userLon) * Math.PI / 180;
             const cosGamma = Math.cos(latRad) * Math.cos(dLon);
             const el = Math.atan((cosGamma - R/(R+h)) / Math.sqrt(1 - cosGamma**2)) * 180 / Math.PI;
-            return Math.max(0, el);
+            return Math.max(0, el); // No negative elevation
         }
 
-        function calcDistance(satLon) {
-            const R = 6371, h = 35786;
-            const latRad = userLat * Math.PI / 180;
-            const dLon = (satLon - userLon) * Math.PI / 180;
-            const cosGamma = Math.cos(latRad) * Math.cos(dLon);
-            const dist = Math.sqrt(R**2 + (R+h)**2 - 2*R*(R+h)*cosGamma);
-            return Math.round(dist);
-        }
-
-        function renderSatellites(list = satellites) {
-            const grid = document.getElementById('satellitesGrid');
-            grid.innerHTML = list.map((sat, idx) => {
-                const hasLoc = userLat !== null;
-                const az = hasLoc ? calcAzimuth(sat.longitude).toFixed(1) : '—';
-                const el = hasLoc ? calcElevation(sat.longitude).toFixed(1) : '—';
-                const dist = hasLoc ? calcDistance(sat.longitude).toLocaleString() : '—';
-                const isActive = activeCompass === idx;
-
-                return `
-                    <div class="apple-card animate-in" style="animation-delay: ${idx * 0.05}s">
-                        <div class="card-header">
-                            <div class="card-badge">${sat.band}-Band</div>
-                            <h3 class="card-title">${sat.name}</h3>
-                            <p class="card-subtitle">${sat.position} • ${sat.freq}</p>
-                        </div>
-                        
-                        <div class="card-content">
-                            <div class="info-table">
-                                <div class="info-row">
-                                    <span class="info-label">🧭 الاتجاه</span>
-                                    <span class="info-value">${az}°</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">📐 الارتفاع</span>
-                                    <span class="info-value">${el}°</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">📏 المسافة</span>
-                                    <span class="info-value">${dist} كم</span>
-                                </div>
-                            </div>
-                            
-                            <button class="compass-toggle ${isActive ? 'active' : ''}" 
-                                    onclick="toggleCompass(${idx}, ${sat.longitude})" 
-                                    id="toggle-${idx}">
-                                ${isActive ? '❌ إخفاء البوصلة' : '🧭 عرض البوصلة'}
-                            </button>
-                            
-                            <div class="compass-section ${isActive ? 'active' : ''}" id="compass-${idx}">
-                                <div class="compass-inner">
-                                    <div class="compass-container">
-                                        <div class="alignment-pill far" id="pill-${idx}">
-                                            <span id="pill-text-${idx}">جاري التهيئة...</span>
-                                        </div>
-                                        
-                                        <div class="compass-wrapper">
-                                            <div class="compass-outer">
-                                                <div class="compass-face" id="face-${idx}">
-                                                    <div class="compass-markings" id="marks-${idx}"></div>
-                                                    <div class="compass-direction n">N</div>
-                                                    <div class="compass-direction e">E</div>
-                                                    <div class="compass-direction s">S</div>
-                                                    <div class="compass-direction w">W</div>
-                                                    <div class="target-marker"></div>
-                                                    
-                                                    <div class="compass-rotating" id="ring-${idx}">
-                                                        <div class="compass-needle"></div>
-                                                        <div class="needle-center"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="status-ring far" id="status-ring-${idx}"></div>
-                                        </div>
-                                        
-                                        <div class="metrics-grid">
-                                            <div class="metric-card">
-                                                <div class="metric-label">اتجاهك</div>
-                                                <div class="metric-value" id="head-${idx}">—</div>
-                                            </div>
-                                            <div class="metric-card">
-                                                <div class="metric-label">هدف القمر</div>
-                                                <div class="metric-value target" id="target-${idx}">—</div>
-                                            </div>
-                                            <div class="metric-card">
-                                                <div class="metric-label">الفرق</div>
-                                                <div class="metric-value diff" id="diff-${idx}">—</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="controls-row">
-                                            <button class="control-btn ${!soundOn ? 'active' : ''}" 
-                                                    onclick="toggleSound(${idx})" id="sound-${idx}">
-                                                ${soundOn ? '🔊' : '🔇'} صوت
-                                            </button>
-                                            <button class="control-btn" onclick="resetCompass(${idx})">
-                                                🔄 إعادة
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Add degree marks to active compass
-            if (activeCompass !== null) {
-                addDegreeMarks(activeCompass);
-            }
-        }
-
-        function addDegreeMarks(idx) {
-            const container = document.getElementById(`marks-${idx}`);
-            if (!container) return;
+        // --- 5. Modal & Compass Logic ---
+        async function openCompass(index, name, pos, lon) {
+            currentTarget = { name, pos, lon };
             
-            container.innerHTML = '';
-            for (let i = 0; i < 360; i += 10) {
-                const tick = document.createElement('div');
-                tick.className = i % 90 === 0 ? 'degree-tick major' : 'degree-tick';
-                tick.style.transform = `rotate(${i}deg)`;
-                container.appendChild(tick);
-            }
-        }
-
-        async function toggleCompass(idx, satLon) {
-            if (!userLat) {
-                alert('⚠️ يرجى تحديد موقعك أولاً');
-                return;
-            }
-
-            if (activeCompass === idx) {
-                closeCompass(idx);
-                return;
-            }
-
-            if (activeCompass !== null) {
-                closeCompass(activeCompass);
-            }
-
-            activeCompass = idx;
-            const targetAz = calcAzimuth(satLon);
+            document.getElementById('modal-sat-name').textContent = name;
+            document.getElementById('modal-sat-pos').textContent = pos;
+            document.getElementById('compassModal').classList.add('active');
             
-            // Update UI
-            document.getElementById(`toggle-${idx}`).classList.add('active');
-            document.getElementById(`toggle-${idx}`).textContent = '❌ إخفاء البوصلة';
-            document.getElementById(`compass-${idx}`).classList.add('active');
-            document.getElementById(`target-${idx}`).textContent = targetAz.toFixed(1) + '°';
-            
-            addDegreeMarks(idx);
+            updateCalculations(currentTarget);
 
             // Request permission for iOS
-            if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+            if (typeof DeviceOrientationEvent !== 'undefined' && 
+                typeof DeviceOrientationEvent.requestPermission === 'function') {
                 try {
                     const perm = await DeviceOrientationEvent.requestPermission();
-                    if (perm !== 'granted') return;
+                    if (perm !== 'granted') alert('يرجى السماح باستخدام البوصلة');
                 } catch (e) {
                     console.error(e);
-                    return;
                 }
             }
 
-            startOrientationListener(idx, targetAz);
+            startCompass();
         }
 
-        function startOrientationListener(idx, targetAz) {
-            const handler = (e) => {
-                let heading = e.webkitCompassHeading ?? (360 - e.alpha);
-                if (heading === null || isNaN(heading)) return;
-                
+        function closeModal() {
+            document.getElementById('compassModal').classList.remove('active');
+            stopCompass();
+            currentTarget = null;
+        }
+
+        function updateCalculations(target) {
+            if (userLat === null) {
+                document.getElementById('alignStatus').textContent = 'يرجى تحديد الموقع أولاً ⚠️';
+                return;
+            }
+
+            const az = calcAzimuth(target.lon);
+            const el = calcElevation(target.lon);
+
+            document.getElementById('val-az').textContent = az.toFixed(1) + '°';
+            document.getElementById('val-el').textContent = el.toFixed(1) + '°';
+            
+            // Set satellite marker position relative to North (0 on the dial)
+            // The dial rotates, so we just place the marker at the fixed degree on the dial
+            const marker = document.getElementById('satMarker');
+            marker.style.transform = `rotate(${az}deg)`;
+        }
+
+        function startCompass() {
+            const handleOrientation = (e) => {
+                if (!currentTarget || userLat === null) return;
+
+                // 1. Get Heading
+                let heading = 0;
+                if (e.webkitCompassHeading) {
+                    heading = e.webkitCompassHeading; // iOS
+                } else if (e.alpha !== null) {
+                    heading = 360 - e.alpha; // Android (simplified)
+                }
                 heading = (heading + 360) % 360;
-                updateCompass(idx, heading, targetAz);
+
+                // 2. Rotate Compass Face
+                // We rotate the face NEGATIVE to the heading.
+                // If phone points East (90), Face rotates -90 so "N" is at left (West).
+                const face = document.getElementById('compassFace');
+                face.style.transform = `rotate(${-heading}deg)`;
+
+                // 3. Calculate Diff
+                const targetAz = calcAzimuth(currentTarget.lon);
+                let diff = targetAz - heading;
+                
+                // Normalize diff -180 to 180
+                while (diff < -180) diff += 360;
+                while (diff > 180) diff -= 360;
+                
+                const absDiff = Math.abs(diff);
+
+                // 4. Update UI
+                document.getElementById('val-head').textContent = heading.toFixed(0) + '°';
+                document.getElementById('val-diff').textContent = absDiff.toFixed(1) + '°';
+                
+                const statusEl = document.getElementById('alignStatus');
+                
+                let dir = diff > 0 ? 'يمين ⟳' : 'يسار ⟲';
+
+                if (absDiff < 3) {
+                    statusEl.textContent = '🚀 إشارة ممتازة! ثبت الطبق';
+                    statusEl.className = 'status-bar aligned';
+                    playBeep(880);
+                    if (navigator.vibrate) navigator.vibrate(50);
+                } else if (absDiff < 15) {
+                    statusEl.textContent = `قريب.. در لـ ${dir}`;
+                    statusEl.className = 'status-bar close';
+                } else {
+                    statusEl.textContent = `ابحث.. در لـ ${dir}`;
+                    statusEl.className = 'status-bar';
+                }
             };
 
-            window.addEventListener('deviceorientation', handler);
-            
-            // Store for cleanup
-            window._compassHandler = handler;
+            if ('ondeviceorientationabsolute' in window) {
+                window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation, true);
+            }
+            window._compassHandler = handleOrientation;
         }
 
-        let lastUpdate = 0;
-        function updateCompass(idx, heading, target) {
-            const now = Date.now();
-            if (now - lastUpdate < 50) return;
-            lastUpdate = now;
-
-            const ring = document.getElementById(`ring-${idx}`);
-            const headEl = document.getElementById(`head-${idx}`);
-            const diffEl = document.getElementById(`diff-${idx}`);
-            const pill = document.getElementById(`pill-${idx}`);
-            const pillText = document.getElementById(`pill-text-${idx}`);
-            const statusRing = document.getElementById(`status-ring-${idx}`);
-
-            // Rotate compass (inverse for needle effect)
-            ring.style.transform = `rotate(${-heading}deg)`;
-            headEl.textContent = heading.toFixed(1) + '°';
-
-            // Calculate difference
-            let diff = Math.abs(target - heading);
-            if (diff > 180) diff = 360 - diff;
-            diffEl.textContent = diff.toFixed(1) + '°';
-
-            // Update status
-            pill.className = 'alignment-pill';
-            statusRing.className = 'status-ring';
-
-            if (diff <= 2) {
-                pill.classList.add('perfect');
-                pillText.textContent = '🎯 محاذاة مثالية!';
-                statusRing.classList.add('perfect');
-                playTone(800, 0.3);
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            } else if (diff <= 10) {
-                pill.classList.add('close');
-                pillText.textContent = `✅ قريب (${diff.toFixed(1)}°)`;
-                statusRing.classList.add('close');
-                playTone(600, 0.2);
-            } else {
-                pill.classList.add('far');
-                pillText.textContent = `🔍 بعيد (${diff.toFixed(1)}°)`;
-                statusRing.classList.add('far');
+        function stopCompass() {
+            if (window._compassHandler) {
+                window.removeEventListener('deviceorientation', window._compassHandler, true);
+                window.removeEventListener('deviceorientationabsolute', window._compassHandler, true);
             }
         }
 
-        function playTone(freq, vol) {
-            if (!soundOn || !audioCtx) return;
-            
+        // Sound Engine
+        let lastBeep = 0;
+        function playBeep(freq) {
+            const now = Date.now();
+            if (now - lastBeep < 200 || !audioCtx) return; // Prevent spam
+            lastBeep = now;
+
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             
             osc.frequency.value = freq;
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
             
-            osc.start(audioCtx.currentTime);
+            osc.start();
             osc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        function closeCompass(idx) {
-            activeCompass = null;
-            if (window._compassHandler) {
-                window.removeEventListener('deviceorientation', window._compassHandler);
-            }
-            
-            const toggle = document.getElementById(`toggle-${idx}`);
-            const section = document.getElementById(`compass-${idx}`);
-            
-            if (toggle) {
-                toggle.classList.remove('active');
-                toggle.textContent = '🧭 عرض البوصلة';
-            }
-            if (section) {
-                section.classList.remove('active');
-            }
-        }
-
-        function toggleSound(idx) {
-            soundOn = !soundOn;
-            const btn = document.getElementById(`sound-${idx}`);
-            if (btn) {
-                btn.classList.toggle('active', !soundOn);
-                btn.innerHTML = `${soundOn ? '🔊' : '🔇'} صوت`;
-            }
-        }
-
-        function resetCompass(idx) {
-            const pill = document.getElementById(`pill-${idx}`);
-            const pillText = document.getElementById(`pill-text-${idx}`);
-            pill.className = 'alignment-pill far';
-            pillText.textContent = '🔄 تم إعادة الضبط';
         }
     </script>
 </body>
