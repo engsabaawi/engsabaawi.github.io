@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساعة كاسيو - محاذاة لليسار</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/digital-numbers');
+
+        :root {
+            --bg-color: #050505;
+            --clock-size: 340px;
+            --casio-green: #00ff41;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center; /* التوسيط الأفقي الأساسي */
+            align-items: center;    /* التوسيط العمودي */
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        /* حاوية الساعة المزاحة لليسار */
+        .clock-wrapper {
+            position: relative;
+            margin-right: 80px; /* دفع الساعة لجهة اليسار عبر إضافة هامش لليمين */
+        }
+
+        .clock {
+            width: var(--clock-size);
+            height: var(--clock-size);
+            background: #111;
+            border-radius: 50%;
+            position: relative;
+            border: 12px solid #222;
+            box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 30px #000;
+        }
+
+        /* توزيع الأرقام داخل الإطار */
+        .number {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transform-origin: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #3d3d3d;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .number span {
+            display: inline-block;
+        }
+
+        /* شاشة الديجيتال */
+        .digital-box {
+            position: absolute;
+            top: 62%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 1px solid #282828;
+            padding: 6px 14px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        #digital-time {
+            font-family: 'Digital Numbers', sans-serif;
+            color: var(--casio-green);
+            font-size: 1.3rem;
+            text-shadow: 0 0 12px var(--casio-green);
+            letter-spacing: 2px;
+        }
+
+        /* العقارب */
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            transform: translateX(-50%);
+            z-index: 5;
+            /* تم إلغاء أي transition هنا لمنع التشتت البصري */
+        }
+
+        .hour { width: 8px; height: 75px; background: #eee; border-radius: 4px; }
+        .minute { width: 5px; height: 110px; background: #999; border-radius: 3px; }
+        .second { width: 2px; height: 130px; background: var(--casio-green); z-index: 6; }
+
+        .center-dot {
+            width: 14px; height: 14px; background: #fff;
+            border-radius: 50%; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .info {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-wrapper">
+        <div class="clock">
+            <div class="info">
+                <div id="day-name">--</div>
+                <div id="full-date">--</div>
+            </div>
+
+            <div id="numbers-container"></div>
+
+            <div class="digital-box">
+                <div id="digital-time">00:00:00</div>
+            </div>
+
+            <div class="center-dot"></div>
+            <div class="hand hour" id="hour-hand"></div>
+            <div class="hand minute" id="min-hand"></div>
+            <div class="hand second" id="sec-hand"></div>
+        </div>
+    </div>
+
+    <script>
+        // إنشاء الأرقام
+        const container = document.getElementById('numbers-container');
+        for (let i = 1; i <= 12; i++) {
+            const div = document.createElement('div');
+            div.className = 'number';
+            div.style.transform = `rotate(${i * 30}deg)`;
+            const span = document.createElement('span');
+            span.innerText = i;
+            span.style.transform = `rotate(-${i * 30}deg)`;
+            div.appendChild(span);
+            container.appendChild(div);
+        }
+
+        function update() {
+            const now = new Date();
+            const ms = now.getMilliseconds();
+            const s = now.getSeconds();
+            const m = now.getMinutes();
+            const h = now.getHours();
+
+            // حل مشكلة تشتت الثواني: استخدام الوقت الخام لحساب زاوية لا تقفز أبداً
+            // الدرجات لكل ملي ثانية: (360 درجة / 60000 ملي ثانية في الدقيقة)
+            const secondAngle = (s * 6) + (ms * 0.006);
+            const minuteAngle = (m * 6) + (s * 0.1);
+            const hourAngle = ((h % 12) * 30) + (m * 0.5);
+
+            document.getElementById('sec-hand').style.transform = `translateX(-50%) rotate(${secondAngle}deg)`;
+            document.getElementById('min-hand').style.transform = `translateX(-50%) rotate(${minuteAngle}deg)`;
+            document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourAngle}deg)`;
+
+            // الساعة الرقمية
+            document.getElementById('digital-time').innerText = 
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+            // التاريخ باللغة العربية
+            const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            
+            document.getElementById('day-name').innerText = days[now.getDay()];
+            document.getElementById('full-date').innerText = `${now.getDate()} ${months[now.getMonth()]}`;
+
+            // تحديث فائق السلسلة
+            requestAnimationFrame(update);
+        }
+
+        requestAnimationFrame(update);
+    </script>
+</body>
+</html>
+
+    
