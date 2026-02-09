@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الأقمار الصناعية - Satellite Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #151b2e;
+            --bg-card: #1a2332;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #7b2cbf;
+            --accent-tertiary: #ff006e;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2d1;
+            --border-color: #2d3748;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
+    }
+
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* Header */
+    header {
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-bottom: 3px solid var(--accent-primary);
+        box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    h1 {
+        font-family: 'Cairo', sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+        animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.3); }
+    }
+
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Search Bar */
+    .search-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        position: relative;
+    }
+
+    .search-wrapper {
+        position: relative;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    #searchInput {
+        flex: 1;
+        padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 50px;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-family: 'Tajawal', sans-serif;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent-primary);
+        font-size: 1.3rem;
+    }
+
+    .location-btn {
+        padding: 1.2rem 2rem;
+        background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-family: 'Cairo', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(123, 44, 191, 0.4);
+        white-space: nowrap;
+    }
+
+    .location-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(123, 44, 191, 0.6);
+    }
+
+    .location-btn:active {
+        transform: translateY(-1px);
+    }
+
+    /* User Location Display */
+    .user-location {
+        text-align: center;
+        margin: 1rem auto;
+        padding: 1rem;
+        background: rgba(0, 217, 255, 0.1);
+        border-radius: 15px;
+        max-width: 800px;
+        display: none;
+    }
+
+    .user-location.active {
+        display: block;
+        animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Satellites Grid */
+    .satellites-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .satellite-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .satellite-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(123, 44, 191, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .satellite-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--accent-primary);
+        box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+    }
+
+    .satellite-card:hover::before {
+        opacity: 1;
+    }
+
+    .satellite-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .satellite-name {
+        font-family: 'Cairo', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+        text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    }
+
+    .satellite-position {
+        background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .satellite-details {
+        position: relative;
+        z-index: 1;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-value {
+        font-weight: 700;
+        color: var(--accent-primary);
+        font-size: 1.05rem;
+    }
+
+    .compass-btn {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary));
+        border: none;
+        border-radius: 15px;
+        color: white;
+        font-family: 'Cairo', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 5px 20px rgba(255, 0, 110, 0.3);
+    }
+
+    .compass-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(255, 0, 110, 0.5);
+    }
+
+    /* Compass Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .modal.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: var(--bg-card);
+        padding: 3rem;
+        border-radius: 30px;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+        border: 2px solid var(--accent-primary);
+        box-shadow: 0 20px 60px rgba(0, 217, 255, 0.4);
+        animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: var(--accent-tertiary);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .close-btn:hover {
+        transform: rotate(90deg);
+        background: var(--accent-primary);
+    }
+
+    .compass {
+        width: 300px;
+        height: 300px;
+        margin: 2rem auto;
+        position: relative;
+        background: radial-gradient(circle, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        border-radius: 50%;
+        border: 5px solid var(--accent-primary);
+        box-shadow: 0 0 50px rgba(0, 217, 255, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .compass-needle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 6px;
+        height: 120px;
+        background: linear-gradient(to top, var(--accent-tertiary), var(--accent-primary));
+        transform-origin: bottom center;
+        transform: translate(-50%, -100%);
+        border-radius: 10px;
+        box-shadow: 0 0 20px var(--accent-primary);
+        transition: transform 0.5s ease;
+    }
+
+    .compass-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: var(--accent-primary);
+        border-radius: 50%;
+        box-shadow: 0 0 20px var(--accent-primary);
+    }
+
+    .compass-directions {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-family: 'Cairo', sans-serif;
+        font-weight: 700;
+    }
+
+    .direction {
+        position: absolute;
+        font-size: 1.5rem;
+        color: var(--accent-primary);
+    }
+
+    .direction.n { top: 10px; left: 50%; transform: translateX(-50%); }
+    .direction.e { right: 10px; top: 50%; transform: translateY(-50%); }
+    .direction.s { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .direction.w { left: 10px; top: 50%; transform: translateY(-50%); }
+
+    .azimuth-display {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-primary);
+        font-family: 'Cairo', sans-serif;
+    }
+
+    /* No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        display: none;
+    }
+
+    .no-results.active {
+        display: block;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 2rem;
+        margin-top: 4rem;
+        background: var(--bg-secondary);
+        border-top: 2px solid var(--border-color);
+        color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        .search-wrapper {
+            flex-direction: column;
+        }
+
+        .satellites-container {
+            grid-template-columns: 1fr;
+        }
+
+        .compass {
+            width: 250px;
+            height: 250px;
+        }
+
+        .modal-content {
+            padding: 2rem;
+        }
+    }
+
+    /* Loading Animation */
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid var(--border-color);
+        border-top-color: var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Quick Location Buttons */
+    .quick-location-btn {
+        width: 100%;
+        padding: 0.7rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: right;
+    }
+
+    .quick-location-btn:hover {
+        background: var(--accent-secondary);
+        border-color: var(--accent-secondary);
+        transform: translateX(-5px);
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="bg-animation" id="bgAnimation"></div>
+
+```
+<header>
+    <h1>🛰️ دليل الأقمار الصناعية</h1>
+    <p class="subtitle">نظام متقدم لتوجيه أطباق الاستقبال الفضائية</p>
+    
+    <!-- Permission Notice -->
+    <div style="max-width: 700px; margin: 1.5rem auto 0; padding: 1rem; background: rgba(255, 193, 7, 0.15); border: 2px solid var(--warning); border-radius: 15px; text-align: right;">
+        <div style="display: flex; align-items: start; gap: 1rem;">
+            <span style="font-size: 2rem;">ℹ️</span>
+            <div>
+                <strong style="color: var(--warning); font-size: 1.05rem;">للحصول على أفضل تجربة:</strong>
+                <p style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                    عند الضغط على "تحديد موقعي"، سيطلب المتصفح صلاحية الوصول للموقع. يرجى النقر على <strong>"السماح"</strong> أو <strong>"Allow"</strong> لحساب الزوايا بدقة. 
+                    <br>يمكنك أيضاً إدخال الإحداثيات يدوياً إذا كنت تفضل ذلك.
+                </p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="search-container">
+    <div class="search-wrapper">
+        <div style="position: relative; flex: 1;">
+            <input type="text" id="searchInput" placeholder="ابحث عن القمر الصناعي...">
+            <span class="search-icon">🔍</span>
+        </div>
+        <button class="location-btn" onclick="getUserLocation()">
+            📍 تحديد موقعي
+        </button>
+    </div>
+    <div class="user-location" id="userLocation">
+        <strong>موقعك الحالي:</strong> <span id="locationText">جاري التحميل...</span>
+    </div>
+</div>
+
+<div class="satellites-container" id="satellitesContainer">
+    <!-- Satellites will be populated here -->
+</div>
+
+<div class="no-results" id="noResults">
+    <h2>😔 لا توجد نتائج</h2>
+    <p>لم يتم العثور على أقمار صناعية تطابق بحثك</p>
+</div>
+
+<div class="modal" id="compassModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeCompass()">✕</button>
+        <h2 style="text-align: center; margin-bottom: 1rem; font-family: 'Cairo', sans-serif;">
+            🧭 بوصلة التوجيه
+        </h2>
+        <div id="satelliteInfo" style="text-align: center; margin-bottom: 1rem; color: var(--text-secondary);">
+        </div>
+        <div class="compass">
+            <div class="compass-needle" id="compassNeedle"></div>
+            <div class="compass-center"></div>
+            <div class="compass-directions">
+                <div class="direction n">شمال</div>
+                <div class="direction e">شرق</div>
+                <div class="direction s">جنوب</div>
+                <div class="direction w">غرب</div>
+            </div>
+        </div>
+        <div class="azimuth-display">
+            الاتجاه: <span id="azimuthValue">0°</span>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 دليل الأقمار الصناعية - جميع الحقوق محفوظة</p>
+    <p style="margin-top: 0.5rem; font-size: 0.9rem;">تم التطوير باستخدام تقنيات الويب الحديثة</p>
+</footer>
+
+<script>
+    // Satellite Data - Comprehensive list from Hispasat to SES-9 (108.2°E)
+    const satellites = [
+        {
+            name: "Hispasat 30W-6",
+            position: "30.0° غرب",
+            longitude: -30.0,
+            frequency: "11.731-12.722 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Hispasat 30W-5",
+            position: "30.0° غرب",
+            longitude: -30.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 907",
+            position: "27.5° غرب",
+            longitude: -27.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Alcomsat-1",
+            position: "24.8° غرب",
+            longitude: -24.8,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 905",
+            position: "24.5° غرب",
+            longitude: -24.5,
+            frequency: "11.450-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "SES-4 (NSS-7)",
+            position: "22.0° غرب",
+            longitude: -22.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Express-AM8",
+            position: "14.0° غرب",
+            longitude: -14.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 8 West B",
+            position: "8.0° غرب",
+            longitude: -8.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Nilesat 201",
+            position: "7.0° غرب",
+            longitude: -7.0,
+            frequency: "10.727-12.729 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 7 West A",
+            position: "7.0° غرب",
+            longitude: -7.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 5 West A",
+            position: "5.0° غرب",
+            longitude: -5.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Amos 17",
+            position: "4.0° غرب",
+            longitude: -4.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "ABS-3A",
+            position: "3.0° غرب",
+            longitude: -3.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Thor 7",
+            position: "1.0° غرب",
+            longitude: -1.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "BulgariaSat-1",
+            position: "1.9° شرق",
+            longitude: 1.9,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 3B",
+            position: "3.0° شرق",
+            longitude: 3.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 4A (SES-5)",
+            position: "4.8° شرق",
+            longitude: 4.8,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 7A",
+            position: "7.0° شرق",
+            longitude: 7.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 9B",
+            position: "9.0° شرق",
+            longitude: 9.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 10A",
+            position: "10.0° شرق",
+            longitude: 10.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat Hot Bird 13F",
+            position: "13.0° شرق",
+            longitude: 13.0,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat Hot Bird 13G",
+            position: "13.0° شرق",
+            longitude: 13.0,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 16A",
+            position: "16.0° شرق",
+            longitude: 16.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 1KR",
+            position: "19.2° شرق",
+            longitude: 19.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 1L",
+            position: "19.2° شرق",
+            longitude: 19.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 1M",
+            position: "19.2° شرق",
+            longitude: 19.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 3B",
+            position: "23.5° شرق",
+            longitude: 23.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Es'hail Sat (Qatar)",
+            position: "25.5° شرق",
+            longitude: 25.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Arabsat Badr-4",
+            position: "26.0° شرق",
+            longitude: 26.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Arabsat Badr-5",
+            position: "26.0° شرق",
+            longitude: 26.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Arabsat Badr-6",
+            position: "26.0° شرق",
+            longitude: 26.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 2E",
+            position: "28.2° شرق",
+            longitude: 28.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 2F",
+            position: "28.2° شرق",
+            longitude: 28.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 2G",
+            position: "28.2° شرق",
+            longitude: 28.2,
+            frequency: "10.700-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Arabsat 5A",
+            position: "30.5° شرق",
+            longitude: 30.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Astra 5B",
+            position: "31.5° شرق",
+            longitude: 31.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 33E",
+            position: "33.0° شرق",
+            longitude: 33.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Türksat 4A",
+            position: "42.0° شرق",
+            longitude: 42.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Türksat 4B",
+            position: "42.0° شرق",
+            longitude: 42.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Türksat 5A",
+            position: "42.0° شرق",
+            longitude: 42.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Türksat 5B",
+            position: "42.0° شرق",
+            longitude: 42.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 10-02",
+            position: "47.5° شرق",
+            longitude: 47.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "NSS-12",
+            position: "57.0° شرق",
+            longitude: 57.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 33e",
+            position: "60.0° شرق",
+            longitude: 60.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Amos 4",
+            position: "65.0° شرق",
+            longitude: 65.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 17",
+            position: "66.0° شرق",
+            longitude: 66.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Intelsat 20",
+            position: "68.5° شرق",
+            longitude: 68.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Eutelsat 70B",
+            position: "70.5° شرق",
+            longitude: 70.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "ABS-2A",
+            position: "75.0° شرق",
+            longitude: 75.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Measat 3",
+            position: "91.5° شرق",
+            longitude: 91.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "SES-8",
+            position: "95.0° شرق",
+            longitude: 95.0,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Asiasat 5",
+            position: "100.5° شرق",
+            longitude: 100.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "Asiasat 7",
+            position: "105.5° شرق",
+            longitude: 105.5,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "SES-7",
+            position: "108.2° شرق",
+            longitude: 108.2,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        },
+        {
+            name: "SES-9 (108)",
+            position: "108.2° شرق",
+            longitude: 108.2,
+            frequency: "11.470-12.750 GHz",
+            band: "Ku-band"
+        }
+    ];
+
+    // User location
+    let userLat = null;
+    let userLon = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        displaySatellites(satellites);
+        createStars();
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = satellites.filter(sat => 
+                sat.name.toLowerCase().includes(searchTerm) ||
+                sat.position.includes(searchTerm)
+            );
+            displaySatellites(filtered);
+        });
+    });
+
+    // Create animated stars background
+    function createStars() {
+        const container = document.getElementById('bgAnimation');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            container.appendChild(star);
+        }
+    }
+
+    // Display satellites
+    function displaySatellites(sats) {
+        const container = document.getElementById('satellitesContainer');
+        const noResults = document.getElementById('noResults');
+        
+        if (sats.length === 0) {
+            container.innerHTML = '';
+            noResults.classList.add('active');
+            return;
+        }
+        
+        noResults.classList.remove('active');
+        container.innerHTML = sats.map(sat => createSatelliteCard(sat)).join('');
+    }
+
+    // Create satellite card
+    function createSatelliteCard(sat) {
+        const distance = userLat && userLon ? calculateDistance(sat.longitude) : 'حدد موقعك';
+        const elevation = userLat && userLon ? calculateElevation(sat.longitude) : 'حدد موقعك';
+        const azimuth = userLat && userLon ? calculateAzimuth(sat.longitude) : 'حدد موقعك';
+        const lnbSkew = userLat && userLon ? calculateLNBSkew(sat.longitude) : 'حدد موقعك';
+        
+        return `
+            <div class="satellite-card">
+                <div class="satellite-header">
+                    <div class="satellite-name">${sat.name}</div>
+                    <div class="satellite-position">${sat.position}</div>
+                </div>
+                <div class="satellite-details">
+                    <div class="detail-row">
+                        <span class="detail-label">📡 التردد</span>
+                        <span class="detail-value">${sat.frequency}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📊 النطاق</span>
+                        <span class="detail-value">${sat.band}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📏 المسافة</span>
+                        <span class="detail-value">${distance}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📐 زاوية الارتفاع</span>
+                        <span class="detail-value">${elevation}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🧭 زاوية الاتجاه (Azimuth)</span>
+                        <span class="detail-value">${azimuth}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🔄 زاوية اللاقط (LNB Skew)</span>
+                        <span class="detail-value">${lnbSkew}</span>
+                    </div>
+                </div>
+                <button class="compass-btn" onclick='showCompass(${JSON.stringify(sat)})'>
+                    🧭 عرض البوصلة
+                </button>
+            </div>
+        `;
+    }
+
+    // Get user location
+    async function getUserLocation() {
+        const locationDiv = document.getElementById('userLocation');
+        const locationText = document.getElementById('locationText');
+        
+        if ('geolocation' in navigator) {
+            locationText.innerHTML = '<span class="loading"></span> جاري تحديد الموقع... يرجى السماح بالوصول';
+            locationDiv.classList.add('active');
+            
+            // Request location with options
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            };
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    userLat = position.coords.latitude;
+                    userLon = position.coords.longitude;
+                    locationText.innerHTML = `✅ خط العرض: ${userLat.toFixed(4)}° | خط الطول: ${userLon.toFixed(4)}° 
+                        <button onclick="showManualLocation()" style="margin-right: 10px; padding: 5px 15px; background: var(--accent-secondary); border: none; border-radius: 15px; color: white; cursor: pointer; font-size: 0.85rem;">تعديل يدوياً</button>`;
+                    displaySatellites(satellites);
+                },
+                error => {
+                    let errorMessage = '';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = '❌ تم رفض الصلاحية. يرجى السماح بالوصول للموقع في إعدادات المتصفح.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = '❌ الموقع غير متوفر حالياً.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = '❌ انتهت مهلة تحديد الموقع.';
+                            break;
+                        default:
+                            errorMessage = '❌ حدث خطأ في تحديد الموقع.';
+                    }
+                    locationText.innerHTML = `${errorMessage} <button onclick="showManualLocation()" style="margin-right: 10px; padding: 5px 15px; background: var(--accent-primary); border: none; border-radius: 15px; color: white; cursor: pointer; font-size: 0.85rem;">إدخال يدوياً</button>`;
+                    console.error('Error getting location:', error);
+                },
+                options
+            );
+        } else {
+            locationText.innerHTML = '❌ المتصفح لا يدعم خاصية تحديد الموقع. <button onclick="showManualLocation()" style="margin-right: 10px; padding: 5px 15px; background: var(--accent-primary); border: none; border-radius: 15px; color: white; cursor: pointer;">إدخال يدوياً</button>';
+            locationDiv.classList.add('active');
+        }
+    }
+
+    // Show manual location input
+    function showManualLocation() {
+        const modal = document.getElementById('compassModal');
+        const modalContent = modal.querySelector('.modal-content');
+        
+        modalContent.innerHTML = `
+            <button class="close-btn" onclick="closeCompass()">✕</button>
+            <h2 style="text-align: center; margin-bottom: 2rem; font-family: 'Cairo', sans-serif;">
+                📍 إدخال الموقع يدوياً
+            </h2>
+            <div style="padding: 1rem;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        📐 خط العرض (Latitude)
+                    </label>
+                    <input type="number" id="manualLat" step="0.0001" placeholder="مثال: 24.7136" 
+                        style="width: 100%; padding: 1rem; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 10px; color: white; font-size: 1rem;">
+                    <small style="color: var(--text-secondary); display: block; margin-top: 0.3rem;">
+                        القيم الموجبة للشمال، السالبة للجنوب (-90 إلى 90)
+                    </small>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        📐 خط الطول (Longitude)
+                    </label>
+                    <input type="number" id="manualLon" step="0.0001" placeholder="مثال: 46.6753" 
+                        style="width: 100%; padding: 1rem; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 10px; color: white; font-size: 1rem;">
+                    <small style="color: var(--text-secondary); display: block; margin-top: 0.3rem;">
+                        القيم الموجبة للشرق، السالبة للغرب (-180 إلى 180)
+                    </small>
+                </div>
+                
+                <div style="background: rgba(0, 217, 255, 0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <strong style="color: var(--accent-primary);">💡 نصيحة:</strong>
+                    <p style="margin: 0.5rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                        يمكنك الحصول على إحداثياتك من خرائط جوجل بالبحث عن موقعك والنقر على المكان، ستظهر الإحداثيات في الأسفل.
+                    </p>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="setManualLocation()" 
+                        style="flex: 1; padding: 1rem; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: none; border-radius: 15px; color: white; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; font-size: 1rem;">
+                        ✅ تأكيد الموقع
+                    </button>
+                    <button onclick="closeCompass()" 
+                        style="flex: 1; padding: 1rem; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 15px; color: white; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; font-size: 1rem;">
+                        إلغاء
+                    </button>
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(123, 44, 191, 0.1); border-radius: 10px;">
+                    <strong style="color: var(--accent-secondary);">📍 مواقع عربية شائعة:</strong>
+                    <div style="margin-top: 0.8rem; display: grid; gap: 0.5rem;">
+                        <button onclick="setQuickLocation(24.7136, 46.6753, 'الرياض')" class="quick-location-btn">🇸🇦 الرياض</button>
+                        <button onclick="setQuickLocation(21.4225, 39.8262, 'جدة')" class="quick-location-btn">🇸🇦 جدة</button>
+                        <button onclick="setQuickLocation(30.0444, 31.2357, 'القاهرة')" class="quick-location-btn">🇪🇬 القاهرة</button>
+                        <button onclick="setQuickLocation(33.8869, 35.5131, 'بيروت')" class="quick-location-btn">🇱🇧 بيروت</button>
+                        <button onclick="setQuickLocation(25.2048, 55.2708, 'دبي')" class="quick-location-btn">🇦🇪 دبي</button>
+                        <button onclick="setQuickLocation(36.8065, 10.1815, 'تونس')" class="quick-location-btn">🇹🇳 تونس</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        modal.classList.add('active');
+    }
+
+    // Set manual location
+    function setManualLocation() {
+        const lat = parseFloat(document.getElementById('manualLat').value);
+        const lon = parseFloat(document.getElementById('manualLon').value);
+        
+        if (isNaN(lat) || isNaN(lon)) {
+            alert('⚠️ يرجى إدخال قيم صحيحة لخط العرض والطول');
+            return;
+        }
+        
+        if (lat < -90 || lat > 90) {
+            alert('⚠️ خط العرض يجب أن يكون بين -90 و 90');
+            return;
+        }
+        
+        if (lon < -180 || lon > 180) {
+            alert('⚠️ خط الطول يجب أن يكون بين -180 و 180');
+            return;
+        }
+        
+        userLat = lat;
+        userLon = lon;
+        
+        const locationDiv = document.getElementById('userLocation');
+        const locationText = document.getElementById('locationText');
+        
+        locationText.innerHTML = `✅ خط العرض: ${userLat.toFixed(4)}° | خط الطول: ${userLon.toFixed(4)}° (يدوي)
+            <button onclick="showManualLocation()" style="margin-right: 10px; padding: 5px 15px; background: var(--accent-secondary); border: none; border-radius: 15px; color: white; cursor: pointer; font-size: 0.85rem;">تعديل</button>`;
+        locationDiv.classList.add('active');
+        
+        displaySatellites(satellites);
+        closeCompass();
+    }
+
+    // Set quick location
+    function setQuickLocation(lat, lon, city) {
+        document.getElementById('manualLat').value = lat;
+        document.getElementById('manualLon').value = lon;
+    }
+
+    // Calculate distance from satellite
+    function calculateDistance(satLon) {
+        if (!userLat || !userLon) return 'حدد موقعك';
+        
+        // Geostationary orbit radius: ~35,786 km from Earth's center
+        // Earth's radius: ~6,371 km
+        const geoAltitude = 35786;
+        const earthRadius = 6371;
+        
+        // Calculate angle difference
+        const lonDiff = Math.abs(satLon - userLon);
+        const latRad = userLat * Math.PI / 180;
+        
+        // Calculate distance using spherical law of cosines
+        const distance = Math.sqrt(
+            Math.pow(earthRadius + geoAltitude, 2) + 
+            Math.pow(earthRadius, 2) - 
+            2 * (earthRadius + geoAltitude) * earthRadius * 
+            Math.cos(lonDiff * Math.PI / 180) * Math.cos(latRad)
+        );
+        
+        return `${distance.toFixed(0)} كم`;
+    }
+
+    // Calculate elevation angle
+    function calculateElevation(satLon) {
+        if (!userLat || !userLon) return 'حدد موقعك';
+        
+        const geoAltitude = 35786;
+        const earthRadius = 6371;
+        
+        const lonDiff = satLon - userLon;
+        const latRad = userLat * Math.PI / 180;
+        
+        // Calculate elevation
+        const elevation = Math.atan(
+            (Math.cos(lonDiff * Math.PI / 180) * Math.cos(latRad) - earthRadius / (earthRadius + geoAltitude)) /
+            Math.sqrt(1 - Math.pow(Math.cos(lonDiff * Math.PI / 180) * Math.cos(latRad), 2))
+        ) * 180 / Math.PI;
+        
+        return `${Math.max(0, elevation).toFixed(1)}°`;
+    }
+
+    // Calculate azimuth angle
+    function calculateAzimuth(satLon) {
+        if (!userLat || !userLon) return 'حدد موقعك';
+        
+        const lonDiff = satLon - userLon;
+        const latRad = userLat * Math.PI / 180;
+        
+        let azimuth = Math.atan2(
+            Math.sin(lonDiff * Math.PI / 180),
+            Math.cos(lonDiff * Math.PI / 180) * Math.sin(latRad)
+        ) * 180 / Math.PI;
+        
+        // Convert to compass bearing (0-360)
+        azimuth = (azimuth + 360) % 360;
+        
+        // For northern hemisphere, adjust
+        if (userLat > 0) {
+            azimuth = 180 - azimuth;
+        }
+        
+        return `${azimuth.toFixed(1)}°`;
+    }
+
+    // Calculate LNB Skew angle
+    function calculateLNBSkew(satLon) {
+        if (!userLat || !userLon) return 'حدد موقعك';
+        
+        const lonDiff = satLon - userLon;
+        const latRad = userLat * Math.PI / 180;
+        
+        const skew = Math.atan2(
+            Math.sin(lonDiff * Math.PI / 180),
+            Math.tan(latRad)
+        ) * 180 / Math.PI;
+        
+        return `${skew.toFixed(1)}°`;
+    }
+
+    // Show compass modal
+    function showCompass(satellite) {
+        if (!userLat || !userLon) {
+            alert('يرجى تحديد موقعك أولاً');
+            return;
+        }
+        
+        const modal = document.getElementById('compassModal');
+        const satelliteInfo = document.getElementById('satelliteInfo');
+        const azimuthValue = document.getElementById('azimuthValue');
+        const needle = document.getElementById('compassNeedle');
+        
+        const azimuth = parseFloat(calculateAzimuth(satellite.longitude));
+        
+        satelliteInfo.innerHTML = `
+            <strong style="color: var(--accent-primary); font-size: 1.3rem;">${satellite.name}</strong><br>
+            <span style="font-size: 0.9rem;">الموقع: ${satellite.position}</span>
+        `;
+        
+        azimuthValue.textContent = `${azimuth.toFixed(1)}°`;
+        
+        // Rotate needle to azimuth
+        needle.style.transform = `translate(-50%, -100%) rotate(${azimuth}deg)`;
+        
+        modal.classList.add('active');
+    }
+
+    // Close compass modal
+    function closeCompass() {
+        document.getElementById('compassModal').classList.remove('active');
+    }
+
+    // Close modal on background click
+    document.getElementById('compassModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeCompass();
+        }
+    });
+</script>
+```
+
+</body>
+</html>
+`;
