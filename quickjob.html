@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب الترقيات المتراكمة والمستحقة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* التنسيقات الأساسية */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            direction: rtl;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative; 
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative; 
+        }
+        
+        /* ------------------------------------- */
+        /* تنسيق زر الرجوع */
+        /* ------------------------------------- */
+        .back-link {
+            position: absolute;
+            top: 30px; 
+            right: 40px; 
+            
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            
+            text-decoration: none;
+            padding: 10px; 
+            border-radius: 50%; 
+            
+            background-color: #1a73e8; 
+            color: #ffffff; 
+            font-size: 16px;
+            font-weight: 500;
+            
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            
+            z-index: 1000; 
+            width: 45px; 
+            height: 45px; 
+        }
+
+        .back-link i {
+            font-size: 20px; 
+            transform: scaleX(-1); 
+        }
+
+        .back-link:hover {
+            background-color: #0d47a1;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* ------------------------------------- */
+        
+        /* تنسيق العنوان الرئيسي */
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: 700; 
+            color: #1a73e8; 
+            position: relative;
+            padding: 15px 10px; 
+            background: #f0f8ff; 
+            border-radius: 10px 10px 0 0; 
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 15%; 
+            left: 15%;
+            height: 5px; 
+            background: linear-gradient(to left, transparent, #00bcd4, transparent);
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            width: 100%;
+        }
+
+        /* توحيد حجم ومظهر حقول الإدخال */
+        .form-group input[type="date"], 
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            height: 60px; 
+            padding: 18px 25px 8px; 
+            font-size: 17px; 
+            border-radius: 12px;
+            border: 1px solid #e0e0e0; 
+            background: #f8f8f8; 
+            transition: all 0.3s ease;
+            color: #333;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            background: #ffffff;
+            border-color: #00bcd4;
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+            outline: none;
+        }
+
+        /* تنسيق عناوين الإدخال (Labels) - الحالة الافتراضية */
+        .form-group label {
+            position: absolute;
+            right: 25px; 
+            top: 20px;
+            font-size: 18px; 
+            font-weight: 600; 
+            color: #555; 
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: transparent;
+            padding: 0 5px;
+            z-index: 10;
+        }
+
+        /* تأثير العنوان العائم (Floating Label) */
+        .form-group input:focus ~ label,
+        .form-group input:not(:placeholder-shown) ~ label,
+        .form-group select:focus ~ label,
+        .form-group select:not([value=""]) ~ label {
+            top: -12px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #000000; 
+            background: white;
+            padding: 2px 14px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        }
+        
+        /* إعادة تعيين تنسيق محدد التاريخ الافتراضي في بعض المتصفحات */
+        .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+            padding: 0 10px; 
+            cursor: pointer;
+            opacity: 0.8; 
+            transition: opacity 0.2s;
+        }
+        
+        .form-group input[type="date"]:not(:placeholder-shown)::-webkit-calendar-picker-indicator {
+             opacity: 1; 
+        }
+
+        /* تخصيص سهم الـ select */
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23777%22%20d%3D%22M287%20197.8L146.2%2057%205.4%20197.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: left 20px center; 
+            background-size: 10px 10px;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #calculateBtn {
+            background: #00bcd4;
+            color: white;
+        }
+        #calculateBtn:hover {
+            background: #0097a7;
+        }
+
+        #resetBtn {
+            background: #e0e0e0;
+            color: #333;
+        }
+        #resetBtn:hover {
+            background: #d0d0d0;
+        }
+
+        /* تنسيق لزر الطباعة */
+        #printBtn {
+            background: #4caf50;
+            color: white;
+            flex-grow: 1;
+            display: none; 
+        }
+        #printBtn:hover {
+            background: #388e3c;
+        }
+
+        .result-section {
+            margin-top: 40px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 30px;
+        }
+
+        /* صناديق النتائج - تطبيق الحدود الضبابية السوداء */
+        .result-box {
+            margin-bottom: 25px; 
+            padding: 20px;
+            background: #ffffff;
+            border-left: 4px solid #00bcd4;
+            border-radius: 12px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* الحدود الضبابية السوداء */
+        }
+
+        /* قائمة الترقيات - تطبيق الحدود الضبابية السوداء */
+        .promo-list {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            margin-bottom: 25px; 
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* حدود ضبابية أخف */
+        }
+
+        .promo-list h4 {
+            margin-top: 0;
+            color: #00bcd4;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .promo-list ul {
+            margin: 0;
+            padding-right: 25px;
+        }
+
+        .promo-list li {
+            margin-bottom: 10px;
+            padding: 12px;
+            background: #ffffff;
+            border-radius: 8px;
+            list-style-type: disc;
+            color: #333;
+            border-left: 3px solid #00bcd4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* تنسيقات الطباعة (Print Media Query) */
+        @media print {
+            body {
+                background: none;
+                justify-content: flex-start;
+                align-items: flex-start;
+                padding: 0;
+            }
+            
+            .back-link {
+                display: none !important;
+            }
+
+            .container {
+                width: 210mm; 
+                min-height: 297mm; 
+                max-width: none;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20mm; 
+                background: white;
+            }
+
+            /* إخفاء عناصر الإدخال والأزرار في وضع الطباعة */
+            .form-group, .btn-group {
+                display: none;
+            }
+            
+            h2 {
+                color: #333; 
+                background: none;
+                border-bottom: 2px solid #00bcd4;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            h2::after {
+                content: none;
+            }
+
+            .result-section {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+
+            .result-box {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                border-left: 4px solid #00bcd4;
+                page-break-inside: avoid; 
+            }
+
+            .promo-list {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .promo-list li {
+                box-shadow: none;
+                border: none;
+                border-bottom: 1px dotted #ccc;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .back-link {
+                top: 15px; 
+                right: 15px; 
+                width: 36px;
+                height: 36px;
+            }
+            .back-link i {
+                font-size: 16px;
+            }
+            .container {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group input[type="date"],
+            .form-group input[type="number"],
+            .form-group select {
+                height: 60px;
+                padding: 18px 20px 8px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                margin-top: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a href="https://engsabaawi.github.io" class="back-link" title="العودة إلى الصفحة الرئيسية">
+    <i class="fas fa-chevron-left"></i> 
+</a>
+<div class="container">
+        <h2>حساب الترقيات المتراكمة والمستحقة</h2>
+        
+        <form id="promotionForm">
+            <div class="form-group">
+                <input type="date" id="gradDate" name="gradDate" placeholder=" " required>
+                <label for="gradDate">تاريخ التخرج</label>
+            </div>
+
+            <div class="form-group">
+                <select id="previousGrade" name="previousGrade" required>
+                    <option value="" disabled selected hidden></option>
+                    <option value="8">8 (أدنى درجة)</option>
+                    <option value="7">7</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1 (أعلى درجة)</option>
+                </select>
+                <label for="previousGrade">الدرجة السابقة (قبل التخرج)</label>
+            </div>
+
+            <div class="form-group">
+                <select id="currentGrade" name="currentGrade" required>
+                    <option value="" disabled selected hidden></option>
+                    <option value="8">8 (أدنى درجة)</option>
+                    <option value="7">7</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1 (أعلى درجة)</option>
+                </select>
+                <label for="currentGrade">الدرجة الحالية (بعد التخرج)</label>
+            </div>
+
+            <div class="form-group hidden">
+                <input type="date" id="calculationDate" name="calculationDate" placeholder=" " required>
+                <label for="calculationDate">تاريخ الحساب</label>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" id="calculateBtn">احسب الترقيات</button>
+                <button type="button" id="resetBtn">إعادة تعيين</button>
+                <button type="button" id="printBtn">طباعة (PDF)</button>
+            </div>
+        </form>
+
+        <div class="result-section">
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // دالة لتعيين التاريخ الفعلي الحالي (اليوم) تلقائياً
+        function setCurrentDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayString = `${year}-${month}-${day}`;
+            
+            document.getElementById('calculationDate').value = todayString;
+        }
+
+        // دالة لحساب الفرق بالسنوات بين تاريخين
+        function getYearsBetween(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = Math.abs(end - start);
+            const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+            return diffYears;
+        }
+
+        // دالة لإضافة سنوات إلى تاريخ معين
+        function addYears(date, years) {
+            const result = new Date(date);
+            result.setFullYear(result.getFullYear() + years);
+            return result.toISOString().split('T')[0];
+        }
+
+        // دالة لتنسيق التاريخ العربي
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ar-IQ', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // دالة مساعدة لتحديد مرتبة الدرجة (أعلى/أدنى)
+        function getGradeRank(grade) {
+            if (grade === 1) return 'أعلى درجة';
+            if (grade === 8) return 'أدنى درجة';
+            return '';
+        }
+
+        // دالة لعرض نتيجة واحدة
+        function showResult(message, type = 'info') {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result-box ${type}`;
+            resultDiv.innerHTML = message;
+            resultsContainer.appendChild(resultDiv);
+        }
+
+        // دالة لعرض قائمة الترقيات
+        function showPromotionsList(title, promotions) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const listDiv = document.createElement('div');
+            listDiv.className = 'promo-list';
+            
+            let html = `<h4>${title}</h4><ul>`;
+            promotions.forEach(promo => {
+                html += `<li>${promo.text}</li>`;
+            });
+            html += '</ul>';
+            
+            listDiv.innerHTML = html;
+            resultsContainer.appendChild(listDiv);
+        }
+        
+        // **********************************************
+        // دالة رئيسية لحساب الترقيات
+        // **********************************************
+        function calculatePromotions() {
+            const gradDate = document.getElementById('gradDate').value;
+            const previousGrade = parseInt(document.getElementById('previousGrade').value); 
+            const currentGrade = parseInt(document.getElementById('currentGrade').value); 
+            const calculationDate = document.getElementById('calculationDate').value;
+            
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+            document.getElementById('printBtn').style.display = 'none';
+
+            // التحقق من البيانات
+            if (!gradDate || !calculationDate || isNaN(previousGrade) || isNaN(currentGrade)) {
+                showResult('الرجاء إدخال جميع البيانات المطلوبة بشكل صحيح.', 'error');
+                return;
+            }
+
+            if (currentGrade <= previousGrade) {
+                showResult('خطأ: الدرجة السابقة يجب أن تكون أقل رقماً من الدرجة الحالية (مثلاً: السابق 5، الحالي 8).', 'error');
+                return;
+            }
+            
+            // حساب الفترة الزمنية بين التخرج والتاريخ الفعلي
+            const yearsSinceGrad = getYearsBetween(gradDate, calculationDate);
+            const totalMonths = Math.floor(yearsSinceGrad * 12);
+            const totalYears = Math.floor(yearsSinceGrad);
+
+            // الفرق بين الدرجات (العدد الإجمالي للترقيات المستحقة في دور التسريع)
+            const gradeDifference = currentGrade - previousGrade;
+
+            let earnedList = [];
+            let futureList = [];
+            let actualEarnedCount = 0;
+            
+            // يتم الترقية درجة واحدة كل سنتين (2 سنة)
+            for (let i = 0; i < gradeDifference; i++) {
+                const promoYear = (i + 1) * 2;
+                const promoDate = addYears(gradDate, promoYear);
+                
+                const fromGrade = currentGrade - i;
+                const toGrade = currentGrade - i - 1;
+                
+                if (new Date(promoDate) <= new Date(calculationDate)) {
+                    actualEarnedCount++;
+                    earnedList.push({
+                        date: promoDate,
+                        text: `الترقية ${i + 1}: من الدرجة ${fromGrade} (${getGradeRank(fromGrade)}) إلى الدرجة ${toGrade} (${getGradeRank(toGrade)}) بتاريخ ${formatDate(promoDate)}`
+                    });
+                } else {
+                    futureList.push({
+                        date: promoDate,
+                        text: `الترقية ${i + 1}: من الدرجة ${fromGrade} (${getGradeRank(fromGrade)}) إلى الدرجة ${toGrade} (${getGradeRank(toGrade)}) بتاريخ ${formatDate(promoDate)}`
+                    });
+                }
+            }
+
+            // تحديد حالة التسريع
+            let status = '';
+            let nextPromotionDate = null;
+            const remainingCount = gradeDifference - actualEarnedCount;
+
+            if (actualEarnedCount >= gradeDifference) {
+                status = `✅ تم تحقيق جميع الدرجات المتراكمة والمستحقة (${gradeDifference} ترقيات) في فترة التسريع.`;
+                showResult(`<strong>حالة التسريع:</strong> ${status}`, 'success');
+            } else {
+                status = `⏳ تم تحقيق ${actualEarnedCount} ترقيات متراكمة، وباقي ${remainingCount} ترقيات مستحقة في دور التسريع.`;
+                nextPromotionDate = futureList.length > 0 ? futureList[0].date : null;
+                showResult(`<strong>حالة التسريع:</strong> ${status}`, 'warning');
+            }
+            
+            // عرض النتائج التفصيلية
+            showResult(`<strong>الخدمة منذ التخرج:</strong> ${totalYears} سنوات و ${totalMonths % 12} أشهر`, 'info');
+            showResult(`<strong>الترقيات المتراكمة المحققة:</strong> ${actualEarnedCount} ترقية`, 'info');
+            showResult(`<strong>الترقيات المستحقة المتبقية:</strong> ${remainingCount} ترقية`, 'info');
+            showResult(`<strong>الفرق بين الدرجات:</strong> ${gradeDifference} ترقية (من الدرجة ${currentGrade} إلى ${previousGrade})`, 'info');
+
+            if (earnedList.length > 0) {
+                showPromotionsList('✅ الترقيات المتراكمة التي تم تحقيقها:', earnedList);
+            }
+
+            if (futureList.length > 0) {
+                showPromotionsList('📅 الترقيات المستحقة المستقبلية:', futureList);
+            }
+
+            if (nextPromotionDate) {
+                showResult(`<strong>📅 موعد أول ترقية مستحقة قادمة:</strong> ${formatDate(nextPromotionDate)}`, 'warning');
+            }
+            
+            // إظهار زر الطباعة بعد ظهور النتائج
+            document.getElementById('printBtn').style.display = 'block';
+        }
+
+
+        // **********************************************
+        // دالة طباعة النتائج (PDF)
+        // **********************************************
+        function printResultsToPDF() {
+            window.print();
+        }
+
+        // دالة إعادة التعيين
+        function resetForm() {
+            document.getElementById('promotionForm').reset();
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('printBtn').style.display = 'none';
+            // إعادة تعيين التاريخ الفعلي تلقائياً
+            setCurrentDate();
+        }
+
+        // الأحداث
+        document.getElementById('calculateBtn').addEventListener('click', calculatePromotions);
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        document.getElementById('printBtn').addEventListener('click', printResultsToPDF);
+
+        // تعيين التاريخ عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', setCurrentDate);
+    </script>
+</body>
+</html>
