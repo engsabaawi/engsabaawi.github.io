@@ -42,7 +42,7 @@
         .safe-dial-scroll {
             display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
             width: 100%; height: 100%; align-items: center;
-            scrollbar-width: none; /* إخفاء السكرول بار */
+            scrollbar-width: none;
             -ms-overflow-style: none;
             padding-left: calc(50% - 40px);
             padding-right: calc(50% - 40px);
@@ -105,8 +105,7 @@
             <h3>سنوات الخدمة (اسحب الأرقام لليمين واليسار)</h3>
             <div class="safe-dial-wrapper">
                 <div class="center-marker"></div>
-                <div class="safe-dial-scroll" id="dialScroll">
-                    </div>
+                <div class="safe-dial-scroll" id="dialScroll"></div>
             </div>
             <input type="hidden" id="serviceYears" value="15">
         </div>
@@ -123,6 +122,14 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>المرحلة</label>
+                    <select id="stage">
+                        <script>
+                            for(let i=1; i<=11; i++) document.write(`<option value="${i}">المرحلة ${i}</option>`);
+                        </script>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>التحصيل الدراسي</label>
                     <select id="degree">
                         <option value="0.00">إعدادية فما دون</option>
@@ -132,7 +139,7 @@
                         <option value="0.20">دكتوراه (20%)</option>
                     </select>
                 </div>
-                <div class="form-group" style="grid-column: span 2;">
+                <div class="form-group">
                     <label>عدد الأطفال (10% لكل طفل)</label>
                     <select id="childrenCount">
                         <option value="0">بدون أطفال</option>
@@ -168,7 +175,6 @@
     const hiddenInput = document.getElementById('serviceYears');
     let lastSelected = 15;
 
-    // توليد صوت التكة
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClick() {
         const osc = audioCtx.createOscillator();
@@ -179,7 +185,6 @@
         osc.start(); osc.stop(audioCtx.currentTime + 0.1);
     }
 
-    // بناء الأرقام
     for (let i = 15; i <= 50; i++) {
         const div = document.createElement('div');
         div.className = 'dial-number';
@@ -187,11 +192,9 @@
         dialScroll.appendChild(div);
     }
 
-    // مراقبة السكرول لمعرفة الرقم الموجود في المنتصف
     dialScroll.addEventListener('scroll', () => {
         const scrollLeft = dialScroll.scrollLeft;
-        const width = 80; // عرض الرقم الواحد
-        // حساب الرقم الأقرب للمركز
+        const width = 80; 
         const index = Math.round(Math.abs(scrollLeft) / width);
         const selectedYear = 15 + index;
 
@@ -200,14 +203,12 @@
             lastSelected = selectedYear;
             hiddenInput.value = selectedYear;
             
-            // تحديث الشكل البصري
             document.querySelectorAll('.dial-number').forEach((el, i) => {
                 el.classList.toggle('selected', i === index);
             });
         }
     });
 
-    // ضبط القيمة البدئية
     setTimeout(() => { dialScroll.scrollLeft = 0; }, 100);
 
     const iraqiSalaries = {
@@ -220,19 +221,28 @@
 
     function calculateFinal() {
         const grade = document.getElementById('grade').value;
+        const stage = parseInt(document.getElementById('stage').value); // الحصول على المرحلة
         const years = parseInt(hiddenInput.value);
         const degreeRate = parseFloat(document.getElementById('degree').value);
         const childrenCount = parseInt(document.getElementById('childrenCount').value);
 
-        const avgNominal = iraqiSalaries[grade].base + (5 * iraqiSalaries[grade].inc); 
-        const basicPension = (years * 2.5 * avgNominal) / 100;
-        const total = basicPension + (basicPension * degreeRate) + (basicPension * 0.01 * years) + (childrenCount * 0.1 * basicPension);
+        // حساب الراتب الاسمي بناءً على الدرجة والمرحلة
+        const currentNominal = iraqiSalaries[grade].base + ((stage - 1) * iraqiSalaries[grade].inc);
+        
+        // حساب الراتب التقاعدي الأساسي (القانون العراقي: سنوات الخدمة * 2.5% * الراتب الاسمي)
+        const basicPension = (years * 2.5 * currentNominal) / 100;
+        
+        const degreeAmt = basicPension * degreeRate;
+        const livingAmt = basicPension * 0.01 * years;
+        const childrenAmt = basicPension * 0.1 * childrenCount;
+
+        const total = basicPension + degreeAmt + livingAmt + childrenAmt;
 
         document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString() + " د.ع";
         document.getElementById('resYears').innerText = years + " سنة";
-        document.getElementById('resDegree').innerText = Math.round(basicPension * degreeRate).toLocaleString() + " د.ع";
-        document.getElementById('resLiving').innerText = Math.round(basicPension * 0.01 * years).toLocaleString() + " د.ع";
-        document.getElementById('resChildren').innerText = Math.round(childrenCount * 0.1 * basicPension).toLocaleString() + " د.ع";
+        document.getElementById('resDegree').innerText = Math.round(degreeAmt).toLocaleString() + " د.ع";
+        document.getElementById('resLiving').innerText = Math.round(livingAmt).toLocaleString() + " د.ع";
+        document.getElementById('resChildren').innerText = Math.round(childrenAmt).toLocaleString() + " د.ع";
         document.getElementById('totalAmount').innerText = Math.round(total).toLocaleString() + " د.ع";
         
         document.getElementById('resultBox').style.display = 'block';
