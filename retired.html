@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة التقاعد - م. مالك محمد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #2c3e50; --accent: #e67e22; --success: #27ae60; --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif; background-color: var(--bg);
+            margin: 0; padding: 15px; color: var(--primary); direction: rtl;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px; margin: 0 auto; background: #fff;
+            padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h2 { text-align: center; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 25px; font-size: 1.6rem; }
+
+        .field-group {
+            background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 15px; margin-bottom: 20px;
+        }
+
+        h3 { font-size: 1.2rem; color: var(--accent); margin-bottom: 15px; }
+
+        /* تصميم القاصة التفاعلي */
+        .safe-dial-wrapper {
+            position: relative; background: #222; border-radius: 15px;
+            height: 100px; border: 4px solid #444; overflow: hidden;
+            display: flex; align-items: center;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        .safe-dial-scroll {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+            width: 100%; height: 100%; align-items: center;
+            scrollbar-width: none; /* إخفاء السكرول بار */
+            -ms-overflow-style: none;
+            padding-left: calc(50% - 40px);
+            padding-right: calc(50% - 40px);
+            scroll-behavior: smooth;
+        }
+
+        .safe-dial-scroll::-webkit-scrollbar { display: none; }
+
+        .dial-number {
+            scroll-snap-align: center; min-width: 80px; text-align: center;
+            font-size: 2.5rem; font-weight: 800; color: #555;
+            transition: 0.3s; cursor: pointer;
+        }
+
+        .dial-number.selected {
+            color: var(--accent); transform: scale(1.3);
+            text-shadow: 0 0 15px rgba(230, 126, 34, 0.6);
+        }
+
+        .center-marker {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 85px; height: 85%; border: 2px solid var(--accent);
+            border-radius: 12px; pointer-events: none;
+            box-shadow: 0 0 15px rgba(230, 126, 34, 0.3);
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        
+        label { font-size: 1rem; font-weight: 600; }
+        select { height: 50px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1rem; padding: 0 10px; font-family: 'Rubik'; }
+
+        .btn-calc {
+            width: 100%; padding: 18px; background: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 1.3rem; font-weight: 700;
+            cursor: pointer; margin-top: 15px;
+        }
+
+        #resultBox { display: none; margin-top: 25px; }
+        .final-pension-card { text-align: center; background: var(--success); color: white; padding: 25px; border-radius: 15px; }
+        .amount { font-size: 2.8rem; font-weight: 700; display: block; margin-top: 10px; }
+
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .detail-item { background: #f8f9fa; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
+        .detail-item strong { display: block; font-size: 1.2rem; color: var(--primary); }
+
+        .btn-screenshot {
+            width: 100%; padding: 15px; background: #3498db; color: white; border: none;
+            border-radius: 12px; font-size: 1.1rem; margin-top: 20px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>حاسبة الاستحقاق التقاعدي</h2>
+
+    <form id="pensionForm">
+        <div class="field-group">
+            <h3>سنوات الخدمة (اسحب الأرقام لليمين واليسار)</h3>
+            <div class="safe-dial-wrapper">
+                <div class="center-marker"></div>
+                <div class="safe-dial-scroll" id="dialScroll">
+                    </div>
+            </div>
+            <input type="hidden" id="serviceYears" value="15">
+        </div>
+
+        <div class="field-group">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>الدرجة الوظيفية</label>
+                    <select id="grade">
+                        <script>
+                            const gradesText = ["العاشرة", "التاسعة", "الثامنة", "السابعة", "السادسة", "الخامسة", "الرابعة", "الثالثة", "الثانية", "الأولى"];
+                            for(let i=0; i<10; i++) document.write(`<option value="${10-i}">الدرجة ${gradesText[i]}</option>`);
+                        </script>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>التحصيل الدراسي</label>
+                    <select id="degree">
+                        <option value="0.00">إعدادية فما دون</option>
+                        <option value="0.05">دبلوم (5%)</option>
+                        <option value="0.10">بكلوريوس (10%)</option>
+                        <option value="0.15">ماجستير (15%)</option>
+                        <option value="0.20">دكتوراه (20%)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>عدد الأطفال (10% لكل طفل)</label>
+                    <select id="childrenCount">
+                        <option value="0">بدون أطفال</option>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-calc" onclick="calculateFinal()">حساب الراتب النهائي</button>
+    </form>
+
+    <div id="resultBox">
+        <div id="captureArea">
+            <div class="final-pension-card">
+                <h4>صافي الراتب التقاعدي</h4>
+                <span id="totalAmount" class="amount">0 د.ع</span>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item"><span>الأساسي</span><strong id="resBasic">0</strong></div>
+                <div class="detail-item"><span>سنوات الخدمة</span><strong id="resYears">0</strong></div>
+                <div class="detail-item"><span>مبلغ الشهادة</span><strong id="resDegree">0</strong></div>
+                <div class="detail-item"><span>غلاء المعيشة</span><strong id="resLiving">0</strong></div>
+                <div class="detail-item" style="grid-column: span 2;"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
+            </div>
+        </div>
+        <button type="button" class="btn-screenshot" onclick="takeScreenshot()">حفظ النتيجة كصورة</button>
+    </div>
+</div>
+
+<script>
+    const dialScroll = document.getElementById('dialScroll');
+    const hiddenInput = document.getElementById('serviceYears');
+    let lastSelected = 15;
+
+    // توليد صوت التكة
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playClick() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    // بناء الأرقام
+    for (let i = 15; i <= 50; i++) {
+        const div = document.createElement('div');
+        div.className = 'dial-number';
+        div.innerText = i;
+        dialScroll.appendChild(div);
+    }
+
+    // مراقبة السكرول لمعرفة الرقم الموجود في المنتصف
+    dialScroll.addEventListener('scroll', () => {
+        const scrollLeft = dialScroll.scrollLeft;
+        const width = 80; // عرض الرقم الواحد
+        // حساب الرقم الأقرب للمركز
+        const index = Math.round(Math.abs(scrollLeft) / width);
+        const selectedYear = 15 + index;
+
+        if (selectedYear !== lastSelected && selectedYear >= 15 && selectedYear <= 50) {
+            playClick();
+            lastSelected = selectedYear;
+            hiddenInput.value = selectedYear;
+            
+            // تحديث الشكل البصري
+            document.querySelectorAll('.dial-number').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+        }
+    });
+
+    // ضبط القيمة البدئية
+    setTimeout(() => { dialScroll.scrollLeft = 0; }, 100);
+
+    const iraqiSalaries = {
+        "1": { base: 910000, inc: 20000 }, "2": { base: 723000, inc: 17000 },
+        "3": { base: 600000, inc: 15000 }, "4": { base: 509000, inc: 12000 },
+        "5": { base: 429000, inc: 10000 }, "6": { base: 362000, inc: 6000 },
+        "7": { base: 296000, inc: 6000 }, "8": { base: 260000, inc: 5000 },
+        "9": { base: 210000, inc: 4000 }, "10": { base: 170000, inc: 3000 }
+    };
+
+    function calculateFinal() {
+        const grade = document.getElementById('grade').value;
+        const years = parseInt(hiddenInput.value);
+        const degreeRate = parseFloat(document.getElementById('degree').value);
+        const childrenCount = parseInt(document.getElementById('childrenCount').value);
+
+        const avgNominal = iraqiSalaries[grade].base + (5 * iraqiSalaries[grade].inc); 
+        const basicPension = (years * 2.5 * avgNominal) / 100;
+        const total = basicPension + (basicPension * degreeRate) + (basicPension * 0.01 * years) + (childrenCount * 0.1 * basicPension);
+
+        document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString() + " د.ع";
+        document.getElementById('resYears').innerText = years + " سنة";
+        document.getElementById('resDegree').innerText = Math.round(basicPension * degreeRate).toLocaleString() + " د.ع";
+        document.getElementById('resLiving').innerText = Math.round(basicPension * 0.01 * years).toLocaleString() + " د.ع";
+        document.getElementById('resChildren').innerText = Math.round(childrenCount * 0.1 * basicPension).toLocaleString() + " د.ع";
+        document.getElementById('totalAmount').innerText = Math.round(total).toLocaleString() + " د.ع";
+        
+        document.getElementById('resultBox').style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function takeScreenshot() {
+        html2canvas(document.getElementById('captureArea')).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'التقاعد.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+
+</body>
+</html>
