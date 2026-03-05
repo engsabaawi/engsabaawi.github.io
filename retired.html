@@ -13,68 +13,83 @@
             --accent: #e67e22; 
             --success: #27ae60; 
             --bg: #f4f7f6;
+            --border-radius: 16px;
+            --spacing: 20px;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
         }
 
         body {
             font-family: 'Rubik', sans-serif; 
-            background-color: var(--bg);
+            background: linear-gradient(135deg, #e0e7ee 0%, #f4f7f6 100%);
             margin: 0; 
             padding: 15px; 
             color: var(--primary); 
             direction: rtl;
-            overflow-x: hidden;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .container {
-            max-width: 800px; 
-            margin: 0 auto; 
+            width: 100%;
+            max-width: 600px; 
             background: #fff;
             padding: 25px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 100%;
+            border-radius: var(--border-radius); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing);
         }
 
         h2 { 
             text-align: center; 
-            border-bottom: 3px solid var(--accent); 
-            padding-bottom: 10px; 
-            margin-bottom: 25px; 
-            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            border-bottom: 4px solid var(--accent); 
+            padding-bottom: 15px; 
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
             line-height: 1.4;
+            color: var(--primary);
         }
 
         .field-group {
             background: #fdfdfd; 
             padding: 20px; 
-            border: 1px solid #eee; 
-            border-radius: 15px; 
-            margin-bottom: 20px;
+            border: 2px solid #e8e8e8; 
+            border-radius: var(--border-radius); 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         h3 { 
-            font-size: clamp(1rem, 3.5vw, 1.2rem); 
+            font-size: clamp(1rem, 4vw, 1.2rem); 
             color: var(--accent); 
-            margin-bottom: 15px; 
+            margin-bottom: 5px;
+            font-weight: 600;
         }
 
-        /* تصميم القاصة التفاعلي - محسّن للشاشات الصغيرة */
+        /* ========== قاصة السنوات ========== */
         .safe-dial-wrapper {
             position: relative; 
-            background: #222; 
-            border-radius: 15px;
-            height: 100px; 
-            border: 4px solid #444; 
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a); 
+            border-radius: var(--border-radius);
+            height: 120px; 
+            border: 3px solid #444; 
             overflow: hidden;
             display: flex; 
             align-items: center;
-            box-shadow: inset 0 0 20px #000;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.2);
             touch-action: pan-x;
         }
 
@@ -87,8 +102,8 @@
             align-items: center;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            padding-left: calc(50% - 40px);
-            padding-right: calc(50% - 40px);
+            padding-left: calc(50% - 50px);
+            padding-right: calc(50% - 50px);
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
@@ -97,275 +112,483 @@
 
         .dial-number {
             scroll-snap-align: center; 
-            min-width: 80px; 
+            min-width: 100px; 
             text-align: center;
-            font-size: clamp(1.8rem, 6vw, 2.5rem); 
+            font-size: clamp(2rem, 6vw, 2.5rem); 
             font-weight: 800; 
-            color: #555;
-            transition: 0.3s; 
+            color: #666;
+            transition: all 0.3s ease; 
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
+            padding: 0 10px;
         }
 
         .dial-number.selected {
             color: var(--accent); 
-            transform: scale(1.3);
-            text-shadow: 0 0 15px rgba(230, 126, 34, 0.6);
+            transform: scale(1.4);
+            text-shadow: 0 0 20px rgba(230, 126, 34, 0.8);
         }
 
         .center-marker {
             position: absolute; 
             left: 50%; 
             transform: translateX(-50%);
-            width: 85px; 
-            height: 85%; 
-            border: 2px solid var(--accent);
+            width: 100px; 
+            height: 90%; 
+            border: 3px solid var(--accent);
             border-radius: 12px; 
             pointer-events: none;
-            box-shadow: 0 0 15px rgba(230, 126, 34, 0.3);
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.4), inset 0 0 10px rgba(230, 126, 34, 0.1);
+            background: rgba(230, 126, 34, 0.05);
         }
 
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
+        /* ========== النموذج ========== */
+        .form-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .form-group { 
+            flex: 1;
+            min-width: 140px;
             display: flex; 
             flex-direction: column; 
-            gap: 5px; 
+            gap: 8px; 
+        }
+
+        .form-group.full-width {
+            flex: 1 1 100%;
         }
         
         label { 
-            font-size: clamp(0.9rem, 3vw, 1rem); 
-            font-weight: 600; 
+            font-size: clamp(0.9rem, 3.5vw, 1rem); 
+            font-weight: 600;
+            color: #555;
         }
 
-        input[type="number"] {
-            height: 50px; 
-            border-radius: 10px; 
+        input[type="number"],
+        select { 
+            height: 55px; 
+            border-radius: 12px; 
             border: 2px solid #ddd; 
-            font-size: clamp(0.9rem, 3vw, 1.1rem); 
+            font-size: clamp(1rem, 3.5vw, 1.1rem); 
             padding: 0 15px; 
             font-family: 'Rubik';
             width: 100%;
             background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"] {
             direction: ltr;
             text-align: right;
         }
 
-        input[type="number"]:focus {
+        input[type="number"]:focus,
+        select:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
         }
 
-        select { 
-            height: 50px; 
-            border-radius: 10px; 
-            border: 2px solid #ddd; 
-            font-size: clamp(0.9rem, 3vw, 1.1rem); 
-            padding: 0 10px; 
-            font-family: 'Rubik';
-            width: 100%;
-            background-color: white;
+        select {
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 20px;
+            padding-left: 45px;
         }
 
+        /* ========== الأزرار ========== */
         .btn-calc {
             width: 100%; 
-            padding: 18px; 
-            background: var(--primary); 
+            padding: 20px; 
+            background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%); 
             color: white;
             border: none; 
             border-radius: 12px; 
             font-size: clamp(1.1rem, 4vw, 1.3rem); 
             font-weight: 700;
             cursor: pointer; 
-            margin-top: 15px;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-calc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.4);
         }
 
         .btn-calc:active {
-            transform: scale(0.98);
-            background-color: #34495e;
+            transform: translateY(0);
         }
 
+        /* ========== صندوق النتائج ========== */
         #resultBox { 
             display: none; 
-            margin-top: 25px; 
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== منطقة الالتقاط مع الحدود ========== */
+        #captureArea {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            padding: 25px;
+            border: 4px solid var(--success);
+            box-shadow: 0 10px 40px rgba(39, 174, 96, 0.15), inset 0 0 0 1px rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #captureArea::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--success), #2ecc71, var(--success));
         }
 
         .final-pension-card { 
             text-align: center; 
-            background: var(--success); 
+            background: linear-gradient(135deg, var(--success) 0%, #229954 100%); 
             color: white; 
-            padding: clamp(15px, 4vw, 25px); 
-            border-radius: 15px; 
+            padding: 30px; 
+            border-radius: var(--border-radius); 
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+            margin-bottom: 20px;
         }
 
         .final-pension-card h4 {
-            margin: 0 0 10px 0;
-            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            margin: 0 0 15px 0;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            font-weight: 500;
+            opacity: 0.95;
         }
 
         .amount { 
-            font-size: clamp(1.8rem, 7vw, 2.8rem); 
-            font-weight: 700; 
+            font-size: clamp(2rem, 8vw, 3rem); 
+            font-weight: 800; 
             display: block; 
-            margin-top: 10px;
-            word-break: break-word;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .details-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-top: 15px; 
+        .details-flex { 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px; 
         }
 
         .detail-item { 
-            background: #f8f9fa; 
-            padding: clamp(10px, 3vw, 15px); 
+            flex: 1;
+            min-width: calc(50% - 6px);
+            background: #ffffff; 
+            padding: 20px 15px; 
             border-radius: 12px; 
             text-align: center; 
-            border: 1px solid #eee; 
+            border: 2px solid #e8e8e8;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .detail-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .detail-item.full-width {
+            flex: 1 1 100%;
         }
 
         .detail-item span {
-            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-            color: #666;
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
+            color: #777;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
         .detail-item strong { 
             display: block; 
-            font-size: clamp(1rem, 3.5vw, 1.2rem); 
+            font-size: clamp(1.1rem, 4vw, 1.3rem); 
             color: var(--primary);
-            word-break: break-word;
+            font-weight: 700;
+        }
+
+        /* تذييل الصورة */
+        .capture-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ddd;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .capture-footer .date {
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         .btn-screenshot {
             width: 100%; 
-            padding: 15px; 
-            background: #3498db; 
+            padding: 18px; 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
             color: white; 
             border: none;
             border-radius: 12px; 
             font-size: clamp(1rem, 3.5vw, 1.1rem); 
             margin-top: 20px; 
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            font-weight: 600;
         }
 
-        .btn-screenshot:active {
-            transform: scale(0.98);
-            background-color: #2980b9;
+        .btn-screenshot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
         }
 
-        /* استعلامات الوسائط للشاشات الصغيرة */
-        @media (max-width: 600px) {
+        /* ========== استعلامات الوسائط ========== */
+        
+        /* شاشات صغيرة جداً (هواتف صغيرة) */
+        @media (max-width: 360px) {
             body {
                 padding: 10px;
             }
             
             .container {
                 padding: 15px;
-                border-radius: 15px;
+                border-radius: 12px;
             }
             
             .field-group {
                 padding: 15px;
             }
             
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
+            #captureArea {
+                padding: 15px;
+                border-width: 3px;
             }
             
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .detail-item[style*="grid-column: span 2"] {
-                grid-column: span 1 !important;
+            .final-pension-card {
+                padding: 20px;
             }
             
             .safe-dial-wrapper {
-                height: 80px;
-            }
-            
-            .center-marker {
-                width: 70px;
+                height: 100px;
             }
             
             .dial-number {
-                min-width: 70px;
+                min-width: 80px;
+                font-size: 1.8rem;
+            }
+            
+            .center-marker {
+                width: 80px;
             }
             
             .safe-dial-scroll {
-                padding-left: calc(50% - 35px);
-                padding-right: calc(50% - 35px);
+                padding-left: calc(50% - 40px);
+                padding-right: calc(50% - 40px);
+            }
+            
+            .detail-item {
+                min-width: 100%;
             }
         }
 
-        /* للشاشات المتوسطة */
-        @media (min-width: 601px) and (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
+        /* شاشات صغيرة */
+        @media (max-width: 480px) {
+            .form-row {
+                flex-direction: column;
                 gap: 12px;
             }
             
-            .container {
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .detail-item {
+                min-width: 100%;
+            }
+            
+            .safe-dial-wrapper {
+                height: 110px;
+            }
+            
+            #captureArea {
                 padding: 20px;
             }
         }
 
-        /* للشاشات الكبيرة جداً */
-        @media (min-width: 1200px) {
+        /* شاشات متوسطة */
+        @media (min-width: 481px) and (max-width: 768px) {
             .container {
-                max-width: 900px;
+                max-width: 100%;
+            }
+            
+            .detail-item {
+                min-width: calc(50% - 6px);
             }
         }
 
-        /* دعم الوضع الأفقي على الهاتف */
+        /* شاشات كبيرة */
+        @media (min-width: 769px) {
+            body {
+                padding: 30px;
+                align-items: center;
+            }
+            
+            .container {
+                max-width: 650px;
+            }
+            
+            .detail-item {
+                min-width: calc(33.333% - 8px);
+            }
+            
+            .detail-item.full-width {
+                min-width: calc(50% - 6px);
+            }
+        }
+
+        /* شاشات كبيرة جداً */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 700px;
+            }
+        }
+
+        /* الوضع الأفقي على الهاتف */
         @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
             .safe-dial-wrapper {
-                height: 70px;
+                height: 90px;
             }
             
             .field-group {
-                padding: 12px;
-                margin-bottom: 10px;
+                padding: 15px;
+                gap: 10px;
             }
             
             h2 {
+                padding-bottom: 10px;
                 margin-bottom: 15px;
-                padding-bottom: 8px;
+            }
+            
+            #captureArea {
+                padding: 20px;
             }
         }
 
         /* تحسينات الوصول */
         @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
             .safe-dial-scroll {
                 scroll-behavior: auto;
             }
-            
-            .dial-number {
-                transition: none;
-            }
-            
-            .btn-calc, .btn-screenshot {
-                transition: none;
+        }
+
+        /* دعم الشاشات العريضة */
+        @media (min-aspect-ratio: 21/9) {
+            body {
+                align-items: center;
             }
         }
 
-        /* دعم الشاشات العريضة جداً */
-        @media (min-aspect-ratio: 21/9) {
+        /* دعم الوضع الداكن */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a1a1a;
+                --primary: #ecf0f1;
+            }
+            
+            body {
+                background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+            }
+            
             .container {
-                max-width: 1000px;
+                background: #2c3e50;
+                color: #ecf0f1;
+            }
+            
+            .field-group {
+                background: #34495e;
+                border-color: #4a6278;
+            }
+            
+            input[type="number"],
+            select {
+                background-color: #2c3e50;
+                border-color: #4a6278;
+                color: #ecf0f1;
+            }
+            
+            .detail-item {
+                background: #34495e;
+                border-color: #4a6278;
+            }
+            
+            .detail-item strong {
+                color: #ecf0f1;
+            }
+            
+            .detail-item span {
+                color: #bdc3c7;
+            }
+            
+            label {
+                color: #bdc3c7;
+            }
+            
+            h3 {
+                color: #e67e22;
+            }
+            
+            #captureArea {
+                background: linear-gradient(145deg, #2c3e50, #34495e);
+                border-color: var(--success);
+            }
+            
+            .capture-footer {
+                border-color: #4a6278;
+                color: #95a5a6;
             }
         }
     </style>
@@ -373,11 +596,12 @@
 <body>
 
 <div class="container">
-    <h2>حاسبة الاستحقاق التقاعدي</h2>
+    <h2>حاسبة الراتب التقاعدي</h2>
 
     <form id="pensionForm">
+        <!-- قاصة السنوات -->
         <div class="field-group">
-            <h3>سنوات الخدمة (اسحب الأرقام لليمين واليسار)</h3>
+            <h3>سنوات الخدمة (اسحب للتغيير)</h3>
             <div class="safe-dial-wrapper">
                 <div class="center-marker"></div>
                 <div class="safe-dial-scroll" id="dialScroll"></div>
@@ -385,66 +609,103 @@
             <input type="hidden" id="serviceYears" value="15">
         </div>
 
+        <!-- رواتب السنوات الثلاث -->
         <div class="field-group">
             <h3>رواتب آخر 3 سنوات من الخدمة</h3>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>راتب السنة الأولى (د.ع)</label>
-                    <input type="number" id="salaryYear1" placeholder="مثال: 1000000" min="0">
+            <div class="form-flex">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salaryYear1">معدل راتب السنة الاولى</label>
+                        <input type="number" id="salaryYear1" class="auto-calc" placeholder="أدخل الراتب" min="0" step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryYear2">معدل راتب السنة الثانية</label>
+                        <input type="number" id="salaryYear2" class="auto-calc" placeholder="أدخل الراتب" min="0" step="1000">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>راتب السنة الثانية (د.ع)</label>
-                    <input type="number" id="salaryYear2" placeholder="مثال: 1000000" min="0">
-                </div>
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>راتب السنة الثالثة (د.ع)</label>
-                    <input type="number" id="salaryYear3" placeholder="مثال: 1000000" min="0">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="salaryYear3">معدل راتب السنة الثالثة</label>
+                        <input type="number" id="salaryYear3" class="auto-calc" placeholder="أدخل الراتب" min="0" step="1000">
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- الشهادة والأطفال -->
         <div class="field-group">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>التحصيل الدراسي</label>
-                    <select id="degree">
-                        <option value="0.00">إعدادية فما دون</option>
-                        <option value="0.05">دبلوم (5%)</option>
-                        <option value="0.10">بكلوريوس (10%)</option>
-                        <option value="0.15">ماجستير (15%)</option>
-                        <option value="0.20">دكتوراه (20%)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>عدد الأطفال (25,000 د.ع لكل طفل)</label>
-                    <select id="childrenCount">
-                        <option value="0">بدون أطفال</option>
-                        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                        <option value="5">5</option><option value="6">6</option>
-                    </select>
+            <div class="form-flex">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="degree">التحصيل الدراسي</label>
+                        <select id="degree" class="auto-calc">
+                            <option value="0.00">إعدادية فما دون</option>
+                            <option value="0.05">دبلوم</option>
+                            <option value="0.10">بكلوريوس</option>
+                            <option value="0.15">ماجستير</option>
+                            <option value="0.20">دكتوراه</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="childrenCount">عدد الأطفال</label>
+                        <select id="childrenCount" class="auto-calc">
+                            <option value="0">بدون أطفال</option>
+                            <option value="1">طفل واحد</option>
+                            <option value="2">طفلان</option>
+                            <option value="3">3 أطفال</option>
+                            <option value="4">4 أطفال</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <button type="button" class="btn-calc" onclick="calculateFinal()">حساب الراتب النهائي</button>
+        <button type="button" class="btn-calc" onclick="calculateFinal()">
+            <span>حساب الراتب التقاعدي</span>
+        </button>
     </form>
 
+    <!-- النتائج -->
     <div id="resultBox">
         <div id="captureArea">
             <div class="final-pension-card">
-                <h4>صافي الراتب التقاعدي</h4>
+                <h4>صافي الراتب التقاعدي الشهري</h4>
                 <span id="totalAmount" class="amount">0 د.ع</span>
             </div>
-            <div class="details-grid">
-                <div class="detail-item"><span>متوسط الراتب</span><strong id="resAvg">0</strong></div>
-                <div class="detail-item"><span>سنوات الخدمة</span><strong id="resYears">0</strong></div>
-                <div class="detail-item"><span>الأساسي (2.5% × سنوات)</span><strong id="resBasic">0</strong></div>
-                <div class="detail-item"><span>مبلغ الشهادة</span><strong id="resDegree">0</strong></div>
-                <div class="detail-item"><span>غلاء المعيشة</span><strong id="resLiving">0</strong></div>
-                <div class="detail-item"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
+            <div class="details-flex">
+                <div class="detail-item">
+                    <span>متوسط الراتب</span>
+                    <strong id="resAvg">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>سنوات الخدمة</span>
+                    <strong id="resYears">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>الراتب الأساسي</span>
+                    <strong id="resBasic">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>مكافأة الشهادة</span>
+                    <strong id="resDegree">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>غلاء المعيشة</span>
+                    <strong id="resLiving">0</strong>
+                </div>
+                <div class="detail-item full-width">
+                    <span>مخصصات الأطفال</span>
+                    <strong id="resChildren">0</strong>
+                </div>
+            </div>
+            <div class="capture-footer">
+                <div>حاسبة التقاعد - م. مالك محمد</div>
+                <div class="date" id="captureDate"></div>
             </div>
         </div>
-        <button type="button" class="btn-screenshot" onclick="takeScreenshot()">حفظ النتيجة كصورة</button>
+        <button type="button" class="btn-screenshot" onclick="takeScreenshot()">
+        حفظ النتيجة كصورة
+        </button>
     </div>
 </div>
 
@@ -452,7 +713,9 @@
     const dialScroll = document.getElementById('dialScroll');
     const hiddenInput = document.getElementById('serviceYears');
     let lastSelected = 15;
+    let hasCalculated = false; // متغير لتتبع إذا تم الحساب مسبقاً
 
+    // تأثير صوتي خفيف
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClick() {
         if (audioCtx.state === 'suspended') {
@@ -460,19 +723,34 @@
         }
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        osc.connect(gain); 
+        gain.connect(audioCtx.destination);
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.05);
     }
 
+    // إنشاء أرقام القاصة
     for (let i = 15; i <= 50; i++) {
         const div = document.createElement('div');
         div.className = 'dial-number';
         div.innerText = i;
         div.setAttribute('role', 'button');
         div.setAttribute('aria-label', `سنة ${i}`);
+        div.onclick = () => scrollToYear(i);
         dialScroll.appendChild(div);
+    }
+
+    function scrollToYear(year) {
+        const index = year - 15;
+        const width = window.innerWidth <= 360 ? 80 : (window.innerWidth <= 480 ? 90 : 100);
+        dialScroll.scrollTo({
+            left: index * width,
+            behavior: 'smooth'
+        });
     }
 
     // تحسين أداء التمرير
@@ -489,8 +767,8 @@
 
     function updateSelectedYear() {
         const scrollLeft = dialScroll.scrollLeft;
-        const width = window.innerWidth <= 600 ? 70 : 80; 
-        const index = Math.round(Math.abs(scrollLeft) / width);
+        const width = window.innerWidth <= 360 ? 80 : (window.innerWidth <= 480 ? 90 : 100);
+        const index = Math.round(scrollLeft / width);
         const selectedYear = 15 + index;
 
         if (selectedYear !== lastSelected && selectedYear >= 15 && selectedYear <= 50) {
@@ -501,6 +779,11 @@
             document.querySelectorAll('.dial-number').forEach((el, i) => {
                 el.classList.toggle('selected', i === index);
             });
+            
+            // التحديث التلقائي إذا تم الحساب مسبقاً
+            if (hasCalculated) {
+                autoCalculate();
+            }
         }
     }
 
@@ -510,7 +793,49 @@
         document.querySelector('.dial-number').classList.add('selected');
     }, 100);
 
-    function calculateFinal() {
+    // دعم لوحة المفاتيح للقاصة
+    dialScroll.addEventListener('keydown', (e) => {
+        const currentYear = parseInt(hiddenInput.value);
+        if (e.key === 'ArrowLeft' && currentYear > 15) {
+            scrollToYear(currentYear - 1);
+        } else if (e.key === 'ArrowRight' && currentYear < 50) {
+            scrollToYear(currentYear + 1);
+        }
+    });
+
+    // إضافة مستمعي الأحداث للتحديث التلقائي
+    function setupAutoCalculate() {
+        const inputs = document.querySelectorAll('.auto-calc');
+        inputs.forEach(input => {
+            // للحقول الرقمية
+            if (input.type === 'number') {
+                input.addEventListener('input', debounce(() => {
+                    if (hasCalculated) autoCalculate();
+                }, 500));
+            } else {
+                // لحقول الاختيار
+                input.addEventListener('change', () => {
+                    if (hasCalculated) autoCalculate();
+                });
+            }
+        });
+    }
+
+    // دالة منع الاستدعاء المتكرر
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // دالة الحساب التلقائي (بدون رسائل تنبيه)
+    function autoCalculate() {
         const years = parseInt(hiddenInput.value);
         const salary1 = parseFloat(document.getElementById('salaryYear1').value) || 0;
         const salary2 = parseFloat(document.getElementById('salaryYear2').value) || 0;
@@ -518,25 +843,29 @@
         const degreeRate = parseFloat(document.getElementById('degree').value);
         const childrenCount = parseInt(document.getElementById('childrenCount').value);
 
+        // التحقق من وجود بيانات كافية
+        if (salary1 === 0 && salary2 === 0 && salary3 === 0) return;
+
         // حساب متوسط الراتب
         const avgSalary = (salary1 + salary2 + salary3) / 3;
         
-        // المعاش الأساسي: 2.5% × سنوات الخدمة × متوسط الراتب
+        // المعاش الأساسي
         const basicPension = (years * 2.5 * avgSalary) / 100;
         
-        // مبلغ الشهادة: نسبة من المعاش الأساسي
+        // المبالغ الإضافية
         const degreeAmt = basicPension * degreeRate;
-        
-        // غلاء المعيشة: مبلغ مقطوع 100,000 د.ع
         const livingAmt = 100000;
-        
-        // مخصصات الأطفال: 25,000 د.ع لكل طفل
         const childrenAmt = 25000 * childrenCount;
 
         // المجموع الكلي
         const total = basicPension + degreeAmt + livingAmt + childrenAmt;
 
-        // عرض النتائج
+        // تحديث الواجهة
+        updateResults(avgSalary, years, basicPension, degreeAmt, livingAmt, childrenAmt, total);
+    }
+
+    // دالة تحديث النتائج في الواجهة
+    function updateResults(avgSalary, years, basicPension, degreeAmt, livingAmt, childrenAmt, total) {
         document.getElementById('resAvg').innerText = Math.round(avgSalary).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('resYears').innerText = years + " سنة";
         document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString('ar-IQ') + " د.ع";
@@ -545,61 +874,180 @@
         document.getElementById('resChildren').innerText = Math.round(childrenAmt).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('totalAmount').innerText = Math.round(total).toLocaleString('ar-IQ') + " د.ع";
         
+        // تحديث التاريخ
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ar-IQ', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('captureDate').innerText = dateStr;
+    }
+
+    function calculateFinal() {
+        const years = parseInt(hiddenInput.value);
+        const salary1 = parseFloat(document.getElementById('salaryYear1').value) || 0;
+        const salary2 = parseFloat(document.getElementById('salaryYear2').value) || 0;
+        const salary3 = parseFloat(document.getElementById('salaryYear3').value) || 0;
+        const degreeRate = parseFloat(document.getElementById('degree').value);
+        const childrenCount = parseInt(document.getElementById('childrenCount').value);
+
+        // التحقق من إدخال الرواتب
+        if (salary1 === 0 && salary2 === 0 && salary3 === 0) {
+            alert('الرجاء إدخال رواتب السنوات الثلاث على الأقل');
+            return;
+        }
+
+        // حساب متوسط الراتب
+        const avgSalary = (salary1 + salary2 + salary3) / 3;
+        
+        // المعاش الأساسي
+        const basicPension = (years * 2.5 * avgSalary) / 100;
+        
+        // المبالغ الإضافية
+        const degreeAmt = basicPension * degreeRate;
+        const livingAmt = 100000;
+        const childrenAmt = 25000 * childrenCount;
+
+        // المجموع الكلي
+        const total = basicPension + degreeAmt + livingAmt + childrenAmt;
+
+        // تحديث الواجهة
+        updateResults(avgSalary, years, basicPension, degreeAmt, livingAmt, childrenAmt, total);
+        
+        // إظهار صندوق النتائج
         document.getElementById('resultBox').style.display = 'block';
+        
+        // تفعيل التحديث التلقائي
+        hasCalculated = true;
         
         // التمرير السلس للنتيجة
         setTimeout(() => {
-            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
     }
 
     function takeScreenshot() {
         const captureArea = document.getElementById('captureArea');
+        const btn = document.querySelector('.btn-screenshot');
         
         // إضافة تأثير بصري مؤقت
-        captureArea.style.transform = 'scale(1.02)';
+        captureArea.style.transform = 'scale(1.01)';
         captureArea.style.transition = 'transform 0.2s';
+        btn.innerHTML = '⏳ جاري الحفظ...';
         
-        html2canvas(captureArea, {
-            scale: window.devicePixelRatio || 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            logging: false
-        }).then(canvas => {
-            captureArea.style.transform = 'scale(1)';
-            
-            const link = document.createElement('a');
-            const timestamp = new Date().toISOString().slice(0,10);
-            link.download = `التقاعد_${timestamp}.png`;
-            link.href = canvas.toDataURL('image/png');
-            
-            // للأجهزة المحمولة
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                const newWindow = window.open();
-                newWindow.document.write('<img src="' + link.href + '" style="width:100%;">');
-            } else {
-                link.click();
-            }
-        }).catch(err => {
-            console.error('Error capturing screenshot:', err);
-            alert('حدث خطأ أثناء حفظ الصورة. يرجى المحاولة مرة أخرى.');
+        // تحديث التاريخ قبل الالتقاط
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ar-IQ', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
+        document.getElementById('captureDate').innerText = dateStr;
+        
+        // انتظار قصير لتحديث الواجهة
+        setTimeout(() => {
+            html2canvas(captureArea, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                width: captureArea.offsetWidth,
+                height: captureArea.offsetHeight,
+                x: 0,
+                y: 0,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: captureArea.offsetWidth,
+                windowHeight: captureArea.offsetHeight
+            }).then(canvas => {
+                captureArea.style.transform = 'scale(1)';
+                btn.innerHTML = '📸 حفظ النتيجة كصورة';
+                
+                const link = document.createElement('a');
+                const timestamp = new Date().toLocaleDateString('ar-IQ').replace(/\//g, '-');
+                link.download = `التقاعد_${timestamp}.png`;
+                link.href = canvas.toDataURL('image/png');
+                
+                // للأجهزة المحمولة
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(`
+                        <html dir="rtl">
+                        <head>
+                            <title>صورة التقاعد</title>
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style>
+                                body {
+                                    margin: 0;
+                                    padding: 20px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+                                    min-height: 100vh;
+                                    background: #f4f7f6;
+                                    font-family: 'Rubik', sans-serif;
+                                }
+                                img {
+                                    max-width: 100%;
+                                    border-radius: 20px;
+                                    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+                                    border: 4px solid #27ae60;
+                                }
+                                .hint {
+                                    margin-top: 20px;
+                                    background: rgba(0,0,0,0.8);
+                                    color: white;
+                                    padding: 15px 25px;
+                                    border-radius: 25px;
+                                    font-size: 1rem;
+                                    text-align: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <img src="${link.href}">
+                            <div class="hint">📱 اضغط مطولاً على الصورة للحفظ في الألبوم</div>
+                        </body>
+                        </html>
+                    `);
+                } else {
+                    link.click();
+                }
+            }).catch(err => {
+                console.error('Error capturing screenshot:', err);
+                alert('حدث خطأ أثناء حفظ الصورة. يرجى المحاولة مرة أخرى.');
+                btn.innerHTML = '📸 حفظ النتيجة كصورة';
+                captureArea.style.transform = 'scale(1)';
+            });
+        }, 100);
     }
 
-    // دعم لوحة المفاتيح للقاصة
-    dialScroll.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            dialScroll.scrollBy({ left: -80, behavior: 'smooth' });
-        } else if (e.key === 'ArrowRight') {
-            dialScroll.scrollBy({ left: 80, behavior: 'smooth' });
-        }
-    });
+    // إعداد التحديث التلقائي
+    setupAutoCalculate();
 
     // منع التكبير المزدوج على iOS
-    document.addEventListener('dblclick', (e) => {
-        e.preventDefault();
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
     }, { passive: false });
+
+    // تحسين التركيز على الحقول
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+    });
 </script>
 
 </body>
