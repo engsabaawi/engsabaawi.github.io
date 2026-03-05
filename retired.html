@@ -143,6 +143,24 @@
             font-weight: 600; 
         }
 
+        input[type="number"] {
+            height: 50px; 
+            border-radius: 10px; 
+            border: 2px solid #ddd; 
+            font-size: clamp(0.9rem, 3vw, 1.1rem); 
+            padding: 0 15px; 
+            font-family: 'Rubik';
+            width: 100%;
+            background-color: white;
+            direction: ltr;
+            text-align: right;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
         select { 
             height: 50px; 
             border-radius: 10px; 
@@ -368,24 +386,25 @@
         </div>
 
         <div class="field-group">
+            <h3>رواتب آخر 3 سنوات من الخدمة</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>الدرجة الوظيفية</label>
-                    <select id="grade">
-                        <script>
-                            const gradesText = ["العاشرة", "التاسعة", "الثامنة", "السابعة", "السادسة", "الخامسة", "الرابعة", "الثالثة", "الثانية", "الأولى"];
-                            for(let i=0; i<10; i++) document.write(`<option value="${10-i}">الدرجة ${gradesText[i]}</option>`);
-                        </script>
-                    </select>
+                    <label>راتب السنة الأولى (د.ع)</label>
+                    <input type="number" id="salaryYear1" placeholder="مثال: 1000000" min="0">
                 </div>
                 <div class="form-group">
-                    <label>المرحلة</label>
-                    <select id="stage">
-                        <script>
-                            for(let i=1; i<=11; i++) document.write(`<option value="${i}">المرحلة ${i}</option>`);
-                        </script>
-                    </select>
+                    <label>راتب السنة الثانية (د.ع)</label>
+                    <input type="number" id="salaryYear2" placeholder="مثال: 1000000" min="0">
                 </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>راتب السنة الثالثة (د.ع)</label>
+                    <input type="number" id="salaryYear3" placeholder="مثال: 1000000" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="form-grid">
                 <div class="form-group">
                     <label>التحصيل الدراسي</label>
                     <select id="degree">
@@ -397,10 +416,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>عدد الأطفال (10% لكل طفل)</label>
+                    <label>عدد الأطفال (25,000 د.ع لكل طفل)</label>
                     <select id="childrenCount">
                         <option value="0">بدون أطفال</option>
                         <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                        <option value="5">5</option><option value="6">6</option>
                     </select>
                 </div>
             </div>
@@ -416,11 +436,12 @@
                 <span id="totalAmount" class="amount">0 د.ع</span>
             </div>
             <div class="details-grid">
-                <div class="detail-item"><span>الأساسي</span><strong id="resBasic">0</strong></div>
+                <div class="detail-item"><span>متوسط الراتب</span><strong id="resAvg">0</strong></div>
                 <div class="detail-item"><span>سنوات الخدمة</span><strong id="resYears">0</strong></div>
+                <div class="detail-item"><span>الأساسي (2.5% × سنوات)</span><strong id="resBasic">0</strong></div>
                 <div class="detail-item"><span>مبلغ الشهادة</span><strong id="resDegree">0</strong></div>
                 <div class="detail-item"><span>غلاء المعيشة</span><strong id="resLiving">0</strong></div>
-                <div class="detail-item" style="grid-column: span 2;"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
+                <div class="detail-item"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
             </div>
         </div>
         <button type="button" class="btn-screenshot" onclick="takeScreenshot()">حفظ النتيجة كصورة</button>
@@ -489,32 +510,36 @@
         document.querySelector('.dial-number').classList.add('selected');
     }, 100);
 
-    const iraqiSalaries = {
-        "1": { base: 910000, inc: 20000 }, "2": { base: 723000, inc: 17000 },
-        "3": { base: 600000, inc: 15000 }, "4": { base: 509000, inc: 12000 },
-        "5": { base: 429000, inc: 10000 }, "6": { base: 362000, inc: 6000 },
-        "7": { base: 296000, inc: 6000 }, "8": { base: 260000, inc: 5000 },
-        "9": { base: 210000, inc: 4000 }, "10": { base: 170000, inc: 3000 }
-    };
-
     function calculateFinal() {
-        const grade = document.getElementById('grade').value;
-        const stage = parseInt(document.getElementById('stage').value);
         const years = parseInt(hiddenInput.value);
+        const salary1 = parseFloat(document.getElementById('salaryYear1').value) || 0;
+        const salary2 = parseFloat(document.getElementById('salaryYear2').value) || 0;
+        const salary3 = parseFloat(document.getElementById('salaryYear3').value) || 0;
         const degreeRate = parseFloat(document.getElementById('degree').value);
         const childrenCount = parseInt(document.getElementById('childrenCount').value);
 
-        const currentNominal = iraqiSalaries[grade].base + ((stage - 1) * iraqiSalaries[grade].inc);
-        const basicPension = (years * 2.5 * currentNominal) / 100;
+        // حساب متوسط الراتب
+        const avgSalary = (salary1 + salary2 + salary3) / 3;
         
+        // المعاش الأساسي: 2.5% × سنوات الخدمة × متوسط الراتب
+        const basicPension = (years * 2.5 * avgSalary) / 100;
+        
+        // مبلغ الشهادة: نسبة من المعاش الأساسي
         const degreeAmt = basicPension * degreeRate;
-        const livingAmt = basicPension * 0.01 * years;
-        const childrenAmt = basicPension * 0.1 * childrenCount;
+        
+        // غلاء المعيشة: مبلغ مقطوع 100,000 د.ع
+        const livingAmt = 100000;
+        
+        // مخصصات الأطفال: 25,000 د.ع لكل طفل
+        const childrenAmt = 25000 * childrenCount;
 
+        // المجموع الكلي
         const total = basicPension + degreeAmt + livingAmt + childrenAmt;
 
-        document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString('ar-IQ') + " د.ع";
+        // عرض النتائج
+        document.getElementById('resAvg').innerText = Math.round(avgSalary).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('resYears').innerText = years + " سنة";
+        document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('resDegree').innerText = Math.round(degreeAmt).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('resLiving').innerText = Math.round(livingAmt).toLocaleString('ar-IQ') + " د.ع";
         document.getElementById('resChildren').innerText = Math.round(childrenAmt).toLocaleString('ar-IQ') + " د.ع";
