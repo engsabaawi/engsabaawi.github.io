@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>موقع عصري مفيد يعطيك بعض الخدمات المهمة صمم بواسط المهندس مالك محمد</title>
     <style>
         * {
@@ -12,334 +11,491 @@
             box-sizing: border-box;
         }
 
-
-    html, body {
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-        background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F7 50%, #EFEFEF 100%);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* خلفية متحركة بتأثيرات سائلة - ألوان آبل الدقيقة */
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 50%, rgba(0, 122, 255, 0.06) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, rgba(52, 199, 89, 0.04) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    body::after {
-        content: '';
-        position: fixed;
-        top: -50%;
-        right: -10%;
-        width: 600px;
-        height: 600px;
-        background: radial-gradient(circle, rgba(52, 199, 89, 0.03) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: float 20s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translate(0, 0); }
-        25% { transform: translate(50px, 50px); }
-        50% { transform: translate(-30px, 100px); }
-        75% { transform: translate(80px, -30px); }
-    }
-
-    .container {
-        position: relative;
-        z-index: 1;
-        max-width: 900px;
-        width: 100%;
-    }
-
-    header {
-        text-align: center;
-        margin-bottom: 60px;
-        animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #000000 0%, #007AFF 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 10px;
-        letter-spacing: -1px;
-    }
-
-    .subtitle {
-        font-size: 1.1rem;
-        color: #666666;
-        font-weight: 500;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
+        :root {
+            /* Fluid spacing system using clamp */
+            --space-xs: clamp(0.5rem, 0.5rem + 0.5vw, 0.75rem);
+            --space-sm: clamp(0.75rem, 0.75rem + 0.5vw, 1rem);
+            --space-md: clamp(1rem, 1rem + 1vw, 1.5rem);
+            --space-lg: clamp(1.5rem, 1.5rem + 1.5vw, 2.5rem);
+            --space-xl: clamp(2rem, 2rem + 2vw, 4rem);
+            --space-xxl: clamp(3rem, 3rem + 3vw, 6rem);
+            
+            /* Fluid typography */
+            --font-xs: clamp(0.75rem, 0.75rem + 0.25vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 0.875rem + 0.25vw, 1rem);
+            --font-base: clamp(1rem, 1rem + 0.5vw, 1.125rem);
+            --font-lg: clamp(1.125rem, 1.125rem + 0.75vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 1.5rem + 1.5vw, 2.5rem);
+            --font-xxl: clamp(2rem, 2rem + 2vw, 3.5rem);
+            
+            /* Colors */
+            --color-primary: #007AFF;
+            --color-secondary: #34C759;
+            --color-bg: #FFFFFF;
+            --color-bg-secondary: #F5F5F7;
+            --color-text: #000000;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.06);
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-    }
 
-    .controls {
-        display: none;
-    }
-
-    .btn-control {
-        display: none;
-    }
-
-    .btn-add {
-        display: none;
-    }
-
-    .btn-clear {
-        display: none;
-    }
-
-    .buttons-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 25px;
-        animation: slideDown 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
-    }
-
-    .button-card {
-        position: relative;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 248, 0.9) 100%);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 24px;
-        padding: 30px 20px;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 240px;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    }
-
-    .button-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                                    rgba(0, 122, 255, 0.12) 0%, 
-                                    transparent 70%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .button-card:hover {
-        transform: translateY(-8px);
-        border-color: rgba(0, 122, 255, 0.25);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 247, 0.95) 100%);
-        box-shadow: 0 12px 32px rgba(0, 122, 255, 0.12);
-    }
-
-    .button-card:hover::before {
-        opacity: 1;
-    }
-
-    .button-content {
-        position: relative;
-        z-index: 2;
-        text-align: center;
-    }
-
-    .button-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        animation: bounce 2s ease-in-out infinite;
-        color: #007AFF;
-        font-weight: 600;
-        letter-spacing: 4px;
-    }
-
-    .button-text {
-        color: #000000;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-        letter-spacing: 0.5px;
-    }
-
-    .button-url {
-        color: #777777;
-        font-size: 0.85rem;
-        word-break: break-all;
-        margin-bottom: 0px;
-        font-family: 'Monaco', 'Courier New', monospace;
-    }
-
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(0, 122, 255, 0.6), transparent);
-        pointer-events: none;
-        animation: rippleAnimation 0.8s ease-out;
-    }
-
-    @keyframes rippleAnimation {
-        from {
-            width: 20px;
-            height: 20px;
-            opacity: 1;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 50%, #EFEFEF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: var(--space-md);
+            position: relative;
+            line-height: 1.6;
         }
-        to {
-            width: 300px;
-            height: 300px;
-            opacity: 0;
+
+        /* Animated background - Apple-inspired colors */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 122, 255, 0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(52, 199, 89, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
-    }
 
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -10%;
+            width: clamp(300px, 50vw, 600px);
+            height: clamp(300px, 50vw, 600px);
+            background: radial-gradient(circle, rgba(52, 199, 89, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
         }
-        50% {
-            transform: translateY(-10px);
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(50px, 50px); }
+            50% { transform: translate(-30px, 100px); }
+            75% { transform: translate(80px, -30px); }
         }
-    }
 
-    /* Modal */
-    .modal {
-        display: none;
-    }
-
-    /* Bubble animation */
-    .bubble {
-        position: fixed;
-        pointer-events: none;
-        border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%, rgba(0, 122, 255, 0.45), rgba(52, 199, 89, 0.25));
-        animation: bubbleFloat 4s ease-in forwards;
-        z-index: 0;
-    }
-
-    @keyframes bubbleFloat {
-        0% {
-            opacity: 1;
-            transform: translateY(0) translateX(0) scale(1);
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: min(1200px, 95vw);
+            margin: 0 auto;
+            padding: var(--space-lg) 0;
         }
-        100% {
-            opacity: 0;
-            transform: translateY(-200px) translateX(var(--tx)) scale(0.5);
+
+        header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 0 var(--space-sm);
         }
-    }
 
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        grid-column: 1 / -1;
-    }
-
-    .empty-state-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        opacity: 0.4;
-        color: #BBBBBB;
-    }
-
-    .empty-state-text {
-        color: #777777;
-        font-size: 1.1rem;
-        margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
         h1 {
-            font-size: 2rem;
+            font-size: var(--font-xxl);
+            font-weight: 700;
+            background: linear-gradient(135deg, #000000 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
         }
 
+        .subtitle {
+            font-size: var(--font-lg);
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .controls {
+            display: none;
+        }
+
+        .btn-control, .btn-add, .btn-clear {
+            display: none;
+        }
+
+        /* Responsive Grid System */
         .buttons-grid {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+            width: 100%;
+            opacity: 1;
+        }
+
+        /* Tablet: 2 columns */
+        @media (min-width: 577px) {
+            .buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-lg);
+            }
+        }
+
+        /* Desktop: 3 columns */
+        @media (min-width: 1025px) {
+            .buttons-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--space-xl);
+            }
+        }
+
+        /* Large Desktop: max 4 columns with larger gaps */
+        @media (min-width: 1440px) {
+            .buttons-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: clamp(2rem, 2.5vw, 3rem);
+            }
         }
 
         .button-card {
-            min-height: 180px;
-            padding: 20px 15px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 248, 0.9) 100%);
+            border: 1px solid var(--color-border);
+            border-radius: clamp(16px, 2vw, 24px);
+            padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: clamp(180px, 25vw, 240px);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            /* Increased touch target area for mobile */
+            touch-action: manipulation;
+            /* Animation initial state - visible by default */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card entrance animation */
+        .button-card.animate-in {
+            animation: cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced hover effects for non-touch devices */
+        @media (hover: hover) {
+            .button-card:hover {
+                transform: translateY(-8px) scale(1.02);
+                border-color: rgba(0, 122, 255, 0.25);
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 247, 0.95) 100%);
+                box-shadow: 0 12px 32px rgba(0, 122, 255, 0.12);
+            }
+
+            .button-card:hover::before {
+                opacity: 1;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .button-card:active {
+                transform: scale(0.98);
+                background: rgba(0, 122, 255, 0.05);
+            }
+        }
+
+        .button-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                                        rgba(0, 122, 255, 0.12) 0%, 
+                                        transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .button-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
         }
 
         .button-icon {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--space-sm);
+            animation: bounce 2s ease-in-out infinite;
+            color: var(--color-primary);
+            font-weight: 600;
+            letter-spacing: 4px;
+            display: block;
         }
 
-        .modal-content {
-            padding: 30px 20px;
+        .button-text {
+            color: var(--color-text);
+            font-size: var(--font-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
-    }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.12);
-        border-radius: 6px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.2);
-    }
-
-    .button-card.active {
-        animation: pulse 0.6s ease-out;
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.55);
+        .button-url {
+            color: #777777;
+            font-size: var(--font-xs);
+            word-break: break-all;
+            font-family: 'Monaco', 'Courier New', monospace;
+            opacity: 0.8;
+            margin-top: var(--space-xs);
         }
-        70% {
-            box-shadow: 0 0 0 30px rgba(0, 122, 255, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
-        }
-    }
-</style>
 
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.6), transparent);
+            pointer-events: none;
+            animation: rippleAnimation 0.8s ease-out;
+        }
+
+        @keyframes rippleAnimation {
+            from {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            }
+            to {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+        }
+
+        /* Bubble animation */
+        .bubble {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 122, 255, 0.45), rgba(52, 199, 89, 0.25));
+            animation: bubbleFloat 4s ease-in forwards;
+            z-index: 0;
+        }
+
+        @keyframes bubbleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) translateX(var(--tx)) scale(0.5);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state-icon {
+            font-size: clamp(3rem, 8vw, 4rem);
+            margin-bottom: var(--space-md);
+            opacity: 0.4;
+            color: #BBBBBB;
+        }
+
+        .empty-state-text {
+            color: #777777;
+            font-size: var(--font-lg);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 576px) {
+            body {
+                padding: var(--space-sm);
+            }
+
+            h1 {
+                font-size: var(--font-xl);
+            }
+
+            .subtitle {
+                font-size: var(--font-base);
+            }
+
+            .button-card {
+                min-height: 160px;
+                padding: var(--space-md);
+            }
+
+            .button-icon {
+                font-size: 2rem;
+                margin-bottom: var(--space-xs);
+            }
+
+            .button-text {
+                font-size: var(--font-base);
+            }
+
+            .button-url {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 577px) and (max-width: 1024px) {
+            .button-card {
+                min-height: 200px;
+            }
+        }
+
+        /* Landscape mode optimization */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .button-card {
+                min-height: 140px;
+                padding: var(--space-sm);
+            }
+            
+            .button-icon {
+                font-size: 1.75rem;
+                margin-bottom: var(--space-xs);
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.12);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .button-card.active {
+            animation: pulse 0.6s ease-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.55);
+            }
+            70% {
+                box-shadow: 0 0 0 30px rgba(0, 122, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            body::after {
+                animation: none;
+            }
+            
+            .button-card {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 50%, #3a3a3c 100%);
+            }
+            
+            h1 {
+                background: linear-gradient(135deg, #ffffff 0%, var(--color-primary) 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+            
+            .button-card {
+                background: linear-gradient(135deg, rgba(44, 44, 46, 0.95) 0%, rgba(58, 58, 60, 0.9) 100%);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .button-text {
+                color: #ffffff;
+            }
+            
+            .subtitle {
+                color: #a0a0a0;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -348,132 +504,134 @@
             <p class="subtitle">أختر أحد الخدمات التي تريدها أدناه</p>
         </header>
 
-    <div class="buttons-grid" id="buttonsGrid"></div>
-</div>
+        <div class="buttons-grid" id="buttonsGrid"></div>
+    </div>
 
-<script>
-    // البيانات الافتراضية
-    let buttons = [
-        { id: 1, name: 'حساب الراتب', url: 'https://engsabaawi.github.io/salarycal', icon: 'SALARY' },
-        { id: 2, name: 'حساب التسريع', url: 'https://engsabaawi.github.io/quickjob', icon: 'QUICK' },
-        { id: 3, name: 'تطوير الصحون اللاقطة', url: 'https://engsabaawi.github.io/sat', icon: 'DISH' },
-        { id: 4, name: 'إيجاد موقع الاقمار', url: 'https://engsabaawi.github.io/satfinder', icon: 'FINDER' },
-        { id: 5, name: 'GitHub', url: 'https://engsabaawi.github.io/clock', icon: 'CLOCK' },
-        { id: 6, name: 'LinkedIn', url: 'https://linkedin.com', icon: 'L' }
-    ];
+    <script>
+        // Default data
+        let buttons = [
+            { id: 1, name: 'حساب الراتب', url: 'https://engsabaawi.github.io/salarycal', icon: 'SALARY' },
+            { id: 2, name: 'حساب التسريع', url: 'https://engsabaawi.github.io/quickjob', icon: 'QUICK' },
+            { id: 3, name: 'تطوير الصحون اللاقطة', url: 'https://engsabaawi.github.io/sat', icon: 'DISH' },
+            { id: 4, name: 'إيجاد موقع الاقمار', url: 'https://engsabaawi.github.io/satfinder', icon: 'FINDER' },
+            { id: 5, name: 'GitHub', url: 'https://engsabaawi.github.io/clock', icon: 'CLOCK' },
+            { id: 6, name: 'LinkedIn', url: 'https://linkedin.com', icon: 'L' }
+        ];
 
-    let nextId = 7;
+        let nextId = 7;
 
-    // تحميل البيانات من localStorage
-    function loadButtons() {
-        const saved = localStorage.getItem('iosButtons');
-        if (saved) {
-            buttons = JSON.parse(saved);
-            nextId = Math.max(...buttons.map(b => b.id), 0) + 1;
-        }
-    }
-
-    // حفظ البيانات في localStorage
-    function saveButtonsToStorage() {
-        localStorage.setItem('iosButtons', JSON.stringify(buttons));
-    }
-
-    // عرض الأزرار
-    function renderButtons() {
-        const grid = document.getElementById('buttonsGrid');
-        grid.innerHTML = '';
-
-        if (buttons.length === 0) {
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">لا توجد أزرار</div>
-                    <div class="empty-state-text">لا توجد أزرار حتى الآن</div>
-                    <div style="color: rgba(0, 0, 0, 0.4); font-size: 0.95rem;">اضغط على "إضافة زر جديد" للبدء</div>
-                </div>
-            `;
-            return;
+        // Load from localStorage
+        function loadButtons() {
+            const saved = localStorage.getItem('iosButtons');
+            if (saved) {
+                buttons = JSON.parse(saved);
+                nextId = Math.max(...buttons.map(b => b.id), 0) + 1;
+            }
         }
 
-        buttons.forEach((btn, index) => {
-            const card = document.createElement('div');
-            card.className = 'button-card';
-            card.innerHTML = `
-                <div class="button-content">
-                    <div class="button-icon">${btn.icon}</div>
-                    <div class="button-text">${btn.name}</div>
-                    <div class="button-url">${btn.url}</div>
-                </div>
-            `;
+        // Save to localStorage
+        function saveButtonsToStorage() {
+            localStorage.setItem('iosButtons', JSON.stringify(buttons));
+        }
 
-            // تأثير الضغط والموجة
-            card.addEventListener('click', (e) => {
-                createRipple(e, card);
-                createBubbles(e);
-                setTimeout(() => {
-                    card.classList.add('active');
-                }, 50);
-                setTimeout(() => {
-                    window.open(btn.url, '_blank');
-                }, 300);
+        // Render buttons
+        function renderButtons() {
+            const grid = document.getElementById('buttonsGrid');
+            grid.innerHTML = '';
+
+            if (buttons.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">لا توجد أزرار</div>
+                        <div class="empty-state-text">لا توجد أزرار حتى الآن</div>
+                        <div style="color: rgba(0, 0, 0, 0.4); font-size: 0.95rem;">اضغط على "إضافة زر جديد" للبدء</div>
+                    </div>
+                `;
+                return;
+            }
+
+            buttons.forEach((btn, index) => {
+                const card = document.createElement('div');
+                card.className = 'button-card';
+                card.innerHTML = `
+                    <div class="button-content">
+                        <div class="button-icon">${btn.icon}</div>
+                        <div class="button-text">${btn.name}</div>
+                        <div class="button-url">${btn.url}</div>
+                    </div>
+                `;
+
+                // Click and ripple effect
+                card.addEventListener('click', (e) => {
+                    createRipple(e, card);
+                    createBubbles(e);
+                    setTimeout(() => {
+                        card.classList.add('active');
+                    }, 50);
+                    setTimeout(() => {
+                        window.open(btn.url, '_blank');
+                    }, 300);
+                });
+
+                // Lighting effect
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+
+                grid.appendChild(card);
+
+                // Trigger entrance animation with staggered delay
+                // Using requestAnimationFrame to ensure DOM is ready
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        card.classList.add('animate-in');
+                    }, index * 100);
+                });
             });
-
-            // تأثير الإضاءة
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-            });
-
-            grid.appendChild(card);
-
-            // تأخير الظهور
-            setTimeout(() => {
-                card.style.animation = `slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.1}s backwards`;
-            }, 0);
-        });
-    }
-
-    // إنشاء تأثير الموجة
-    function createRipple(event, element) {
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-
-        const ripple = document.createElement('div');
-        ripple.className = 'ripple';
-        ripple.style.width = size + 'px';
-        ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-
-        element.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 800);
-    }
-
-    // إنشاء فقاعات عائمة
-    function createBubbles(event) {
-        for (let i = 0; i < 5; i++) {
-            const bubble = document.createElement('div');
-            bubble.className = 'bubble';
-            const size = Math.random() * 30 + 10;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.left = event.clientX + 'px';
-            bubble.style.top = event.clientY + 'px';
-            bubble.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
-
-            document.body.appendChild(bubble);
-            setTimeout(() => bubble.remove(), 4000);
         }
-    }
 
-    // التهيئة
-    loadButtons();
-    renderButtons();
-</script>
+        // Ripple effect
+        function createRipple(event, element) {
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
 
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            element.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 800);
+        }
+
+        // Floating bubbles
+        function createBubbles(event) {
+            for (let i = 0; i < 5; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 30 + 10;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = event.clientX + 'px';
+                bubble.style.top = event.clientY + 'px';
+                bubble.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+
+                document.body.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 4000);
+            }
+        }
+
+        // Initialize
+        loadButtons();
+        renderButtons();
+    </script>
 </body>
 </html>
