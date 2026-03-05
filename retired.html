@@ -2,11 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>حاسبة التقاعد - م. مالك محمد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة التقاعد الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2c3e50; 
@@ -64,7 +62,7 @@
             margin-bottom: 15px; 
         }
 
-        /* تصميم القاصة التفاعلي - محسّن للشاشات الصغيرة */
+        /* تصميم القاصة التفاعلي */
         .safe-dial-wrapper {
             position: relative; 
             background: #222; 
@@ -105,7 +103,6 @@
             transition: 0.3s; 
             cursor: pointer;
             user-select: none;
-            -webkit-user-select: none;
         }
 
         .dial-number.selected {
@@ -156,11 +153,6 @@
             text-align: right;
         }
 
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
         select { 
             height: 50px; 
             border-radius: 10px; 
@@ -170,7 +162,6 @@
             font-family: 'Rubik';
             width: 100%;
             background-color: white;
-            cursor: pointer;
         }
 
         .btn-calc {
@@ -184,12 +175,7 @@
             font-weight: 700;
             cursor: pointer; 
             margin-top: 15px;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .btn-calc:active {
-            transform: scale(0.98);
-            background-color: #34495e;
+            font-family: 'Rubik';
         }
 
         #resultBox { 
@@ -201,13 +187,8 @@
             text-align: center; 
             background: var(--success); 
             color: white; 
-            padding: clamp(15px, 4vw, 25px); 
+            padding: 25px; 
             border-radius: 15px; 
-        }
-
-        .final-pension-card h4 {
-            margin: 0 0 10px 0;
-            font-size: clamp(1rem, 3.5vw, 1.2rem);
         }
 
         .amount { 
@@ -215,7 +196,6 @@
             font-weight: 700; 
             display: block; 
             margin-top: 10px;
-            word-break: break-word;
         }
 
         .details-grid { 
@@ -227,145 +207,25 @@
 
         .detail-item { 
             background: #f8f9fa; 
-            padding: clamp(10px, 3vw, 15px); 
+            padding: 15px; 
             border-radius: 12px; 
             text-align: center; 
             border: 1px solid #eee; 
         }
 
-        .detail-item span {
-            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-            color: #666;
-            display: block;
-            margin-bottom: 5px;
-        }
+        .detail-item span { font-size: 0.8rem; color: #666; display: block; }
+        .detail-item strong { display: block; font-size: 1rem; color: var(--primary); }
 
-        .detail-item strong { 
-            display: block; 
-            font-size: clamp(1rem, 3.5vw, 1.2rem); 
-            color: var(--primary);
-            word-break: break-word;
-        }
-
-        .btn-screenshot {
-            width: 100%; 
-            padding: 15px; 
-            background: #3498db; 
-            color: white; 
-            border: none;
-            border-radius: 12px; 
-            font-size: clamp(1rem, 3.5vw, 1.1rem); 
-            margin-top: 20px; 
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .btn-screenshot:active {
-            transform: scale(0.98);
-            background-color: #2980b9;
-        }
-
-        /* استعلامات الوسائط للشاشات الصغيرة */
+        /* تعديلات الهاتف (الحقول عمودية) */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 15px;
-                border-radius: 15px;
-            }
-            
-            .field-group {
-                padding: 15px;
-            }
-            
             .form-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                grid-template-columns: 1fr; /* جعل الحقول عمودية */
             }
-            
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .detail-item[style*="grid-column: span 2"] {
+            .form-group[style*="grid-column: span 2"] {
                 grid-column: span 1 !important;
             }
-            
-            .safe-dial-wrapper {
-                height: 80px;
-            }
-            
-            .center-marker {
-                width: 70px;
-            }
-            
-            .dial-number {
-                min-width: 70px;
-            }
-            
-            .safe-dial-scroll {
-                padding-left: calc(50% - 35px);
-                padding-right: calc(50% - 35px);
-            }
-        }
-
-        /* للشاشات المتوسطة */
-        @media (min-width: 601px) and (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-            
-            .container {
-                padding: 20px;
-            }
-        }
-
-        /* للشاشات الكبيرة جداً */
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 900px;
-            }
-        }
-
-        /* دعم الوضع الأفقي على الهاتف */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .safe-dial-wrapper {
-                height: 70px;
-            }
-            
-            .field-group {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
-            
-            h2 {
-                margin-bottom: 15px;
-                padding-bottom: 8px;
-            }
-        }
-
-        /* تحسينات الوصول */
-        @media (prefers-reduced-motion: reduce) {
-            .safe-dial-scroll {
-                scroll-behavior: auto;
-            }
-            
-            .dial-number {
-                transition: none;
-            }
-            
-            .btn-calc, .btn-screenshot {
-                transition: none;
-            }
-        }
-
-        /* دعم الشاشات العريضة جداً */
-        @media (min-aspect-ratio: 21/9) {
-            .container {
-                max-width: 1000px;
+            .details-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -373,11 +233,11 @@
 <body>
 
 <div class="container">
-    <h2>حاسبة الاستحقاق التقاعدي</h2>
+    <h2>حاسبة الراتب التقاعدي</h2>
 
     <form id="pensionForm">
         <div class="field-group">
-            <h3>سنوات الخدمة (اسحب الأرقام لليمين واليسار)</h3>
+            <h3>سنوات الخدمة (اسحب لاختيار السنة)</h3>
             <div class="safe-dial-wrapper">
                 <div class="center-marker"></div>
                 <div class="safe-dial-scroll" id="dialScroll"></div>
@@ -389,16 +249,16 @@
             <h3>رواتب آخر 3 سنوات من الخدمة</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>معدل راتب السنة الاولى</label>
+                    <label>معدل راتب السنة الأولى</label>
                     <input type="number" id="salaryYear1" placeholder="مثال: 1000000" min="0">
                 </div>
                 <div class="form-group">
-                    <label>معدل راتب السنةالثانية</label>
-                    <input type="number" id="salaryYear2" placeholder="مثال: 1000000" min="0">
+                    <label>معدل راتب السنة الثانية</label>
+                    <input type="number" id="salaryYear2" placeholder="مثال: 1100000" min="0">
                 </div>
                 <div class="form-group" style="grid-column: span 2;">
                     <label>معدل راتب السنة الثالثة</label>
-                    <input type="number" id="salaryYear3" placeholder="مثال: 1000000" min="0">
+                    <input type="number" id="salaryYear3" placeholder="مثال: 1200000" min="0">
                 </div>
             </div>
         </div>
@@ -419,8 +279,8 @@
                     <label>عدد الأطفال</label>
                     <select id="childrenCount">
                         <option value="0">بدون أطفال</option>
-                        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                        <option value="5">5</option><option value="6">6</option>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                     </select>
                 </div>
             </div>
@@ -430,176 +290,82 @@
     </form>
 
     <div id="resultBox">
-        <div id="captureArea">
-            <div class="final-pension-card">
-                <h4>صافي الراتب التقاعدي</h4>
-                <span id="totalAmount" class="amount">0 د.ع</span>
-            </div>
-            <div class="details-grid">
-                <div class="detail-item"><span>متوسط الراتب</span><strong id="resAvg">0</strong></div>
-                <div class="detail-item"><span>سنوات الخدمة</span><strong id="resYears">0</strong></div>
-                <div class="detail-item"><span>الأساسي (2.5% × سنوات)</span><strong id="resBasic">0</strong></div>
-                <div class="detail-item"><span>مبلغ الشهادة</span><strong id="resDegree">0</strong></div>
-                <div class="detail-item"><span>غلاء المعيشة</span><strong id="resLiving">0</strong></div>
-                <div class="detail-item"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
-            </div>
+        <div class="final-pension-card">
+            <h4>صافي الراتب التقاعدي المتوقع</h4>
+            <span id="totalAmount" class="amount">0 د.ع</span>
         </div>
-        <button type="button" class="btn-screenshot" onclick="takeScreenshot()">حفظ النتيجة كصورة</button>
+        <div class="details-grid">
+            <div class="detail-item"><span>متوسط الراتب</span><strong id="resAvg">0</strong></div>
+            <div class="detail-item"><span>سنوات الخدمة</span><strong id="resYears">0</strong></div>
+            <div class="detail-item"><span>الراتب الأساسي</span><strong id="resBasic">0</strong></div>
+            <div class="detail-item"><span>مبلغ الشهادة</span><strong id="resDegree">0</strong></div>
+            <div class="detail-item"><span>مخصصات الأطفال</span><strong id="resChildren">0</strong></div>
+            <div class="detail-item"><span>غلاء المعيشة</span><strong>100,000 د.ع</strong></div>
+        </div>
     </div>
 </div>
 
 <script>
+    // إعداد القاصة (Dial)
     const dialScroll = document.getElementById('dialScroll');
-    const hiddenInput = document.getElementById('serviceYears');
-    let lastSelected = 15;
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playClick() {
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    }
+    const serviceYearsInput = document.getElementById('serviceYears');
 
     for (let i = 15; i <= 50; i++) {
         const div = document.createElement('div');
         div.className = 'dial-number';
-        div.innerText = i;
-        div.setAttribute('role', 'button');
-        div.setAttribute('aria-label', `سنة ${i}`);
+        if (i === 15) div.classList.add('selected');
+        div.textContent = i;
+        div.onclick = () => {
+            div.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        };
         dialScroll.appendChild(div);
     }
 
-    // تحسين أداء التمرير
-    let ticking = false;
+    // مراقبة السحب لتحديث القيمة المختارة
     dialScroll.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                updateSelectedYear();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-
-    function updateSelectedYear() {
-        const scrollLeft = dialScroll.scrollLeft;
-        const width = window.innerWidth <= 600 ? 70 : 80; 
-        const index = Math.round(Math.abs(scrollLeft) / width);
-        const selectedYear = 15 + index;
-
-        if (selectedYear !== lastSelected && selectedYear >= 15 && selectedYear <= 50) {
-            playClick();
-            lastSelected = selectedYear;
-            hiddenInput.value = selectedYear;
-            
-            document.querySelectorAll('.dial-number').forEach((el, i) => {
-                el.classList.toggle('selected', i === index);
-            });
-        }
-    }
-
-    // تهيئة الوضع الأولي
-    setTimeout(() => { 
-        dialScroll.scrollLeft = 0; 
-        document.querySelector('.dial-number').classList.add('selected');
-    }, 100);
-
-    function calculateFinal() {
-        const years = parseInt(hiddenInput.value);
-        const salary1 = parseFloat(document.getElementById('salaryYear1').value) || 0;
-        const salary2 = parseFloat(document.getElementById('salaryYear2').value) || 0;
-        const salary3 = parseFloat(document.getElementById('salaryYear3').value) || 0;
-        const degreeRate = parseFloat(document.getElementById('degree').value);
-        const childrenCount = parseInt(document.getElementById('childrenCount').value);
-
-        // حساب متوسط الراتب
-        const avgSalary = (salary1 + salary2 + salary3) / 3;
+        const itemWidth = 80;
+        const scrollPos = dialScroll.scrollLeft;
+        const index = Math.round(Math.abs(scrollPos) / itemWidth);
+        const year = 15 + index;
         
-        // المعاش الأساسي: 2.5% × سنوات الخدمة × متوسط الراتب
-        const basicPension = (years * 2.5 * avgSalary) / 100;
-        
-        // مبلغ الشهادة: نسبة من المعاش الأساسي
-        const degreeAmt = basicPension * degreeRate;
-        
-        // غلاء المعيشة: مبلغ مقطوع 100,000 د.ع
-        const livingAmt = 100000;
-        
-        // مخصصات الأطفال: 25,000 د.ع لكل طفل
-        const childrenAmt = 25000 * childrenCount;
-
-        // المجموع الكلي
-        const total = basicPension + degreeAmt + livingAmt + childrenAmt;
-
-        // عرض النتائج
-        document.getElementById('resAvg').innerText = Math.round(avgSalary).toLocaleString('ar-IQ') + " د.ع";
-        document.getElementById('resYears').innerText = years + " سنة";
-        document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString('ar-IQ') + " د.ع";
-        document.getElementById('resDegree').innerText = Math.round(degreeAmt).toLocaleString('ar-IQ') + " د.ع";
-        document.getElementById('resLiving').innerText = Math.round(livingAmt).toLocaleString('ar-IQ') + " د.ع";
-        document.getElementById('resChildren').innerText = Math.round(childrenAmt).toLocaleString('ar-IQ') + " د.ع";
-        document.getElementById('totalAmount').innerText = Math.round(total).toLocaleString('ar-IQ') + " د.ع";
-        
-        document.getElementById('resultBox').style.display = 'block';
-        
-        // التمرير السلس للنتيجة
-        setTimeout(() => {
-            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-    }
-
-    function takeScreenshot() {
-        const captureArea = document.getElementById('captureArea');
-        
-        // إضافة تأثير بصري مؤقت
-        captureArea.style.transform = 'scale(1.02)';
-        captureArea.style.transition = 'transform 0.2s';
-        
-        html2canvas(captureArea, {
-            scale: window.devicePixelRatio || 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            logging: false
-        }).then(canvas => {
-            captureArea.style.transform = 'scale(1)';
-            
-            const link = document.createElement('a');
-            const timestamp = new Date().toISOString().slice(0,10);
-            link.download = `التقاعد_${timestamp}.png`;
-            link.href = canvas.toDataURL('image/png');
-            
-            // للأجهزة المحمولة
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                const newWindow = window.open();
-                newWindow.document.write('<img src="' + link.href + '" style="width:100%;">');
-            } else {
-                link.click();
-            }
-        }).catch(err => {
-            console.error('Error capturing screenshot:', err);
-            alert('حدث خطأ أثناء حفظ الصورة. يرجى المحاولة مرة أخرى.');
+        document.querySelectorAll('.dial-number').forEach((el, idx) => {
+            el.classList.toggle('selected', idx === index);
         });
-    }
-
-    // دعم لوحة المفاتيح للقاصة
-    dialScroll.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            dialScroll.scrollBy({ left: -80, behavior: 'smooth' });
-        } else if (e.key === 'ArrowRight') {
-            dialScroll.scrollBy({ left: 80, behavior: 'smooth' });
-        }
+        serviceYearsInput.value = year > 50 ? 50 : year;
     });
 
-    // منع التكبير المزدوج على iOS
-    document.addEventListener('dblclick', (e) => {
-        e.preventDefault();
-    }, { passive: false });
+    // دالة الحساب
+    function calculateFinal() {
+        const s1 = parseFloat(document.getElementById('salaryYear1').value) || 0;
+        const s2 = parseFloat(document.getElementById('salaryYear2').value) || 0;
+        const s3 = parseFloat(document.getElementById('salaryYear3').value) || 0;
+        const years = parseInt(serviceYearsInput.value);
+        const degreeRate = parseFloat(document.getElementById('degree').value);
+        const children = parseInt(document.getElementById('childrenCount').value);
+
+        if(!s1 || !s2 || !s3) {
+            alert("يرجى إدخال معدل الرواتب للسنوات الثلاث");
+            return;
+        }
+
+        const avgSalary = (s1 + s2 + s3) / 3;
+        const basicPension = avgSalary * (years * 0.025);
+        const degreeBonus = basicPension * degreeRate;
+        const childrenBonus = children * 25000; 
+        const livingAllowance = 100000;
+
+        const total = basicPension + degreeBonus + childrenBonus + livingAllowance;
+
+        document.getElementById('resAvg').innerText = Math.round(avgSalary).toLocaleString() + " د.ع";
+        document.getElementById('resYears').innerText = years + " سنة";
+        document.getElementById('resBasic').innerText = Math.round(basicPension).toLocaleString() + " د.ع";
+        document.getElementById('resDegree').innerText = Math.round(degreeBonus).toLocaleString() + " د.ع";
+        document.getElementById('resChildren').innerText = childrenBonus.toLocaleString() + " د.ع";
+        document.getElementById('totalAmount').innerText = Math.round(total).toLocaleString() + " د.ع";
+
+        document.getElementById('resultBox').style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
 </script>
 
 </body>
