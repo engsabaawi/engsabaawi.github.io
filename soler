@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الطاقة الشمسية | Solar Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            color: #1f2937;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #007AFF;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .input-group .unit {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3);
+        }
+
+        .calculate-btn:hover {
+            background: #0051D5;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 122, 255, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #007AFF;
+        }
+
+        .result-formula {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .total-section {
+            background: #007AFF;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 25px;
+            color: white;
+            text-align: center;
+        }
+
+        .total-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .total-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .breakdown {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .breakdown-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .note {
+            background: #FEF3C7;
+            border-right: 4px solid #F59E0B;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            color: #92400E;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>حاسبة الطاقة الشمسية</h1>
+            <p>احسب احتياجاتك من الطاقة الشمسية بدقة عالية</p>
+        </div>
+
+        <form id="solarForm">
+            <div class="input-group">
+                <label for="current">التيار المطلوب (أمبير)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="current" step="0.1" placeholder="مثال: 10" required>
+                    <span class="unit">A</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="hours">عدد الساعات المطلوبة</label>
+                <div class="input-wrapper">
+                    <input type="number" id="hours" step="0.5" placeholder="مثال: 8" required>
+                    <span class="unit">h</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="panelPower">قدرة الخلية الشمسية (واط)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="panelPower" step="10" placeholder="مثال: 450" required>
+                    <span class="unit">W</span>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">احسب الاحتياجات</button>
+        </form>
+
+        <div id="results" class="results">
+            <h2 class="results-title">نتائج الحساب</h2>
+
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="result-label">قدرة الانفيرتر</span>
+                    <span class="result-value" id="inverterPower">0 KW</span>
+                </div>
+                <div class="result-formula">230 × <span id="currentDisplay">0</span> × 1.3</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="result-label">عدد الخلايا الشمسية</span>
+                    <span class="result-value" id="panelCount">0</span>
+                </div>
+                <div class="result-formula">(230 × <span id="currentDisplay2">0</span> × 1.3) / <span id="panelPowerDisplay">0</span></div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="result-label">سعة البطارية</span>
+                    <span class="result-value" id="batteryCapacity">0 KWh</span>
+                </div>
+                <div class="result-formula">230 × <span id="currentDisplay3">0</span> × 1.4 × <span id="hoursDisplay">0</span></div>
+            </div>
+
+            <div class="total-section">
+                <div class="total-label">التكلفة الإجمالية التقديرية</div>
+                <div class="total-value" id="totalCost">0 دينار</div>
+                
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <span>الانفيرتر:</span>
+                        <span id="inverterCost">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>البطارية:</span>
+                        <span id="batteryCost">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>الخلايا (<span id="panelCountDisplay">0</span>):</span>
+                        <span id="panelsCost">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>تركيب وتوصيل:</span>
+                        <span>1,500,000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>ملاحظة هامة:</strong> الأسعار المعروضة هي أسعار تقديرية وقابلة للتغيير حسب تقلبات السوق وأسعار الصرف. يُنصح بالتواصل مع الموردين للحصول على عروض أسعار محدثة قبل اتخاذ قرار الشراء.
+        </div>
+
+        <div class="footer">
+            تم التصميم بواسطة المهندس مالك محمد
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('solarForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const current = parseFloat(document.getElementById('current').value);
+            const hours = parseFloat(document.getElementById('hours').value);
+            const panelPower = parseFloat(document.getElementById('panelPower').value);
+            
+            const inverterPower = (230 * current * 1.3) / 1000;
+            const panelCount = Math.ceil((230 * current * 1.3) / panelPower);
+            const batteryCapacity = (230 * current * 1.4 * hours) / 1000;
+            
+            const inverterCost = Math.round(inverterPower * 160000);
+            const batteryCost = Math.round(batteryCapacity * 185000);
+            const panelsCost = panelCount * 155000;
+            const installationCost = 1500000;
+            const totalCost = inverterCost + batteryCost + panelsCost + installationCost;
+            
+            document.getElementById('inverterPower').textContent = inverterPower.toFixed(2) + ' KW';
+            document.getElementById('panelCount').textContent = panelCount + ' خلية';
+            document.getElementById('batteryCapacity').textContent = batteryCapacity.toFixed(2) + ' KWh';
+            
+            document.getElementById('currentDisplay').textContent = current;
+            document.getElementById('currentDisplay2').textContent = current;
+            document.getElementById('currentDisplay3').textContent = current;
+            document.getElementById('panelPowerDisplay').textContent = panelPower;
+            document.getElementById('hoursDisplay').textContent = hours;
+            
+            document.getElementById('totalCost').textContent = totalCost.toLocaleString() + ' دينار';
+            document.getElementById('inverterCost').textContent = inverterCost.toLocaleString();
+            document.getElementById('batteryCost').textContent = batteryCost.toLocaleString();
+            document.getElementById('panelsCost').textContent = panelsCost.toLocaleString();
+            document.getElementById('panelCountDisplay').textContent = panelCount;
+            
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>
