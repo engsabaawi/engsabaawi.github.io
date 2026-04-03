@@ -69,23 +69,66 @@
             position: relative;
         }
 
-        .input-group input {
+        /* ===== تنسيق موحد لجميع حقول الإدخال ===== */
+        .input-group input,
+        .input-group select,
+        .inverter-section select {
             width: 100%;
-            padding: 16px 20px;
+            height: 56px;
+            padding: 16px 20px 16px 48px;
             border: 2px solid #e5e7eb;
             border-radius: 16px;
-            font-size: 1.1rem;
-            font-family: inherit;
+            font-size: 1.05rem;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 500;
             transition: all 0.3s ease;
             background: #fafafa;
             color: #1f2937;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
 
-        .input-group input:focus {
+        .input-group input:focus,
+        .input-group select:focus,
+        .inverter-section select:focus {
             outline: none;
             border-color: #4CD964;
             background: #fff;
             box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        /* ===== أيقونة السهم للقوائم المنسدلة ===== */
+        .input-group select,
+        .inverter-section select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 20px;
+            direction: rtl;
+            text-align: right;
+            color: #007AFF;
+            cursor: pointer;
+        }
+
+        .input-group select option,
+        .inverter-section select option {
+            font-size: 1rem;
+            padding: 10px;
+            direction: rtl;
+            text-align: right;
+            color: #007AFF;
+            background: #fff;
+        }
+
+        /* ===== حقل القدرة - يظهر بعد اختيار العلامة ===== */
+        #panelPowerGroup {
+            display: none;
+        }
+
+        #panelPowerGroup.visible {
+            display: block;
+            animation: slideDown 0.35s ease;
         }
 
         .input-group .unit {
@@ -95,11 +138,13 @@
             transform: translateY(-50%);
             color: #9ca3af;
             font-weight: 500;
+            pointer-events: none;
         }
 
         .calculate-btn {
             width: 100%;
-            padding: 18px;
+            height: 56px;
+            padding: 0 18px;
             background: #007AFF;
             color: white;
             border: none;
@@ -108,18 +153,24 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            margin-top: 10px;
             box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3);
         }
 
-        .calculate-btn:hover {
+        .calculate-btn:hover:not(:disabled) {
             background: #0051D5;
             transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(0, 122, 255, 0.4);
         }
 
-        .calculate-btn:active {
+        .calculate-btn:active:not(:disabled) {
             transform: translateY(0);
+        }
+
+        .calculate-btn:disabled {
+            background: #9ca3af;
+            box-shadow: none;
+            cursor: not-allowed;
         }
 
         .results {
@@ -130,6 +181,11 @@
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -184,6 +240,57 @@
             border-radius: 8px;
             direction: ltr;
             text-align: left;
+        }
+
+        /* ===== معلومات الخلية أسفل بطاقة عدد الخلايا ===== */
+        .panel-result-info {
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: #374151;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        /* ===== قسم الانفيرتر ===== */
+        .inverter-section {
+            margin-bottom: 20px;
+            display: none;
+            width: 100%;
+            padding: 25px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .inverter-section.visible {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+
+        .inverter-section .result-label {
+            color: #64748b;
+        }
+
+        .inverter-section .result-value {
+            color: #007AFF;
+        }
+
+        .inverter-info {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #374151;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .inverter-info strong {
+            color: #374151;
         }
 
         .total-section {
@@ -247,9 +354,16 @@
             .container {
                 padding: 30px 20px;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
+            }
+
+            .input-group input,
+            .input-group select,
+            .inverter-section select {
+                height: 52px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -262,52 +376,91 @@
         </div>
 
         <form id="solarForm">
+            <!-- التيار -->
             <div class="input-group">
-                <label for="current">التيار المطلوب (أمبير)</label>
+                <label for="current">أدخل التيار المطلوب</label>
                 <div class="input-wrapper">
                     <input type="number" id="current" step="0.1" placeholder="مثال: 10" required>
                     <span class="unit">A</span>
                 </div>
             </div>
 
+            <!-- الساعات -->
             <div class="input-group">
-                <label for="hours">عدد الساعات المطلوبة</label>
+                <label for="hours">أدخل عدد ساعات التشغيل</label>
                 <div class="input-wrapper">
-                    <input type="number" id="hours" step="0.5" placeholder="مثال: 8" required>
+                    <input type="number" id="hours" step="0.5" placeholder="مثال: 4" required>
                     <span class="unit">h</span>
                 </div>
             </div>
 
+            <!-- العلامة التجارية للخلية -->
             <div class="input-group">
-                <label for="panelPower">قدرة الخلية الشمسية (واط)</label>
+                <label for="panelBrandSelect">الشركة المصنعة للخلية الشمسية</label>
                 <div class="input-wrapper">
-                    <input type="number" id="panelPower" step="10" placeholder="مثال: 450" required>
-                    <span class="unit">W</span>
+                    <select id="panelBrandSelect">
+                        <option value="">أختر النوع</option>
+                    </select>
                 </div>
             </div>
 
-            <button type="submit" class="calculate-btn">احسب الاحتياجات</button>
+            <!-- القدرة - تظهر بعد اختيار العلامة -->
+            <div class="input-group" id="panelPowerGroup">
+                <label for="panelPowerSelect">قدرة الخلية الشمسية</label>
+                <div class="input-wrapper">
+                    <select id="panelPowerSelect">
+                        <option value="">أختر كمية القدرة</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn" id="calcBtn" disabled>احسب الاحتياجات</button>
         </form>
 
+        <!-- ===== النتائج ===== -->
         <div id="results" class="results">
-            <h2 class="results-title">نتائج الحساب</h2>
+            <h2 class="results-title">نتائج التصميم</h2>
 
+            <!-- قدرة الانفيرتر -->
             <div class="result-card">
                 <div class="result-header">
-                    <span class="result-label">قدرة الانفيرتر</span>
+                    <span class="result-label">قدرة الانفيرتر المطلوبة</span>
                     <span class="result-value" id="inverterPower">0 KW</span>
                 </div>
                 <div class="result-formula">230 × <span id="currentDisplay">0</span> × 1.3</div>
             </div>
 
-            <div class="result-card">
+            <!-- اختيار الانفيرتر -->
+            <div id="inverterSelectionSection" class="inverter-section">
                 <div class="result-header">
-                    <span class="result-label">عدد الخلايا الشمسية</span>
-                    <span class="result-value" id="panelCount">0</span>
+                    <span class="result-label">أختر نوعية الأنفيرتر</span>
+                    <span class="result-value" id="selectedInverterPower">-</span>
                 </div>
-                <div class="result-formula">(230 × <span id="currentDisplay2">0</span> × 1.3) / <span id="panelPowerDisplay">0</span></div>
+                <div class="input-wrapper" style="margin-top: 15px;">
+                    <select id="inverterSelect">
+                        <option value="">أختر النوع</option>
+                    </select>
+                </div>
+                <div class="inverter-info" id="inverterInfo" style="display: none;">
+                    <strong>السعر:</strong> <span id="inverterPriceDisplay">-</span> دينار
+                </div>
             </div>
 
+            <!-- عدد الخلايا -->
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="result-label">عدد الخلايا الشمسية المطلوبة</span>
+                    <span class="result-value" id="panelCount">0</span>
+                </div>
+                <div class="result-formula">(230 × <span id="currentDisplay2">0</span> × 1.3) / <span id="panelPowerDisplay">0</span>W</div>
+                <div class="panel-result-info" id="panelResultInfo" style="display:none;">
+                    <span id="panelResultBrand">-</span> — <span id="panelResultPower">-</span>W
+                    &nbsp;|&nbsp; سعر الخلية: <span id="panelResultPrice">-</span> دينار
+                    &nbsp;|&nbsp; إجمالي الخلايا: <span id="panelResultTotal">-</span> دينار
+                </div>
+            </div>
+
+            <!-- سعة البطارية -->
             <div class="result-card">
                 <div class="result-header">
                     <span class="result-label">سعة البطارية</span>
@@ -316,10 +469,10 @@
                 <div class="result-formula">230 × <span id="currentDisplay3">0</span> × 1.4 × <span id="hoursDisplay">0</span></div>
             </div>
 
+            <!-- التكلفة الإجمالية -->
             <div class="total-section">
-                <div class="total-label">التكلفة الإجمالية التقديرية</div>
+                <div class="total-label">إجمالي التكاليف</div>
                 <div class="total-value" id="totalCost">0 دينار</div>
-                
                 <div class="breakdown">
                     <div class="breakdown-item">
                         <span>الانفيرتر:</span>
@@ -334,7 +487,7 @@
                         <span id="panelsCost">0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span>اسلاك وتنصيب وحمايات :</span>
+                        <span>غير ذلك:</span>
                         <span>2,000,000</span>
                     </div>
                 </div>
@@ -342,7 +495,7 @@
         </div>
 
         <div class="note">
-            <strong>ملاحظة هامة:</strong>  الأسعار تقديرية وقابلة للتغيير حسب متطلبات السوق وأسعار الصرف لذلك يرجى الاستفسار من ذوي المصلحة.
+            <strong>ملاحظة هامة:</strong> الأسعار تقديرية وقابلة للتغيير حسب متطلبات السوق وأسعار الصرف لذلك يرجى الاستفسار من ذوي المصلحة.
         </div>
 
         <div class="footer">
@@ -351,39 +504,306 @@
     </div>
 
     <script>
-        document.getElementById('solarForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        /* =========================================================
+           بيانات الانفيرترات
+        ========================================================= */
+        const invertersData = {
+            3000: [
+                { name: "Must Off-Grid", minPrice: 300000, maxPrice: 450000 },
+                { name: "Voltronic (Axpert)", minPrice: 350000, maxPrice: 500000 }
+            ],
+            5000: [
+                { name: "Must Hybrid", minPrice: 500000, maxPrice: 800000 },
+                { name: "Growatt SPF 5000 ES", minPrice: 650000, maxPrice: 900000 }
+            ],
+            6000: [
+                { name: "Growatt SPF 6000 ES", minPrice: 900000, maxPrice: 1300000 },
+                { name: "Growatt Grid MIN 6000TL-X", minPrice: 800000, maxPrice: 1400000 },
+                { name: "Solis Hybrid", minPrice: 1000000, maxPrice: 1500000 },
+                { name: "GoodWe Hybrid", minPrice: 1100000, maxPrice: 1600000 },
+                { name: "Deye Hybrid", minPrice: 1200000, maxPrice: 1800000 }
+            ],
+            8000: [
+                { name: "Growatt SPF 8000 ES", minPrice: 1200000, maxPrice: 1700000 }
+            ],
+            10000: [
+                { name: "Growatt 10kW Hybrid", minPrice: 1500000, maxPrice: 2200000 },
+                { name: "Huawei SUN2000", minPrice: 2000000, maxPrice: 3000000 }
+            ],
+            12000: [
+                { name: "Growatt SPF 12000 ES", minPrice: 1500000, maxPrice: 2200000 },
+                { name: "Growatt WIT 12kW 3 فاز", minPrice: 1800000, maxPrice: 2500000 },
+                { name: "Solis 12kW 3Phase", minPrice: 2000000, maxPrice: 2800000 },
+                { name: "Huawei 12kW", minPrice: 2500000, maxPrice: 3500000 }
+            ],
+            15000: [
+                { name: "Growatt 15kW", minPrice: 2200000, maxPrice: 3200000 }
+            ],
+            20000: [
+                { name: "Sungrow 20kW", minPrice: 3000000, maxPrice: 5000000 }
+            ]
+        };
+
+        /* =========================================================
+           بيانات الخلايا - مجمعة حسب العلامة التجارية
+        ========================================================= */
+        const panelsByBrand = {
+            "LONGi Solar": [
+                { power: 450, minPrice: 140000, maxPrice: 190000 },
+                { power: 550, minPrice: 180000, maxPrice: 260000 },
+                { power: 600, minPrice: 220000, maxPrice: 300000 }
+            ],
+            "Jinko Solar": [
+                { power: 450, minPrice: 140000, maxPrice: 190000 },
+                { power: 550, minPrice: 180000, maxPrice: 250000 },
+                { power: 600, minPrice: 220000, maxPrice: 300000 }
+            ],
+            "Trina Solar": [
+                { power: 450, minPrice: 140000, maxPrice: 180000 },
+                { power: 550, minPrice: 170000, maxPrice: 250000 },
+                { power: 600, minPrice: 220000, maxPrice: 290000 }
+            ],
+            "JA Solar": [
+                { power: 450, minPrice: 130000, maxPrice: 180000 },
+                { power: 550, minPrice: 170000, maxPrice: 240000 },
+                { power: 600, minPrice: 210000, maxPrice: 280000 }
+            ],
+            "Canadian Solar": [
+                { power: 450, minPrice: 140000, maxPrice: 190000 },
+                { power: 550, minPrice: 180000, maxPrice: 260000 }
+            ],
+            "Risen Energy": [
+                { power: 550, minPrice: 170000, maxPrice: 240000 }
+            ],
+            "Astronergy": [
+                { power: 550, minPrice: 170000, maxPrice: 240000 }
+            ],
+            "Talesun": [
+                { power: 550, minPrice: 160000, maxPrice: 230000 }
+            ],
+            "ZNShine Solar": [
+                { power: 550, minPrice: 160000, maxPrice: 230000 }
+            ],
+            "Leapton Solar": [
+                { power: 550, minPrice: 150000, maxPrice: 220000 }
+            ],
+            "Sunpal (تجاري)": [
+                { power: 550, minPrice: 140000, maxPrice: 210000 }
+            ]
+        };
+
+        /* =========================================================
+           الحالة
+        ========================================================= */
+        let selectedInverterPrice = 0;
+        let calculatedPanelCount = 0;
+        let calculatedInverterPowerWatts = 0;
+        let chosenPanelData = null;
+        let chosenBrand = "";
+
+        /* =========================================================
+           ملء قائمة العلامات التجارية عند التحميل
+        ========================================================= */
+        (function populateBrands() {
+            const sel = document.getElementById('panelBrandSelect');
+            Object.keys(panelsByBrand).forEach(brand => {
+                const opt = document.createElement('option');
+                opt.value = brand;
+                opt.textContent = brand;
+                sel.appendChild(opt);
+            });
+        })();
+
+        /* =========================================================
+           اختيار العلامة التجارية → ملء قائمة القدرات
+        ========================================================= */
+        document.getElementById('panelBrandSelect').addEventListener('change', function () {
+            const brand = this.value;
+            const powerGroup = document.getElementById('panelPowerGroup');
+            const powerSel = document.getElementById('panelPowerSelect');
+
+            powerSel.innerHTML = '<option value="">أختر القدرة</option>';
+            chosenPanelData = null;
+            chosenBrand = brand;
+            checkFormReady();
+
+            if (!brand) {
+                powerGroup.classList.remove('visible');
+                return;
+            }
+
+            panelsByBrand[brand].forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.power;
+                opt.textContent = `${v.power} W  (${v.minPrice.toLocaleString()} - ${v.maxPrice.toLocaleString()} د.ع)`;
+                opt.dataset.minPrice = v.minPrice;
+                opt.dataset.maxPrice = v.maxPrice;
+                powerSel.appendChild(opt);
+            });
+
+            powerGroup.classList.add('visible');
+        });
+
+        /* =========================================================
+           اختيار القدرة
+        ========================================================= */
+        document.getElementById('panelPowerSelect').addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            chosenPanelData = this.value === "" ? null : {
+                power: parseInt(this.value),
+                minPrice: parseInt(opt.dataset.minPrice),
+                maxPrice: parseInt(opt.dataset.maxPrice)
+            };
+            checkFormReady();
+        });
+
+        /* =========================================================
+           تفعيل / تعطيل زر الحساب
+        ========================================================= */
+        function checkFormReady() {
+            const current = document.getElementById('current').value;
+            const hours = document.getElementById('hours').value;
+            document.getElementById('calcBtn').disabled = !(current && hours && chosenPanelData);
+        }
+
+        document.getElementById('current').addEventListener('input', checkFormReady);
+        document.getElementById('hours').addEventListener('input', checkFormReady);
+
+        /* =========================================================
+           ملء قائمة الانفيرترات (الاسم التجاري فقط)
+        ========================================================= */
+        function getNearestCapacity(watts) {
+            const caps = Object.keys(invertersData).map(Number).sort((a, b) => a - b);
+            for (let c of caps) if (watts <= c) return c;
+            return caps[caps.length - 1];
+        }
+
+        function populateInverterSelect(capacity) {
+            const sel = document.getElementById('inverterSelect');
+            sel.innerHTML = '<option value="">أختر النوعية</option>';
+            (invertersData[capacity] || []).forEach((inv, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = inv.name;
+                opt.dataset.minPrice = inv.minPrice;
+                opt.dataset.maxPrice = inv.maxPrice;
+                sel.appendChild(opt);
+            });
+        }
+
+        /* =========================================================
+           حدث اختيار الانفيرتر
+        ========================================================= */
+        document.getElementById('inverterSelect').addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const info = document.getElementById('inverterInfo');
+            if (this.value === "") {
+                info.style.display = 'none';
+                selectedInverterPrice = 0;
+            } else {
+                const min = parseInt(opt.dataset.minPrice);
+                const max = parseInt(opt.dataset.maxPrice);
+                selectedInverterPrice = Math.round((min + max) / 2);
+                document.getElementById('inverterPriceDisplay').textContent =
+                    `${min.toLocaleString()} - ${max.toLocaleString()}`;
+                info.style.display = 'block';
+            }
+            updateTotalCost();
+        });
+
+        /* =========================================================
+           تحديث التكلفة الإجمالية
+        ========================================================= */
+        function updateTotalCost() {
             const current = parseFloat(document.getElementById('current').value);
             const hours = parseFloat(document.getElementById('hours').value);
-            const panelPower = parseFloat(document.getElementById('panelPower').value);
-            
-            const inverterPower = (230 * current * 1.3) / 1000;
-            const panelCount = Math.ceil((230 * current * 1.3) / panelPower);
+
             const batteryCapacity = (230 * current * 1.4 * hours) / 1000;
-            
-            const inverterCost = Math.round(inverterPower * 230000);
             const batteryCost = Math.round(batteryCapacity * 185000);
-            const panelsCost = panelCount * 155000;
-            const installationCost = 2000000;
-            const totalCost = inverterCost + batteryCost + panelsCost + installationCost;
-            
-            document.getElementById('inverterPower').textContent = inverterPower.toFixed(2) + ' KW';
+
+            const inverterCost = selectedInverterPrice > 0
+                ? selectedInverterPrice
+                : Math.round(calculatedInverterPowerWatts * 230);
+
+            const avgPanelPrice = chosenPanelData
+                ? Math.round((chosenPanelData.minPrice + chosenPanelData.maxPrice) / 2)
+                : 155000;
+            const panelsCost = avgPanelPrice * calculatedPanelCount;
+
+            const total = inverterCost + batteryCost + panelsCost + 2000000;
+
+            document.getElementById('totalCost').textContent = total.toLocaleString() + ' دينار';
+            document.getElementById('inverterCost').textContent = inverterCost.toLocaleString();
+            document.getElementById('batteryCost').textContent = batteryCost.toLocaleString();
+            document.getElementById('panelsCost').textContent = panelsCost.toLocaleString();
+        }
+
+        /* =========================================================
+           حدث الإرسال - الحساب الرئيسي
+        ========================================================= */
+        document.getElementById('solarForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const current = parseFloat(document.getElementById('current').value);
+            const hours = parseFloat(document.getElementById('hours').value);
+
+            // قدرة الانفيرتر
+            const inverterPowerWatts = Math.round(230 * current * 1.3);
+            calculatedInverterPowerWatts = inverterPowerWatts;
+            const inverterPowerKW = (inverterPowerWatts / 1000).toFixed(2);
+
+            // عدد الخلايا بالقدرة المختارة فعلاً
+            const panelPower = chosenPanelData.power;
+            const panelCount = Math.ceil((230 * current * 1.3) / panelPower);
+            calculatedPanelCount = panelCount;
+
+            // سعة البطارية
+            const batteryCapacity = (230 * current * 1.4 * hours) / 1000;
+
+            // إعادة ضبط الانفيرتر
+            selectedInverterPrice = 0;
+            document.getElementById('inverterSelect').value = "";
+            document.getElementById('inverterInfo').style.display = 'none';
+
+            // ملء قسم الانفيرتر
+            const nearestCap = getNearestCapacity(inverterPowerWatts);
+            populateInverterSelect(nearestCap);
+            document.getElementById('selectedInverterPower').textContent =
+                (nearestCap / 1000).toFixed(0) + ' KW';
+            document.getElementById('inverterSelectionSection').classList.add('visible');
+
+            // تحديث النتائج
+            document.getElementById('inverterPower').textContent = inverterPowerKW + ' KW';
             document.getElementById('panelCount').textContent = panelCount + ' خلية';
             document.getElementById('batteryCapacity').textContent = batteryCapacity.toFixed(2) + ' KWh';
-            
             document.getElementById('currentDisplay').textContent = current;
             document.getElementById('currentDisplay2').textContent = current;
             document.getElementById('currentDisplay3').textContent = current;
             document.getElementById('panelPowerDisplay').textContent = panelPower;
             document.getElementById('hoursDisplay').textContent = hours;
-            
-            document.getElementById('totalCost').textContent = totalCost.toLocaleString() + ' دينار';
+            document.getElementById('panelCountDisplay').textContent = panelCount;
+
+            // معلومات الخلية داخل بطاقة النتائج
+            const avgPrice = Math.round((chosenPanelData.minPrice + chosenPanelData.maxPrice) / 2);
+            const totalPanel = avgPrice * panelCount;
+            document.getElementById('panelResultBrand').textContent = chosenBrand;
+            document.getElementById('panelResultPower').textContent = panelPower;
+            document.getElementById('panelResultPrice').textContent =
+                `${chosenPanelData.minPrice.toLocaleString()} - ${chosenPanelData.maxPrice.toLocaleString()}`;
+            document.getElementById('panelResultTotal').textContent = totalPanel.toLocaleString();
+            document.getElementById('panelResultInfo').style.display = 'block';
+
+            // التكاليف
+            const inverterCost = Math.round(inverterPowerWatts * 230);
+            const batteryCost = Math.round(batteryCapacity * 185000);
+            const panelsCost = avgPrice * panelCount;
+            const total = inverterCost + batteryCost + panelsCost + 2000000;
+
+            document.getElementById('totalCost').textContent = total.toLocaleString() + ' دينار';
             document.getElementById('inverterCost').textContent = inverterCost.toLocaleString();
             document.getElementById('batteryCost').textContent = batteryCost.toLocaleString();
             document.getElementById('panelsCost').textContent = panelsCost.toLocaleString();
-            document.getElementById('panelCountDisplay').textContent = panelCount;
-            
+
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
