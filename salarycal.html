@@ -7,7 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -29,9 +29,7 @@
             --transition: all 0.3s ease;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             font-family: 'Rubik', sans-serif;
@@ -43,571 +41,136 @@
             position: relative; 
             min-height: 10vh;
         }
-        
+
         .back-link {
             position: absolute;
-            top: 75px; 
-            right: 100px; 
-            display: flex;
-            align-items: center; 
-            justify-content: center; 
-            text-decoration: none;
-            padding: 10px; 
-            border-radius: 50%; 
-            background-color: var(--secondary-color); 
-            color: var(--text-light); 
-            font-size: 16px;
-            font-weight: 500;
+            top: 75px; right: 100px; 
+            display: flex; align-items: center; justify-content: center; 
+            text-decoration: none; padding: 10px; border-radius: 50%; 
+            background-color: var(--secondary-color); color: var(--text-light); 
+            font-size: 16px; font-weight: 500;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            transition: var(--transition);
-            z-index: 1000; 
-            width: 40px; 
-            height: 40px; 
+            transition: var(--transition); z-index: 1000; width: 40px; height: 40px; 
         }
-
-        .back-link i {
-            margin-right: 0; 
-            font-size: 18px; 
-            transform: rotate(180deg);
-        }
-
-        .back-link:hover {
-            background-color: #0060cc;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
+        .back-link i { margin-right: 0; font-size: 18px; transform: rotate(180deg); }
+        .back-link:hover { background-color: #0060cc; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); }
 
         .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            background: var(--background-card);
-            padding: 35px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            min-height: calc(100vh - 60px);
-            position: relative;
-            padding-bottom: 80px;
+            max-width: 1000px; margin: 30px auto; background: var(--background-card);
+            padding: 35px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            min-height: calc(100vh - 60px); position: relative; padding-bottom: 80px;
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 10px;
-            position: relative;
+            text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 700;
+            color: var(--primary-color); border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px; position: relative;
         }
+        h2:after { content: ""; position: absolute; bottom: -3px; right: 0; width: 100px; height: 3px; background: var(--secondary-color); }
 
-        h2:after {
-            content: "";
-            position: absolute;
-            bottom: -3px;
-            right: 0;
-            width: 100px;
-            height: 3px;
-            background: var(--secondary-color);
-        }
+        .form-group { margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+        .form-group label { font-size: 17px; font-weight: 600; color: var(--text-dark); width: 35%; min-width: 150px; text-align: right; flex-shrink: 0; }
 
-        .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px; 
+        input[type="number"], input[type="text"], select {
+            flex-grow: 1; width: 100%; height: var(--input-height); padding: 0 14px; font-size: 17px;
+            border-radius: 10px; border: 2px solid #e9ecef; background: #f8f9fa; transition: var(--transition);
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            direction: ltr; text-align: left;
         }
+        select { direction: rtl; text-align: right; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%20197.8L146.2%2057%205.4%20197.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: left 10px center; background-size: 12px 12px; padding-left: 30px; }
+        input:focus, select:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); background: var(--background-card); outline: none; }
+        .hidden { display: none !important; }
 
-        .form-group label {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text-dark);
-            width: 35%; 
-            min-width: 150px; 
-            text-align: right;
-            flex-shrink: 0; 
-        }
+        .odometer-picker { position: relative; flex-grow: 1; width: 100%; height: 132px; display: flex; align-items: stretch; justify-content: center; gap: 4px; padding: 0 10px; border-radius: 10px; border: 2px solid #e9ecef; background: linear-gradient(#f0f2f5, #f8f9fa 15%, #f8f9fa 85%, #f0f2f5); direction: ltr; overflow: hidden; }
+        .odometer-picker:focus-within { border-color: var(--secondary-color); box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); }
+        .odometer-wheel { position: relative; flex: 1 1 0; max-width: 64px; height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+        .odometer-wheel[data-unit="year"] { flex: 1.5 1 0; max-width: 96px; }
+        .odometer-wheel::-webkit-scrollbar { display: none; }
+        .odometer-list { display: flex; flex-direction: column; }
+        .odometer-list .odometer-item { height: 44px; min-height: 44px; max-height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; scroll-snap-align: center; font-size: 15px; line-height: 1; font-weight: 500; color: #adb5bd; font-family: 'Rubik', sans-serif; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; white-space: nowrap; overflow: hidden; transition: color 0.15s ease, font-size 0.15s ease, font-weight 0.15s ease; user-select: none; cursor: pointer; }
+        .odometer-list .odometer-item.odometer-active { color: var(--primary-color); font-size: 19px; font-weight: 700; }
+        .odometer-sep { align-self: center; font-size: 18px; line-height: 1; font-weight: 700; color: #ced4da; }
+        .odometer-frame { position: absolute; top: 50%; left: 8px; right: 8px; transform: translateY(-50%); height: 44px; box-sizing: border-box; border: 2px solid var(--secondary-color); background: rgba(0, 123, 255, 0.06); border-radius: 6px; pointer-events: none; z-index: 1; }
 
-        input[type="number"],
-        input[type="text"],
-        select {
-            flex-grow: 1; 
-            width: 100%; 
-            height: var(--input-height); 
-            padding: 0 14px; 
-            font-size: 17px;
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            background: #f8f9fa;
-            transition: var(--transition);
-            appearance: none; 
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            direction: ltr; /* لضمان كتابة التاريخ من اليسار لليمين */
-            text-align: left; /* لضمان ظهور النص من اليسار */
-        }
-        
-        select {
-            direction: rtl; /* إعادة اتجاه القائمة المنسدلة للغة العربية */
-            text-align: right;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%20197.8L146.2%2057%205.4%20197.8z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: left 10px center; 
-            background-size: 12px 12px;
-            padding-left: 30px; 
-        }
+        .btn-group { display: flex; gap: 15px; margin-top: 30px; padding-right: 35%; min-width: 400px; }
+        button { flex-grow: 1; padding: 16px; border-radius: 10px; border: none; font-size: 18px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        button:after { content: ""; position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; background: rgba(255, 255, 255, 0.5); opacity: 0; border-radius: 100%; transform: scale(1, 1) translate(-50%); transform-origin: 50% 50%; }
+        button:focus:not(:active)::after { animation: ripple 1s ease-out; }
+        @keyframes ripple { 0% { transform: scale(0, 0); opacity: 0.5; } 100% { transform: scale(20, 20); opacity: 0; } }
+        button i { margin-left: 10px; transition: var(--transition); }
+        button:hover i { transform: translateX(-3px); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
-        input:focus, select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-            background: var(--background-card);
-            outline: none;
-        }
-        
-        .hidden {
-            display: none !important;
-        }
+        #calculateBtn { background: var(--primary-color); color: var(--text-light); }
+        #calculateBtn:hover { background: #004599; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 86, 179, 0.3); }
+        #resetBtn { background: var(--reset-color); color: var(--text-light); }
+        #resetBtn:hover { background: #c82333; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3); }
+        #printBtn { background: var(--print-color); color: var(--text-light); display: none; }
+        #printBtn:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3); }
 
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            padding-right: 35%; 
-            min-width: 400px; 
-        }
+        .loading-indicator { display: none; text-align: center; margin: 20px 0; padding: 15px; background: #e9f5ff; border-radius: var(--border-radius); border-left: 5px solid var(--secondary-color); }
+        .loading-indicator i { font-size: 24px; color: var(--secondary-color); margin-left: 10px; animation: spin 1.5s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        button {
-            flex-grow: 1;
-            padding: 16px;
-            border-radius: 10px;
-            border: none;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
+        .result-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; }
+        .result { margin-bottom: 15px; padding: 15px; background: #e9f5ff; border-left: 5px solid var(--secondary-color); border-radius: 8px; font-size: 18px; font-weight: 500; color: var(--primary-color); margin-top: 0; transition: var(--transition); }
+        .warning { margin-top: 15px; margin-bottom: 15px; padding: 15px; background: #fff3cd; border-left: 5px solid var(--warning-color); border-radius: 8px; font-size: 17px; font-weight: 600; color: #856404; }
+        .details { margin-top: 15px; margin-bottom: 0; padding: 20px; background: #f8fafd; border: 1px solid #dee2e6; border-radius: 12px; font-size: 16px; color: var(--text-dark); line-height: 1.8; transition: var(--transition); }
+        .promo-result { background: #e6ffec; border-left: 5px solid var(--print-color); color: #155724; }
+        .promo-result span { font-weight: 700; color: var(--print-color); }
+        .details strong { color: var(--primary-color); font-weight: 700; }
+        .details span { font-family: 'Rubik', sans-serif; font-weight: 600; margin-left: 5px; direction: ltr; text-align: left; display: inline-block; }
+        .promo-list { margin-top: 10px; padding-right: 0; list-style: none; }
+        .promo-list li { padding: 5px 0 5px 10px; border-bottom: 1px dotted #ccc; font-size: 16px; }
+        .promo-list li:last-child { border-bottom: none; }
+        .details ul { direction: rtl; text-align: right; padding-right: 25px; list-style-position: outside; list-style-type: disc; }
+        .details li { text-align: right; direction: rtl; padding-right: 0; margin-right: 0; }
 
-        button:after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        button:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-
-        button i {
-            margin-left: 10px;
-            transition: var(--transition);
-        }
-
-        button:hover i {
-            transform: translateX(-3px);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        #calculateBtn {
-            background: var(--primary-color);
-            color: var(--text-light);
-        }
-        #calculateBtn:hover {
-            background: #004599;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 86, 179, 0.3);
-        }
-
-        #resetBtn {
-            background: var(--reset-color);
-            color: var(--text-light);
-        }
-        #resetBtn:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
-        }
-        
-        #printBtn {
-            background: var(--print-color);
-            color: var(--text-light);
-            display: none; 
-        }
-        #printBtn:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        .loading-indicator {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #e9f5ff;
-            border-radius: var(--border-radius);
-            border-left: 5px solid var(--secondary-color);
-        }
-
-        .loading-indicator i {
-            font-size: 24px;
-            color: var(--secondary-color);
-            margin-left: 10px;
-            animation: spin 1.5s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .result-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .result {
-            margin-bottom: 15px; 
-            padding: 15px;
-            background: #e9f5ff;
-            border-left: 5px solid var(--secondary-color);
-            border-radius: 8px;
-            font-size: 18px; 
-            font-weight: 500;
-            color: var(--primary-color);
-            margin-top: 0; 
-            transition: var(--transition);
-        }
-        
-        .warning {
-            margin-top: 15px; 
-            margin-bottom: 15px; 
-            padding: 15px;
-            background: #fff3cd;
-            border-left: 5px solid var(--warning-color);
-            border-radius: 8px;
-            font-size: 17px; 
-            font-weight: 600;
-            color: #856404;
-        }
-
-        .details {
-            margin-top: 15px; 
-            margin-bottom: 0; 
-            padding: 20px;
-            background: #f8fafd;
-            border: 1px solid #dee2e6;
-            border-radius: 12px;
-            font-size: 16px; 
-            color: var(--text-dark);
-            line-height: 1.8;
-            transition: var(--transition);
-        }
-        
-        .promo-result {
-            background: #e6ffec; 
-            border-left: 5px solid var(--print-color); 
-            color: #155724; 
-        }
-        
-        .promo-result span {
-            font-weight: 700;
-            color: var(--print-color);
-        }
-
-        .details strong {
-            color: var(--primary-color);
-            font-weight: 700;
-        }
-
-        .details span {
-            font-family: 'Rubik', sans-serif;
-            font-weight: 600;
-            margin-left: 5px;
-            direction: ltr; /* لضمان عرض التواريخ والارقام بالانجليزي */
-            text-align: left;
-            display: inline-block;
-        }
-        
-        .promo-list {
-            margin-top: 10px;
-            padding-right: 0;
-            list-style: none;
-        }
-        .promo-list li {
-            padding: 5px 0 5px 10px;
-            border-bottom: 1px dotted #ccc;
-            font-size: 16px;
-        }
-        .promo-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .details ul {
-            direction: rtl; 
-            text-align: right;
-            padding-right: 25px; 
-            list-style-position: outside; 
-            list-style-type: disc; 
-        }
-
-        .details li {
-            text-align: right;
-            direction: rtl;
-            padding-right: 0; 
-            margin-right: 0;
-        }
-        
-        .footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 35px;
-            margin-top: 40px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-dark);
-            background: transparent;
-        }
-
-        .footer p {
-            margin: 0;
-            padding: 0;
-        }
-
-        .footer hr {
-            border: none;
-            margin: 0 0 15px 0;
-        }
-        
-        #serviceDuration {
-            background: #fff7e6; 
-            border-left: 5px solid var(--warning-color);
-            color: #856404;
-            font-weight: 600;
-        }
-
-        .promotion-info-box {
-            background: #e8f5e9;
-            border: 1px solid #4caf50;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 5px solid #4caf50;
-        }
-
-        .field-group {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 25px;
-            border: 1px solid #e9ecef;
-            transition: var(--transition);
-        }
-
-        .field-group:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        .field-group h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            font-size: 20px;
-        }
-        
-        .print-only-header {
-            display: none;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: 700;
-            color: #000;
-        }
+        .footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 35px; margin-top: 40px; text-align: center; font-size: 14px; font-weight: 500; color: var(--text-dark); background: transparent; }
+        .footer p { margin: 0; padding: 0; }
+        .footer hr { border: none; margin: 0 0 15px 0; }
+        #serviceDuration { background: #fff7e6; border-left: 5px solid var(--warning-color); color: #856404; font-weight: 600; }
+        .promotion-info-box { background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #4caf50; }
+        .field-group { background: #f8f9fa; padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border: 1px solid #e9ecef; transition: var(--transition); }
+        .field-group:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .field-group h3 { margin-top: 0; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; font-size: 20px; }
+        .print-only-header { display: none; text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 700; color: #000; }
 
         @media (max-width: 768px) {
-            .back-link {
-                top: 15px; 
-                right: 25px; 
-                left: auto; 
-                padding: 8px;
-                font-size: 14px;
-                width: 36px;
-                height: 36px;
-            }
-            .back-link i {
-                font-size: 16px;
-                transform: rotate(180deg);
-            }
+            .back-link { top: 15px; right: 25px; left: auto; padding: 8px; font-size: 14px; width: 36px; height: 36px; }
+            .back-link i { font-size: 16px; transform: rotate(180deg); }
             .container { margin: 15px; padding: 25px; padding-bottom: 70px; border-radius: 15px; }
             h2 { font-size: 28px; margin-bottom: 20px; }
-            
-            .form-group {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .form-group label {
-                width: 100%; 
-                text-align: right;
-                margin-bottom: 5px;
-            }
-            input[type="number"],
-            input[type="text"],
-            select {
-                width: 100%; 
-            }
-            .btn-group { 
-                flex-direction: column; 
-                gap: 10px;
-                padding-right: 0; 
-                min-width: auto;
-            }
+            .form-group { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .form-group label { width: 100%; text-align: right; margin-bottom: 5px; }
+            input[type="number"], input[type="text"], select { width: 100%; }
+            .btn-group { flex-direction: column; gap: 10px; padding-right: 0; min-width: auto; }
             button { font-size: 17px; padding: 14px; }
             .result { font-size: 17px; padding: 14px; }
             .details { font-size: 15px; padding: 15px; }
             .footer { padding: 15px 25px; }
         }
 
-        /* ************************************** */
-        /* تعديلات خاصة بالطباعة (وضع الطباعة) */
-        /* ************************************** */
         @media print {
-            body { 
-                background: white !important; 
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .container { 
-                box-shadow: none !important; 
-                margin: 0 !important; 
-                padding: 20px !important;
-                max-width: 100% !important;
-                min-height: auto !important; /* لإزالة ارتفاع الشاشة */
-            }
-            
-            /* إخفاء عناصر الإدخال والأزرار والمؤشرات */
-            .form-group, .btn-group, h2, .back-link, 
-            .loading-indicator, .field-group, 
-            .footer { 
-                display: none !important; 
-            }
-            
-            .print-only-header {
-                display: block !important;
-                font-size: 28px !important;
-                color: #000 !important;
-                margin-top: 0 !important;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #333;
-            }
-            
-            .result-section { 
-                border-top: none !important; 
-                padding-top: 0 !important; 
-            }
-            
-            /* تنسيق صناديق النتائج للطباعة */
-            .result, #serviceDuration {
-                page-break-inside: avoid;
-                border: 1px solid #888 !important;
-                background: #f9f9f9 !important;
-                padding: 12px !important;
-                margin-bottom: 10px !important;
-                color: #000 !important; /* لون الخط أسود */
-                font-weight: 600 !important;
-            }
-            
-            #salaryResult {
-                background: #e9f5ff !important;
-                border-left: 5px solid var(--secondary-color) !important;
-            }
-            
-            #serviceDuration {
-                background: #fff7e6 !important;
-                border-left: 5px solid var(--warning-color) !important;
-            }
-
-            .details {
-                page-break-inside: avoid;
-                border: 1px solid #333 !important;
-                background: #ffffff !important;
-                padding: 15px !important;
-                border-radius: 0 !important;
-            }
-            
-            .details h3, .details h4 {
-                color: #000 !important;
-                border-bottom: 1px solid #ccc !important;
-                padding-bottom: 5px !important;
-            }
-            
-            .details strong {
-                color: #000 !important;
-                font-weight: 700 !important;
-            }
-
-            .details ul { 
-                padding-right: 20px !important; 
-                list-style-position: outside !important;
-                margin-top: 5px !important;
-                margin-bottom: 10px !important;
-            }
-            
-            .details li {
-                padding-right: 0 !important;
-                border-bottom: 1px dotted #eee; /* فاصل خفيف بين العناصر */
-                padding-top: 5px;
-                padding-bottom: 5px;
-            }
-            
-            .promotion-info-box {
-                background: #f0fff0 !important;
-                border: 1px solid #ccc !important;
-                border-left: 5px solid #4caf50 !important;
-                margin-top: 10px !important;
-                margin-bottom: 20px !important;
-                color: #000 !important;
-            }
+            body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .container { box-shadow: none !important; margin: 0 !important; padding: 20px !important; max-width: 100% !important; min-height: auto !important; }
+            .form-group, .btn-group, h2, .back-link, .loading-indicator, .field-group, .footer { display: none !important; }
+            .print-only-header { display: block !important; font-size: 28px !important; color: #000 !important; margin-top: 0 !important; padding-bottom: 10px; border-bottom: 2px solid #333; }
+            .result-section { border-top: none !important; padding-top: 0 !important; }
+            .result, #serviceDuration { page-break-inside: avoid; border: 1px solid #888 !important; background: #f9f9f9 !important; padding: 12px !important; margin-bottom: 10px !important; color: #000 !important; font-weight: 600 !important; }
+            #salaryResult { background: #e9f5ff !important; border-left: 5px solid var(--secondary-color) !important; }
+            #serviceDuration { background: #fff7e6 !important; border-left: 5px solid var(--warning-color) !important; }
+            .details { page-break-inside: avoid; border: 1px solid #333 !important; background: #ffffff !important; padding: 15px !important; border-radius: 0 !important; }
+            .details h3, .details h4 { color: #000 !important; border-bottom: 1px solid #ccc !important; padding-bottom: 5px !important; }
+            .details strong { color: #000 !important; font-weight: 700 !important; }
+            .details ul { padding-right: 20px !important; list-style-position: outside !important; margin-top: 5px !important; margin-bottom: 10px !important; }
+            .details li { padding-right: 0 !important; border-bottom: 1px dotted #eee; padding-top: 5px; padding-bottom: 5px; }
+            .promotion-info-box { background: #f0fff0 !important; border: 1px solid #ccc !important; border-left: 5px solid #4caf50 !important; margin-top: 10px !important; margin-bottom: 20px !important; color: #000 !important; }
         }
     </style>
 </head>
 <body>
 
-<a href="https://engsabaawi.github.io" class="back-link" title="العودة إلى الصفحة الرئيسية">
-    <i class="fas fa-chevron-left"></i> 
-</a>
 <div class="container">
 
     <h2 class="no-print">قصاصة الراتب</h2>
@@ -615,20 +178,38 @@
 
     <form id="salaryForm" class="no-print">
         <div class="field-group">
-            <h3>البيانات الأساسية</h3>
+            <h3>العلاوة والترقية</h3>
             <div class="form-group">
-                <label for="dateOfAppointment">تاريخ التعيين</label>
-                <input type="text" id="dateOfAppointment" name="dateOfAppointment" placeholder="YYYY/MM/DD">
+                <label>تاريخ التعيين</label>
+                <div class="odometer-picker" id="dateOfAppointmentPicker">
+                    <div class="odometer-frame"></div>
+                    <div class="odometer-wheel" data-unit="year"><div class="odometer-list"></div></div>
+                    <span class="odometer-sep">/</span>
+                    <div class="odometer-wheel" data-unit="month"><div class="odometer-list"></div></div>
+                    <span class="odometer-sep">/</span>
+                    <div class="odometer-wheel" data-unit="day"><div class="odometer-list"></div></div>
+                </div>
+                <input type="hidden" id="dateOfAppointment" name="dateOfAppointment" value="">
             </div>
 
             <div class="form-group">
-                <label for="lastPromotionDate">تاريخ آخر ترقية/علاوة</label>
-                <input type="text" id="lastPromotionDate" name="lastPromotionDate" placeholder="YYYY/MM/DD">
+                <label>تاريخ آخر ترفيع</label>
+                <div class="odometer-picker" id="lastPromotionDatePicker">
+                    <div class="odometer-frame"></div>
+                    <div class="odometer-wheel" data-unit="year"><div class="odometer-list"></div></div>
+                    <span class="odometer-sep">/</span>
+                    <div class="odometer-wheel" data-unit="month"><div class="odometer-list"></div></div>
+                    <span class="odometer-sep">/</span>
+                    <div class="odometer-wheel" data-unit="day"><div class="odometer-list"></div></div>
+                </div>
+                <input type="hidden" id="lastPromotionDate" name="lastPromotionDate" value="">
             </div>
 
             <div class="form-group">
                 <label for="degreeType">الشهادة</label>
                 <select id="degreeType" name="degreeType">
+                    <option value="primary">ابتدائية</option>
+                    <option value="preparatory">إعدادية</option>
                     <option value="diploma">دبلوم</option>
                     <option value="bachelor" selected>بكلوريوس</option>
                     <option value="master">ماجستير</option>
@@ -636,19 +217,19 @@
                 </select>
             </div>
         </div>
-        
+
         <div class="field-group">
             <h3>تصنيف الوظيفة</h3>
             <div class="form-group">
-                <label for="workType">تصنيف الوظيفة</label>
+                <label for="workType">موقع العمل</label>
                 <select id="workType" name="workType">
-                    <option value="field" selected>ميداني</option>
+                    <option value="field" selected>فني</option>
                     <option value="admin">إداري</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="workShift">نوع الدوام</label>
+                <label for="workShift">أوقات الدوام</label>
                 <select id="workShift" name="workShift">
                     <option value="morning" selected>صباحي</option>
                     <option value="shift">مناوب</option>
@@ -661,15 +242,14 @@
             </div>
 
             <div id="shiftsBox" class="form-group hidden">
-                <label for="shifts">عدد الشفتات</label>
+                <label for="shifts">رصيد الاجازات</label>
                 <select id="shifts" name="shifts">
-                    <option value="6" selected>لا توجد ساعات إضافية</option>
-                    <option value="7">7 شفتات</option>
-                    <option value="8">8 شفتات</option>
+                    <option value="unauthorized" selected>غير مجاز</option>
+                    <option value="authorized">مجاز</option>
                 </select>
             </div>
         </div>
-        
+
         <div class="field-group">
             <h3>الدرجة والمرحلة</h3>
             <div class="form-group" id="positionBox">
@@ -685,7 +265,9 @@
             <div class="form-group">
                 <label for="grade">الدرجة الحالية</label>
                 <select id="grade" name="grade">
-                    <option value="8" selected>8</option>
+                    <option value="10" selected>10</option>
+                    <option value="9">9</option>
+                    <option value="8">8</option>
                     <option value="7">7</option>
                     <option value="6">6</option>
                     <option value="5">5</option>
@@ -693,9 +275,6 @@
                     <option value="3">3</option>
                     <option value="2">2</option>
                     <option value="1">1</option>
-                    <option value="GM">المدير العام ومن بدرجته</option>
-                    <option value="SP">الدرجة الخاصة</option>
-                    <option value="UM">وكيل وزارة ومن بدرجته</option>
                 </select>
             </div>
 
@@ -716,18 +295,13 @@
                 </select>
             </div>
         </div>
-        
+
         <div class="field-group">
             <h3>المخصصات والإضافات</h3>
             <div class="form-group">
-                <label for="locationAllowance">مخصصات الموقع</label>
-                <input type="number" id="locationAllowance" name="locationAllowance" min="0" placeholder="أدخل المبلغ">
-            </div>
-
-            <div class="form-group">
                 <label for="social">الحالة الاجتماعية</label>
                 <select id="social" name="social">
-                    <option value="single" selected>أعزب</option>
+                    <option value="single" selected>غير متزوج</option>
                     <option value="married">متزوج</option>
                 </select>
             </div>
@@ -739,11 +313,12 @@
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
+                    <option value="4">4</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="bonusMonths">عدد أشهر القدم (كتب الشكر)</label>
+                <label for="bonusMonths">عدد أشهر القدم</label>
                 <input type="number" id="bonusMonths" name="bonusMonths" value="0" min="0" placeholder="أدخل عدد الأشهر">
             </div>
         </div>
@@ -766,7 +341,7 @@
     </div>
 
     <div class="footer">
-        <p>تم تصميم الموقع كلياً بواسطة المهندس مالك محمد</p>
+        <p>تمت البرمجة بواسطة المهندس مالك محمد</p>
     </div>
 
 </div>
@@ -774,48 +349,50 @@
 <script>
     // القيم الأساسية للراتب
     const gradeBase = { 
-        8: 260000, 7: 296000, 6: 362000, 5: 429000, 4: 509000, 3: 600000, 2: 723000, 1: 910000,
-        'GM': 1500000, 'SP': 2000000, 'UM': 2413000
+        10: 170000, 9: 185000, 8: 260000, 7: 296000, 6: 362000, 5: 429000, 4: 509000, 3: 600000, 2: 723000, 1: 910000
     };
-    
+
     const LEADERSHIP_GRADES = ['GM', 'SP', 'UM'];
-    
+
     const stageAddLogic = (grade) => {
         const defaultAdd = { 
-            8: 3000, 7: 6000, 6: 6000, 5: 6000, 4: 8000, 3: 10000, 2: 17000, 1: 20000
+            10: 3000, 9: 5000, 8: 3000, 7: 6000, 6: 6000, 5: 6000, 4: 8000, 3: 10000, 2: 17000, 1: 20000
         };
-        
+
         if (LEADERSHIP_GRADES.includes(grade)) {
             return 83000; 
         }
-        
+
         return defaultAdd[grade] || 0;
     };
-    
+
+    // الحد الأقصى للراتب الاسمي لكل درجة
+    const gradeMaxNominal = {
+        10: 200000, 9: 240000
+    };
+
     const DEDUCTIONS = {
         HEALTH_INSURANCE: 25000, 
         SOCIAL_SOLIDARITY: 2000, 
         CHILD_HOSPITAL_SUPPORT: 1000, 
         PREVIOUS_DEDUCTION: 1000 
     };
-    
+
     const POSITION_DEDUCTIONS = {
         'section-head': 0.15,      
         'department-head': 0.20,   
         'director': 0.30           
     };
-    
+
     const OVERTIME_RATES = {
         'high_grade': 5000,
         'low_grade': 4000,
         'leadership': 5000
     };
 
-    /**
-     * دالة مساعدة لتهيئة التاريخ للصيغة yyyy/mm/dd
-     * @param {Date} dateObj - كائن التاريخ
-     * @returns {string} التاريخ بالصيغة المطلوبة (YYYY/MM/DD)
-     */
+    // مبلغ مقطوع يضاف على الراتب الصافي
+    const LOCATION_FIXED_BONUS = 50000;
+
     function formatDate(dateObj) {
         if (!(dateObj instanceof Date) || isNaN(dateObj)) return "غير محدد";
         const year = dateObj.getFullYear();
@@ -824,125 +401,98 @@
         return `${year}/${month}/${day}`;
     }
 
-    /**
-     * دالة لحساب العلاوة السنوية والترقية مع خصم أشهر القدم
-     * @param {string} lastPromotionDate - تاريخ آخر ترقية (بصيغة YYYY-MM-DD بعد التعديل)
-     * @param {string} currentGrade - الدرجة الحالية
-     * @param {number} currentStage - المرحلة الحالية
-     * @param {number} bonusMonths - عدد أشهر القدم (كتب الشكر)
-     */
     function calculatePromotions(lastPromotionDate, currentGrade, currentStage, bonusMonths) {
         if (!lastPromotionDate) return null;
-        
-        const lastDate = new Date(lastPromotionDate); // يجب أن يكون lastPromotionDate بصيغة YYYY-MM-DD
+
+        const lastDate = new Date(lastPromotionDate);
         const today = new Date();
-        // لضمان أن اليوم يبدأ من منتصف الليل ليوم أمس لأغراض المقارنة
         today.setHours(0, 0, 0, 0); 
-        
-        const bonusYears = bonusMonths / 12;
-        
-        // إذا كانت درجة قيادية
+
         if (LEADERSHIP_GRADES.includes(currentGrade)) {
             return {
                 type: 'leadership',
                 message: 'درجة قيادية - لا توجد ترقية أو علاوة سنوية تلقائية'
             };
         }
-        
+
         const gradeNumber = parseInt(currentGrade);
-        let originalYears = 0; // السنوات الأصلية للترقية
+        let originalYears = 0;
         let nextGrade = currentGrade;
         let nextStage = 1;
         let nextPromotionDate = null;
-        
-        // فترة الترقية ثابتة
-        if (gradeNumber >= 6 && gradeNumber <= 8) {
+
+        if (gradeNumber >= 6 && gradeNumber <= 10) {
             originalYears = 4;
             nextGrade = gradeNumber > 6 ? (gradeNumber - 1).toString() : "5";
         } else if (gradeNumber >= 1 && gradeNumber <= 5) {
             originalYears = 5;
             nextGrade = gradeNumber > 1 ? (gradeNumber - 1).toString() : "GM";
         }
-        
-        // **********************************
-        // 1. حساب الترقية القادمة (خصم سنوات من فترة الانتظار)
-        // **********************************
-        const effectiveYears = Math.max(0, originalYears - bonusYears);
-        
-        if (originalYears > 0) { // فقط إذا كانت هناك ترقية ممكنة أصلاً
+
+        const effectiveYears = originalYears - (currentStage - 1);
+        let promotionOverdueYears = 0;
+
+        if (originalYears > 0) {
+            if (effectiveYears <= 0) {
+                promotionOverdueYears = Math.round(-effectiveYears);
+            }
+
             nextPromotionDate = new Date(lastDate);
-            
             const totalMonthsToWait = Math.round(effectiveYears * 12);
-            
-            // إضافة السنوات والأشهر المتبقية للانتظار
-            nextPromotionDate.setFullYear(lastDate.getFullYear() + Math.floor(totalMonthsToWait / 12));
-            nextPromotionDate.setMonth(lastDate.getMonth() + (totalMonthsToWait % 12));
+            nextPromotionDate.setMonth(nextPromotionDate.getMonth() + totalMonthsToWait);
             nextPromotionDate.setHours(0, 0, 0, 0); 
         }
 
-        // **********************************
-        // 2. حساب العلاوة السنوية القادمة (تم التعديل حسب الملاحظة 1)
-        // **********************************
-        
-        // العلاوة تعتمد على (المرحلة * 1 سنة)
-        const annualYears = currentStage;
-        
         let nextAnnualIncreaseDate = new Date(lastDate);
-        
-        // إضافة سنوات المرحلة الحالية
-        nextAnnualIncreaseDate.setFullYear(lastDate.getFullYear() + annualYears);
-        
-        // التراجع بعدد أشهر القدم المكتسبة (يتم تحويل الشهر إلى 30.4375 يوم تقريباً للتراجع الدقيق)
-        const DAYS_IN_MONTH = 30.4375; 
-        nextAnnualIncreaseDate.setDate(nextAnnualIncreaseDate.getDate() - (bonusMonths * DAYS_IN_MONTH));
-        nextAnnualIncreaseDate.setHours(0, 0, 0, 0); 
-        
-        // التحقق من حالة العلاوة السنوية
+        nextAnnualIncreaseDate.setFullYear(nextAnnualIncreaseDate.getFullYear() + 1);
+        nextAnnualIncreaseDate.setMonth(nextAnnualIncreaseDate.getMonth() - bonusMonths);
+        nextAnnualIncreaseDate.setHours(0, 0, 0, 0);
+
+        while (nextAnnualIncreaseDate.getTime() < today.getTime()) {
+            nextAnnualIncreaseDate.setFullYear(nextAnnualIncreaseDate.getFullYear() + 1);
+        }
+
         const annualTimeDiff = nextAnnualIncreaseDate.getTime() - today.getTime();
         const annualDaysDiff = Math.ceil(annualTimeDiff / (1000 * 3600 * 24));
-        
+
         let annualStatus = 'مستقبلية';
         if (annualDaysDiff <= 0) {
             annualStatus = 'مستحقة الآن';
         }
-        
-        // التحقق من حالة الترقية
+
         let promotionStatus = 'غير متاحة';
         let promotionDaysDiff = 0;
-        
+
         if (nextPromotionDate) {
             const promotionTimeDiff = nextPromotionDate.getTime() - today.getTime();
             promotionDaysDiff = Math.ceil(promotionTimeDiff / (1000 * 3600 * 24));
-            
+
             promotionStatus = 'مستقبلية';
             if (promotionDaysDiff <= 0) {
                 promotionStatus = 'مستحقة الآن';
             }
         }
-        
+
         return {
             type: 'regular',
             originalYears, 
             bonusMonths, 
-            // معلومات العلاوة السنوية
-            annualYears, // لإظهارها في التفاصيل
             nextAnnualIncreaseDate: nextAnnualIncreaseDate,
             annualStatus: annualStatus,
             annualDaysRemaining: annualDaysDiff,
-            // معلومات الترقية
             nextPromotionDate: nextPromotionDate,
             promotionStatus: promotionStatus,
             promotionDaysRemaining: promotionDaysDiff,
             yearsToPromotion: effectiveYears,
+            promotionOverdueYears: promotionOverdueYears,
             nextGrade: nextGrade,
             nextStage: nextStage,
             currentStage: currentStage
         };
     }
 
-    // دالة لتحديد سعر الساعة بناءً على الدرجة
     function getRatePerHoure(grade) {
-        if (parseInt(grade) >= 5 && parseInt(grade) <= 8) {
+        if (parseInt(grade) >= 5 && parseInt(grade) <= 10) {
             return OVERTIME_RATES.low_grade;
         } else if (parseInt(grade) >= 1 && parseInt(grade) <= 4) {
             return OVERTIME_RATES.high_grade;
@@ -951,17 +501,20 @@
         }
         return 0;
     }
-    
-    // دالة مساعدة لحساب الراتب الكلي
-    function calculateFullSalary(targetGrade, targetStage, degree, workType, locationAllowance, social, kids, positionFactor = 0, bonusMonths = 0, workShift = 'morning', overtimeHoursInput = 0, shifts = 6) {
-        
-        // 1. الراتب الاسمي
-        const stageIncrement = stageAddLogic(targetGrade);
-        const nominal = gradeBase[targetGrade] + ((targetStage - 1) * stageIncrement);
 
-        // 2. حساب المعاملات الموحدة
+    function calculateFullSalary(targetGrade, targetStage, degree, workType, social, kids, positionFactor, bonusMonths, workShift, overtimeHoursInput, shifts) {
+
+        const stageIncrement = stageAddLogic(targetGrade);
+        let nominal = gradeBase[targetGrade] + ((targetStage - 1) * stageIncrement);
+
+        if (gradeMaxNominal[targetGrade] && nominal > gradeMaxNominal[targetGrade]) {
+            nominal = gradeMaxNominal[targetGrade];
+        }
+
         let certFactor;
         switch (degree) {
+            case 'primary': certFactor = 0.20; break;
+            case 'preparatory': certFactor = 0.25; break;
             case 'diploma': certFactor = 0.35; break;
             case 'bachelor': certFactor = 0.45; break;
             case 'master': certFactor = 0.65; break;
@@ -970,39 +523,29 @@
         }
 
         const riskFactor = workType === 'field' ? 0.3 : 0.25;
-        
+
         let conditionalFactor = 0; 
-        
-        if (degree !== 'diploma') {
+
+        if (degree !== 'diploma' && degree !== 'primary' && degree !== 'preparatory') {
             conditionalFactor = workType === 'field' ? 0.50 : 0.35;
         }
-        
+
         const fixedOtherAllowanceFactor = 0.3; 
 
         const totalFactors = certFactor + riskFactor + conditionalFactor + fixedOtherAllowanceFactor;
         const factoredAllowance = Math.round(nominal * totalFactors); 
 
-        // 3. مخصصات الزوجية والأطفال
         let familyAllowance = 0;
         if (social === "married") {
             familyAllowance = 50000 + kids * 10000; 
         }
-        
-        // 4. مخصصات المسؤولية
+
         const responsibilityAllowance = Math.round(nominal * positionFactor);
-        
-        // 5. مخصصات "أشهر القدم" (مستبعدة حالياً من الحساب الفعلي للراتب)
         const bonusAmount = 0; 
-        
-        // 6. حساب بدل الساعات الإضافية أو المناوبة
+
         let specialAllowance = 0;
-        let specialAllowanceDetails = {
-            type: 'None', 
-            hours: 0, 
-            rate: 0,
-            shiftList: '' 
-        };
-        
+        let specialAllowanceDetails = { type: 'None', hours: 0, rate: 0, shiftList: '' };
+
         const ratePerHoure = getRatePerHoure(targetGrade);
 
         if (workShift === 'morning' && overtimeHoursInput > 0) {
@@ -1011,40 +554,35 @@
             specialAllowanceDetails.hours = overtimeHoursInput;
             specialAllowanceDetails.rate = ratePerHoure;
         } else if (workShift === 'shift') {
-            const hours = (shifts * 24) - 154; // افتراض ساعات العمل الاعتيادية 154 ساعة 
-            if (hours > 0) {
-                 specialAllowance = hours * ratePerHoure;
+            let hours = 0;
+            const shiftRate = 4000; 
+            if (shifts === 'authorized') {
+                hours = 22.5;
+            } else {
+                hours = 26;
             }
+            specialAllowance = hours * shiftRate;
             specialAllowanceDetails.type = 'Shift';
             specialAllowanceDetails.hours = hours;
-            specialAllowanceDetails.rate = ratePerHoure;
-
-            if (shifts === 7) {
-                specialAllowanceDetails.shiftList = "صباحي, مسائي, ليلي, صباحي, مسائي, ليلي, صباحي";
-            } else if (shifts === 8) {
-                specialAllowanceDetails.shiftList = "مسائي, ليلي, صباحي, مسائي, ليلي, صباحي, مسائي, ليلي";
-            } else {
-                specialAllowanceDetails.shiftList = "لا يوجد تفصيل للشفتات";
-            }
+            specialAllowanceDetails.rate = shiftRate;
+            specialAllowanceDetails.shiftList = shifts === 'authorized' ? 'مجاز' : 'غير مجاز';
         }
 
-        // 7. الاستقطاعات
         const retirement = Math.round(0.1 * nominal);
         const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
         const totalDeductions = retirement + fixedDeductions;
-        
-        // 8. الراتب الكلي (الصافي) 
-        // المخصصات: factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance
-        const totalSalary = (nominal + factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance) - totalDeductions;
-        
+
+        const grossBeforeDeductions = nominal + factoredAllowance + familyAllowance + responsibilityAllowance + specialAllowance;
+        const netAfterDeductions = grossBeforeDeductions - totalDeductions;
+        const totalSalary = netAfterDeductions + LOCATION_FIXED_BONUS;
+
         return { nominal, totalSalary, responsibilityAllowance, totalDeductions, bonusAmount, factoredAllowance, specialAllowance, specialAllowanceDetails };
     }
 
-    // دالة جديدة لحساب سنوات الخدمة الفعلية بدقة
     function calculateServiceDuration(startDate) {
         if (!startDate) return null;
-        
-        const start = new Date(startDate); // يجب أن يكون startDate بصيغة YYYY-MM-DD
+
+        const start = new Date(startDate);
         const now = new Date();
 
         let years = now.getFullYear() - start.getFullYear();
@@ -1061,7 +599,7 @@
             years--;
             months += 12;
         }
-        
+
         if (years < 0) {
             return "تاريخ تعيين غير صحيح"; 
         }
@@ -1069,70 +607,303 @@
         return { years, months, days };
     }
 
-    // الدوال الأساسية للتحكم بعرض الحقول الأخرى
+    const ODOMETER_ITEM_HEIGHT = 44;
+    const ODOMETER_REPEATS = 25;
+
+    function daysInMonthOf(year, month) {
+        return new Date(year, month, 0).getDate();
+    }
+
+    function odometerPad(n) {
+        return String(n).padStart(2, '0');
+    }
+
+    function createOdometerPicker(pickerId, hiddenInputId, initial) {
+        const picker = document.getElementById(pickerId);
+        if (!picker) return null;
+        const hiddenInput = document.getElementById(hiddenInputId);
+
+        const nowYear = new Date().getFullYear();
+        const minYear = nowYear - 70;
+        const maxYear = nowYear + 5;
+        const yearValues = [];
+        for (let y = minYear; y <= maxYear; y++) yearValues.push(y);
+        const monthValues = Array.from({ length: 12 }, (_, i) => i + 1);
+
+        const state = { year: initial.year, month: initial.month, day: initial.day };
+        const wheels = {};
+
+        function emitValue() {
+            hiddenInput.value = `${state.year}/${odometerPad(state.month)}/${odometerPad(state.day)}`;
+        }
+
+        function renderWheelItems(unit, values) {
+            const wheelEl = picker.querySelector(`.odometer-wheel[data-unit="${unit}"]`);
+            const listEl = wheelEl.querySelector('.odometer-list');
+            listEl.innerHTML = '';
+            const items = [];
+            for (let c = 0; c < ODOMETER_REPEATS; c++) {
+                values.forEach(v => {
+                    const item = document.createElement('div');
+                    item.className = 'odometer-item';
+                    item.textContent = unit === 'year' ? String(v) : odometerPad(v);
+                    item.dataset.value = String(v);
+                    listEl.appendChild(item);
+                    items.push(item);
+                });
+            }
+            wheelEl.style.paddingTop = ODOMETER_ITEM_HEIGHT + 'px';
+            wheelEl.style.paddingBottom = ODOMETER_ITEM_HEIGHT + 'px';
+            wheels[unit] = { el: wheelEl, listEl, values, items, suppress: false, settleTimer: null };
+        }
+
+        function indexForValue(unit, value) {
+            const w = wheels[unit];
+            const posInCycle = w.values.indexOf(value);
+            const middleCopy = Math.floor(ODOMETER_REPEATS / 2);
+            return middleCopy * w.values.length + (posInCycle < 0 ? 0 : posInCycle);
+        }
+
+        function setActiveItem(unit, idx) {
+            const w = wheels[unit];
+            w.items.forEach(it => it.classList.remove('odometer-active'));
+            if (w.items[idx]) w.items[idx].classList.add('odometer-active');
+        }
+
+        function currentIndex(unit) {
+            const w = wheels[unit];
+            return Math.round(w.el.scrollTop / ODOMETER_ITEM_HEIGHT);
+        }
+
+        function scrollToValue(unit, value) {
+            const w = wheels[unit];
+            const idx = indexForValue(unit, value);
+            w.suppress = true;
+            w.el.scrollTop = idx * ODOMETER_ITEM_HEIGHT;
+            setActiveItem(unit, idx);
+            requestAnimationFrame(() => {
+                const cur = wheels[unit];
+                if (cur) cur.suppress = false;
+            });
+        }
+
+        function refreshDayWheel() {
+            const maxDay = daysInMonthOf(state.year, state.month);
+            const dayValues = Array.from({ length: maxDay }, (_, i) => i + 1);
+            if (state.day > maxDay) state.day = maxDay;
+            renderWheelItems('day', dayValues);
+            scrollToValue('day', state.day);
+        }
+
+        function onWheelSettle(unit) {
+            const w = wheels[unit];
+            if (!w) return;
+            const idx = Math.max(0, Math.min(w.items.length - 1, currentIndex(unit)));
+            const value = w.values[idx % w.values.length];
+            setActiveItem(unit, idx);
+
+            if (unit === 'year') state.year = value;
+            if (unit === 'month') state.month = value;
+            if (unit === 'day') state.day = value;
+
+            if (unit === 'month' || unit === 'year') {
+                refreshDayWheel();
+            }
+
+            const copyIndex = Math.floor(idx / w.values.length);
+            const middleCopy = Math.floor(ODOMETER_REPEATS / 2);
+            if (Math.abs(copyIndex - middleCopy) > 3) {
+                scrollToValue(unit, value);
+            }
+
+            emitValue();
+        }
+
+        function attachWheelEvents(unit) {
+            const wheelEl = picker.querySelector(`.odometer-wheel[data-unit="${unit}"]`);
+            wheelEl.addEventListener('scroll', () => {
+                const w = wheels[unit];
+                if (!w || w.suppress) return;
+                const idx = Math.max(0, Math.min(w.items.length - 1, currentIndex(unit)));
+                setActiveItem(unit, idx);
+                clearTimeout(w.settleTimer);
+                w.settleTimer = setTimeout(() => onWheelSettle(unit), 130);
+            });
+            wheelEl.addEventListener('click', (e) => {
+                const item = e.target.closest('.odometer-item');
+                if (!item) return;
+                const w = wheels[unit];
+                if (!w) return;
+                const idx = w.items.indexOf(item);
+                if (idx >= 0) {
+                    w.el.scrollTo({ top: idx * ODOMETER_ITEM_HEIGHT, behavior: 'smooth' });
+                }
+            });
+        }
+
+        renderWheelItems('year', yearValues);
+        renderWheelItems('month', monthValues);
+        const initialMaxDay = daysInMonthOf(state.year, state.month);
+        renderWheelItems('day', Array.from({ length: initialMaxDay }, (_, i) => i + 1));
+
+        attachWheelEvents('year');
+        attachWheelEvents('month');
+        attachWheelEvents('day');
+
+        scrollToValue('year', state.year);
+        scrollToValue('month', state.month);
+        scrollToValue('day', state.day);
+        emitValue();
+
+        return {
+            reset(newInitial) {
+                state.year = newInitial.year;
+                state.month = newInitial.month;
+                state.day = newInitial.day;
+                const maxDay = daysInMonthOf(state.year, state.month);
+                if (state.day > maxDay) state.day = maxDay;
+                renderWheelItems('day', Array.from({ length: maxDay }, (_, i) => i + 1));
+                scrollToValue('year', state.year);
+                scrollToValue('month', state.month);
+                scrollToValue('day', state.day);
+                emitValue();
+            }
+        };
+    }
+
+    let dateOfAppointmentPickerInstance = null;
+    let lastPromotionDatePickerInstance = null;
+
+    function todayParts() {
+        const now = new Date();
+        return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    }
+
+    function initOdometerPickers() {
+        const parts = todayParts();
+        dateOfAppointmentPickerInstance = createOdometerPicker('dateOfAppointmentPicker', 'dateOfAppointment', parts);
+        lastPromotionDatePickerInstance = createOdometerPicker('lastPromotionDatePicker', 'lastPromotionDate', parts);
+    }
+
+    // ==========================================
+    // دوال التحكم بالتسكين الوظيفي (جديدة)
+    // ==========================================
+
+    const DEGREE_RANGES = {
+        'primary': { min: 10, max: 3 },
+        'preparatory': { min: 10, max: 2 },
+        'diploma': { min: 8, max: 1 },
+        'bachelor': { min: 7, max: 1 },
+        'master': { min: 7, max: 1 },
+        'phd': { min: 7, max: 1 }
+    };
+
+    const LEADERSHIP_OPTIONS = [
+        { value: 'GM', text: 'المدير العام ومن بدرجته' },
+        { value: 'SP', text: 'الدرجة الخاصة' },
+        { value: 'UM', text: 'وكيل وزارة ومن بدرجته' }
+    ];
+
+    function updateGradeOptions() {
+        const degree = document.getElementById('degreeType').value;
+        const position = document.getElementById('position').value;
+        const gradeSelect = document.getElementById('grade');
+
+        const currentGrade = gradeSelect.value;
+        gradeSelect.innerHTML = '';
+
+        const range = DEGREE_RANGES[degree];
+        if (!range) return;
+
+        for (let g = range.min; g >= range.max; g--) {
+            const option = document.createElement('option');
+            option.value = String(g);
+            option.textContent = String(g);
+            gradeSelect.appendChild(option);
+        }
+
+        if (position !== 'none') {
+            LEADERSHIP_OPTIONS.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.text;
+                gradeSelect.appendChild(option);
+            });
+        }
+
+        const availableValues = Array.from(gradeSelect.options).map(o => o.value);
+        if (availableValues.includes(currentGrade)) {
+            gradeSelect.value = currentGrade;
+        } else {
+            gradeSelect.value = String(range.min);
+        }
+
+        updateStageVisibility();
+    }
+
+    function updateStageVisibility() {
+        const grade = document.getElementById('grade').value;
+        const stageBox = document.getElementById('stageBox');
+
+        if (LEADERSHIP_GRADES.includes(grade)) {
+            stageBox.classList.add('hidden');
+        } else {
+            stageBox.classList.remove('hidden');
+        }
+    }
+
     function toggleKids() {
         document.getElementById("kidsBox").classList.toggle(
             "hidden",
             document.getElementById("social").value !== "married"
         );
     }
-    
-    // دالة للتحكم بعرض حقل الشفتات والساعات الإضافية
+
     function toggleShiftsAndOvertime() {
         const workShift = document.getElementById("workShift").value;
-        
         document.getElementById("overtimeHoursBox").classList.toggle("hidden", workShift !== 'morning');
         document.getElementById("shiftsBox").classList.toggle("hidden", workShift !== 'shift');
     }
-    
-    // دالة حساب جميع النتائج
+
     function calculateAll() {
-        // إظهار مؤشر التحميل
         document.getElementById('loadingIndicator').style.display = 'block';
-        
-        // الإخفاء الأولي لكل العناصر القابلة للإخفاء
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
         document.getElementById("printBtn").style.display = 'none';
 
-        
-        // استخدام setTimeout لمحاكاة عملية حساب قد تستغرق وقتاً
         setTimeout(() => {
-            // جلب المدخلات وتعديل الصيغة من yyyy/mm/dd إلى yyyy-mm-dd لـ Date() constructor
             const dateOfAppointmentInput = document.getElementById("dateOfAppointment").value.trim();
             const lastPromotionDateInput = document.getElementById("lastPromotionDate").value.trim();
 
-            // التحقق من صيغة التاريخ
             const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
             if (dateOfAppointmentInput && !dateRegex.test(dateOfAppointmentInput)) {
-                alert("⚠️ صيغة تاريخ التعيين غير صحيحة. يجب أن تكون YYYY/MM/DD.");
+                alert("صيغة تاريخ التعيين غير صحيحة. يجب أن تكون YYYY/MM/DD.");
                 document.getElementById('loadingIndicator').style.display = 'none';
                 return;
             }
             if (lastPromotionDateInput && !dateRegex.test(lastPromotionDateInput)) {
-                alert("⚠️ صيغة تاريخ آخر ترقية/علاوة غير صحيحة. يجب أن تكون YYYY/MM/DD.");
+                alert("صيغة تاريخ آخر ترقية/علاوة غير صحيحة. يجب أن تكون YYYY/MM/DD.");
                 document.getElementById('loadingIndicator').style.display = 'none';
                 return;
             }
 
             const dateOfAppointment = dateOfAppointmentInput ? dateOfAppointmentInput.replace(/\//g, '-') : '';
             const lastPromotionDate = lastPromotionDateInput ? lastPromotionDateInput.replace(/\//g, '-') : '';
-            
+
             const grade = document.getElementById("grade").value; 
             const isLeadership = LEADERSHIP_GRADES.includes(grade);
-            
+
             const stage = parseInt(document.getElementById("stage").value) || 1; 
             const degree = document.getElementById("degreeType").value; 
             const workType = document.getElementById("workType").value;   
-            const locationAllowance = parseInt(document.getElementById("locationAllowance").value) || 0;
             const social = document.getElementById("social").value;
             const kids = parseInt(document.getElementById("kids").value) || 0;
             const bonusMonths = parseInt(document.getElementById("bonusMonths").value) || 0;
             const workShift = document.getElementById("workShift").value;
-            
+
             const overtimeHoursInput = parseInt(document.getElementById("overtimeHoursInput").value) || 0;
-            const shifts = parseInt(document.getElementById("shifts").value) || 6;
-            
+            const shifts = document.getElementById("shifts").value;
+
             let positionFactor = 0;
             const position = document.getElementById("position").value;
 
@@ -1143,20 +914,17 @@
             } else {
                 positionFactor = POSITION_DEDUCTIONS[position] || 0;
             }
-            
-            // 1. حساب الراتب الحالي (الصافي) 
+
             const { nominal: currentNominal, totalSalary: currentTotalSalary, responsibilityAllowance, totalDeductions, bonusAmount, factoredAllowance, specialAllowance, specialAllowanceDetails } = 
-                calculateFullSalary(grade, stage, degree, workType, locationAllowance, social, kids, positionFactor, bonusMonths, workShift, overtimeHoursInput, shifts);
-            
-            // 2. عرض نتائج الراتب
+                calculateFullSalary(grade, stage, degree, workType, social, kids, positionFactor, bonusMonths, workShift, overtimeHoursInput, shifts);
+
             document.getElementById("salaryResult").classList.remove('hidden');
             document.getElementById("salaryResult").innerHTML =
                 "الراتب الصافي: <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
-                
-            // 3. حساب وعرض سنوات الخدمة
+
             const service = calculateServiceDuration(dateOfAppointment);
             const serviceElement = document.getElementById("serviceDuration");
-            
+
             if (service && typeof service !== 'string') {
                 serviceElement.innerHTML = 
                     `سنوات الخدمة الفعلية: 
@@ -1168,32 +936,28 @@
                 alert(service); 
             }
 
-            // 4. حساب معلومات العلاوة والترقية
             const promotionInfo = lastPromotionDate ? calculatePromotions(lastPromotionDate, grade, stage, bonusMonths) : null;
-            
-            // 5. تفاصيل الحسابات (الراتب الحالي)
-            
+
             const degreeText = document.getElementById("degreeType").selectedOptions[0].textContent;
             const gradeText = document.getElementById("grade").selectedOptions[0].textContent; 
-            const workShiftText = document.getElementById("workShift").selectedOptions[0].textContent;
-            const socialText = document.getElementById("social").selectedOptions[0].textContent; 
-            const kidsText = document.getElementById("kids").value; 
-            
-            // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
+
             const formattedDate = dateOfAppointment ? formatDate(new Date(dateOfAppointment)) : "غير مُدخل";
             const formattedLastPromotionDate = lastPromotionDate ? formatDate(new Date(lastPromotionDate)) : "غير مُدخل";
-            
+
             let positionText;
             if (isLeadership) {
                 positionText = gradeText; 
             } else {
                 positionText = document.getElementById("position").selectedOptions[0].textContent;
             }
-            
+
             const workTypeText = document.getElementById("workType").selectedOptions[0].textContent;
-            
+            const gradeStageText = `${gradeText} - المرحلة ${stage}`;
+
             let certFactor = 0;
             switch (degree) {
+                case 'primary': certFactor = 0.20; break;
+                case 'preparatory': certFactor = 0.25; break;
                 case 'diploma': certFactor = 0.35; break;
                 case 'bachelor': certFactor = 0.45; break;
                 case 'master': certFactor = 0.65; break;
@@ -1201,189 +965,114 @@
                 default: certFactor = 0;
             }
             let riskFactor = workType === 'field' ? 0.3 : 0.25;
-            
+
             let conditionalFactor = 0; 
-            let conditionalFactorName = "مخصصات هندسية";
-            if (degree !== 'diploma') {
+            if (degree !== 'diploma' && degree !== 'primary' && degree !== 'preparatory') {
                 conditionalFactor = workType === 'field' ? 0.50 : 0.35;
-                conditionalFactorName = "مخصصات هندسية";
             }
-            
+
             let fixedOtherAllowanceFactor = 0.3;
-            
+
             const certAmount = Math.round(currentNominal * certFactor);
             const riskAmount = Math.round(currentNominal * riskFactor);
             const otherFixedAmount = Math.round(currentNominal * fixedOtherAllowanceFactor);
             const conditionalAmount = Math.round(currentNominal * conditionalFactor);
-            
+
             let familyAllowance = social === "married" ? (50000 + kids * 10000) : 0;
-            let retirement = Math.round(0.1 * currentNominal);
-            
-            const fixedDeductions = DEDUCTIONS.HEALTH_INSURANCE + DEDUCTIONS.SOCIAL_SOLIDARITY + DEDUCTIONS.CHILD_HOSPITAL_SUPPORT + DEDUCTIONS.PREVIOUS_DEDUCTION;
-            
-            const totalAllowancesWithoutNominal = factoredAllowance + locationAllowance + familyAllowance + responsibilityAllowance + specialAllowance;
+
             const grossSalary = currentTotalSalary + totalDeductions;
 
-            let responsibilityText = '';
-            if (positionFactor > 0) { 
-                const positionNameForPrint = (grade === 'GM') ? gradeText : document.getElementById("position").selectedOptions[0].textContent;
-                responsibilityText = `<li>مخصصات مسؤولية (${positionNameForPrint}) (${(positionFactor * 100).toFixed(0)}%): <span>${responsibilityAllowance.toLocaleString()}</span> دينار</li>`;
-            }
-            
-            let specialAllowanceText = '';
-            if (specialAllowance > 0) {
-                 let allowanceType = (workShift === 'morning' && overtimeHoursInput > 0) ? 'ساعات إضافية' : 'مناوبة';
-                 specialAllowanceText = `<li>بدل ${allowanceType}: <span>${specialAllowance.toLocaleString()}</span> دينار</li>`;
-            }
-            
-            let shiftsDetailText = '';
-            if (workShift === 'shift' && shifts !== 6) {
-                shiftsDetailText = `<li>عدد الشفتات المُحتسب: <span>${shifts}</span> شفت (${specialAllowanceDetails.hours} ساعة إضافية)</li>`;
-            }
+            let nextAnnualDateText = "غير مُدخل";
+            let annualStatusDisplay = "غير مُدخل";
+            let nextPromotionDateText = "غير مُدخل";
+            let promotionStatusDisplay = "غير مُدخل";
 
-            let conditionalAllowanceLine = '';
-            if (conditionalFactor > 0) {
-                conditionalAllowanceLine = `<li>${conditionalFactorName} (${(conditionalFactor * 100).toFixed(0)}%): <span>${conditionalAmount.toLocaleString()}</span> دينار</li>`;
-            }
-            
-            let gradeStageDisplay = `<li>الدرجة: <span>${gradeText}</span>، المرحلة: <span>${stage}</span></li>`;
-
-            // ✅ إعداد نص معلومات العلاوة والترقية 
-            let promotionTextInfo = '';
             if (promotionInfo) {
                 if (promotionInfo.type === 'leadership') {
-                    promotionTextInfo = `
-                        <div class="promotion-info-box">
-                            <strong>معلومات الترقية:</strong>
-                            <ul style="margin-top: 10px; margin-bottom: 0;">
-                                <li>تاريخ آخر ترقية: <span>${formattedLastPromotionDate}</span></li>
-                                <li>${promotionInfo.message}</li>
-                            </ul>
-                        </div>
-                    `;
+                    nextAnnualDateText = "لا يوجد";
+                    annualStatusDisplay = "درجة قيادية";
+                    nextPromotionDateText = "لا يوجد";
+                    promotionStatusDisplay = "درجة قيادية";
                 } else {
-                    // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
-                    const formattedAnnualDate = formatDate(promotionInfo.nextAnnualIncreaseDate);
-                    
-                    const nextGradeText = promotionInfo.nextGrade;
-                    const nextGradeDisplay = nextGradeText === 'GM' ? 'المدير العام' : 
-                                           nextGradeText === 'SP' ? 'الدرجة الخاصة' : 
-                                           nextGradeText === 'UM' ? 'وكيل وزارة' : `درجة ${nextGradeText}`;
-                    
-                    let annualStatusText = '';
-                    let reductionTextAnnual = '';
-                    
+                    nextAnnualDateText = formatDate(promotionInfo.nextAnnualIncreaseDate);
                     if (promotionInfo.annualStatus === 'مستحقة الآن') {
-                        annualStatusText = `<li style="color: #d9534f; font-weight: bold;">حالة العلاوة السنوية: <span>${promotionInfo.annualStatus}</span></li>`;
+                        annualStatusDisplay = "مستحقة الآن";
                     } else {
-                        // إضافة توضيح عن التخفيض بسبب أشهر القدم للعلاوة السنوية
-                        reductionTextAnnual = promotionInfo.bonusMonths > 0 
-                            ? ` (مخفضة ${promotionInfo.bonusMonths} شهر بسبب كتب الشكر)` 
-                            : '';
-                        annualStatusText = `<li>حالة العلاوة السنوية: <span>${promotionInfo.annualStatus}</span> (${promotionInfo.annualDaysRemaining} يوم متبقي)${reductionTextAnnual} - بناءً على ${promotionInfo.annualYears} سنة</li>`;
+                        annualStatusDisplay = `${promotionInfo.annualStatus} (${promotionInfo.annualDaysRemaining} يوم متبقي)`;
                     }
-                    
-                    let promotionInfoText = '';
+
                     if (promotionInfo.nextPromotionDate) {
-                        // ✅ استخدام الدالة الجديدة لتنسيق التواريخ
-                        const formattedPromotionDate = formatDate(promotionInfo.nextPromotionDate);
-                        
-                        let promotionStatusText = '';
-                        if (promotionInfo.promotionStatus === 'مستحقة الآن') {
-                            promotionStatusText = `<li style="color: #d9534f; font-weight: bold;">حالة الترقية: <span>${promotionInfo.promotionStatus}</span></li>`;
+                        nextPromotionDateText = formatDate(promotionInfo.nextPromotionDate);
+                        if (promotionInfo.promotionOverdueYears > 0) {
+                            promotionStatusDisplay = `مستحق ترقية منذ ${promotionInfo.promotionOverdueYears} سنة`;
+                        } else if (promotionInfo.promotionStatus === 'مستحقة الآن') {
+                            promotionStatusDisplay = "مستحقة الآن";
                         } else {
-                            promotionStatusText = `<li>حالة الترقية: <span>${promotionInfo.promotionStatus}</span> (${promotionInfo.promotionDaysRemaining} يوم متبقي)</li>`;
+                            promotionStatusDisplay = `${promotionInfo.promotionStatus} (${promotionInfo.promotionDaysRemaining} يوم متبقي)`;
                         }
-                        
-                        promotionInfoText = `
-                            <li>عدد أشهر القدم المخصومة: <span>${promotionInfo.bonusMonths}</span> شهر</li>
-                            <li>تاريخ الترقية القادمة: <span>${formattedPromotionDate}</span></li>
-                            <li>الدرجة والمرحلة بعد الترقية: <span>${nextGradeDisplay} - مرحلة ${promotionInfo.nextStage}</span></li>
-                            ${promotionStatusText}
-                        `;
                     } else {
-                        promotionInfoText = `<li>الترقية القادمة: <span>لا توجد ترقية قادمة</span></li>`;
+                        nextPromotionDateText = "لا يوجد";
+                        promotionStatusDisplay = "لا يوجد";
                     }
-                    
-                    promotionTextInfo = `
-                        <div class="promotion-info-box">
-                            <strong>معلومات العلاوة والترقية:</strong>
-                            <ul style="margin-top: 10px; margin-bottom: 0;">
-                                <li>تاريخ آخر ترقية/علاوة: <span>${formattedLastPromotionDate}</span></li>
-                                <li>تاريخ العلاوة السنوية القادمة: <span>${formattedAnnualDate}</span></li>
-                                ${annualStatusText}
-                                ${promotionInfoText}
-                            </ul>
-                        </div>
-                    `;
                 }
             }
 
             document.getElementById("detailsBox").innerHTML =
-                "<h3>📄 تفاصيل قصاصة الراتب:</h3>" + 
-                "<div style='background: #f1f1f1; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;'>" +
-                "<strong>البيانات الأساسية:</strong>" +
+                "<h4>معلومات الموظف</h4>" +
+                "<hr style='margin: 5px 0 12px 0; border-top: 1px solid #ccc;'>" +
                 "<ul>" +
-                `<li>تاريخ التعيين: <span>${formattedDate}</span></li>` +
-                gradeStageDisplay + 
-                `<li>الشهادة: <span>${degreeText}</span></li>` +
-                `<li>المنصب الحالي: <span>${positionText}</span></li>` +
-                `<li>تصنيف الوظيفة: <span>${workTypeText}</span></li>` +
-                `<li>نوع الدوام: <span>${workShiftText}</span></li>` +
-                (shiftsDetailText ? shiftsDetailText : '') + 
-                `<li>الحالة الاجتماعية: <span>${socialText}</span></li>` +
-                `<li>عدد الأطفال: <span>${kidsText}</span></li>` +
+                    `<li>تاريخ التعيين: <span>${formattedDate}</span></li>` +
+                    `<li>تاريخ آخر ترفيع: <span>${formattedLastPromotionDate}</span></li>` +
+                    `<li>تاريخ العلاوة القادمة: <span>${nextAnnualDateText}</span></li>` +
+                    `<li>حالة العلاوة: <span>${annualStatusDisplay}</span></li>` +
+                    `<li>تاريخ الترفيع القادم: <span>${nextPromotionDateText}</span></li>` +
+                    `<li>حالة الترفيع: <span>${promotionStatusDisplay}</span></li>` +
+                    `<li>موقع العمل: <span>${workTypeText}</span></li>` +
+                    `<li>الشهادة: <span>${degreeText}</span></li>` +
+                    `<li>الدرجة والمرحلة: <span>${gradeStageText}</span></li>` +
+                    `<li>المسؤولية: <span>${positionText}</span></li>` +
                 "</ul>" +
-                "</div>" +
-                
-                (promotionTextInfo ? promotionTextInfo : '') +
-                
-                "<strong>الراتب الاسمي:</strong> <span>" + currentNominal.toLocaleString() + "</span> دينار<br>" +
-                "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-                "<h4>➕ المخصصات:</h4>" +
-                "<ul> " + 
-                    `<li>مخصصات شهادة (${(certFactor * 100).toFixed(0)}%): <span>${certAmount.toLocaleString()}</span> دينار</li>` +
-                    `<li>مخصصات خطورة (${(riskFactor * 100).toFixed(0)}%): <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
-                    `<li>مخصصات ثابتة (30%): <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` + 
-                    (conditionalAllowanceLine ? conditionalAllowanceLine : '') + 
-                    `<li>مخصصات الزوجية والأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
-                    (responsibilityText ? responsibilityText : '') + 
-                    (specialAllowanceText ? specialAllowanceText : '') + 
-                    `<li>مخصصات الموقع: <span>${locationAllowance.toLocaleString()}</span> دينار</li>` +
+                "<h4>مخصصات الراتب</h4>" +
+                "<hr style='margin: 5px 0 12px 0; border-top: 1px solid #ccc;'>" +
+                "<ul>" +
+                    `<li>الراتب الإسمي: <span>${currentNominal.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. شهادة: <span>${certAmount.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. خطورة: <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. ثابت: <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. هندسية: <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. زوجية: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. موقعية: <span>${LOCATION_FIXED_BONUS.toLocaleString()}</span> دينار</li>` +
+                    `<li>ساعات اضافية: <span>${specialAllowance.toLocaleString()}</span> دينار</li>` +
                 "</ul>" +
                 "<hr style='margin: 8px 0; border-top: 1px dashed #ccc;'>" +
-                "<strong>إجمالي المخصصات:</strong> <span>" + totalAllowancesWithoutNominal.toLocaleString() + "</span> دينار<br>" + 
-                "<strong>الراتب الكلي (قبل الاستقطاع):</strong> <span>" + grossSalary.toLocaleString() + "</span> دينار<br>" +
-                "<hr style='margin: 8px 0; border-top: 2px solid var(--primary-color);'>" + 
-                "<strong>الراتب الصافي النهائي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
+                "<strong>الراتب الكلي:</strong> <span>" + grossSalary.toLocaleString() + "</span> دينار<br>" +
+                "<strong>الاستقطاعات:</strong> <span>" + totalDeductions.toLocaleString() + "</span> دينار<br>" +
+                "<strong>الراتب الصافي:</strong> <span>" + currentTotalSalary.toLocaleString() + "</span> دينار";
 
             document.getElementById("detailsBox").classList.remove('hidden');
             document.getElementById("printBtn").style.display = 'flex';
             document.getElementById('loadingIndicator').style.display = 'none';
         }, 800);
     }
-    
-    // دالة طباعة مباشرة
+
     function printResults() {
         if (document.getElementById("salaryResult").classList.contains('hidden')) {
-            alert("⚠️ يرجى إجراء عملية الحساب أولاً قبل محاولة الطباعة.");
+            alert("يرجى إجراء عملية الحساب أولاً قبل محاولة الطباعة.");
             return;
         }
         window.print();
     }
 
-    // دالة التصفير
     function resetForm() {
         document.getElementById("salaryForm").reset();
-        document.getElementById("locationAllowance").value = ''; // تم تفريغه
         document.getElementById("bonusMonths").value = 0;
-        document.getElementById("dateOfAppointment").value = ""; 
         document.getElementById("overtimeHoursInput").value = ""; 
-        document.getElementById("lastPromotionDate").value = ""; 
+        if (dateOfAppointmentPickerInstance) dateOfAppointmentPickerInstance.reset(todayParts());
+        if (lastPromotionDatePickerInstance) lastPromotionDatePickerInstance.reset(todayParts());
         document.getElementById("position").value = "none";
         document.getElementById("workShift").value = "morning";
-        document.getElementById("shifts").value = "6";
-        document.getElementById("grade").value = "8"; 
+        document.getElementById("shifts").value = "unauthorized";
+        document.getElementById("grade").value = "10"; 
         document.getElementById("stage").value = "1"; 
         document.getElementById("kidsBox").classList.add('hidden'); 
         toggleShiftsAndOvertime();
@@ -1391,19 +1080,30 @@
         document.getElementById('loadingIndicator').style.display = 'none';
         document.querySelectorAll('.result').forEach(el => el.classList.add('hidden'));
         document.getElementById("detailsBox").classList.add('hidden');
+
+        // إعادة تعيين التسكين الوظيفي
+        updateGradeOptions();
     }
 
-    // ربط الدوال بالأحداث
     document.addEventListener('DOMContentLoaded', () => {
+        initOdometerPickers();
         document.getElementById("social").addEventListener('change', toggleKids);
         document.getElementById("workShift").addEventListener('change', toggleShiftsAndOvertime);
         document.getElementById("calculateBtn").addEventListener('click', calculateAll);
         document.getElementById("resetBtn").addEventListener('click', resetForm);
         document.getElementById("printBtn").addEventListener('click', printResults);
+
+        // أحداث التسكين الوظيفي الجديدة
+        document.getElementById("degreeType").addEventListener('change', updateGradeOptions);
+        document.getElementById("position").addEventListener('change', updateGradeOptions);
+        document.getElementById("grade").addEventListener('change', updateStageVisibility);
+
         toggleKids();
-        resetForm(); // لضمان تصفير الموقعية في البداية
+        toggleShiftsAndOvertime();
+        updateGradeOptions(); // تهيئة التسكين الوظيفي عند التحميل
     });
 </script>
 
 </body>
 </html>
+   
