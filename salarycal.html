@@ -154,7 +154,8 @@
         .field-group { background: #f8f9fa; padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border: 1px solid #e9ecef; transition: var(--transition); }
         .field-group:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .field-group h3 { margin-top: 0; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; font-size: 20px; }
-        .print-only-header { display: none; text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 700; color: #000; }
+        .print-only-header { display: none; text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 700; color: var(--primary-color); border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; position: relative; }
+        .print-only-header:after { content: ""; position: absolute; bottom: -3px; right: 0; width: 100px; height: 3px; background: var(--secondary-color); }
 
         @media (max-width: 768px) {
             .back-link { top: 15px; right: 25px; left: auto; padding: 8px; font-size: 14px; width: 36px; height: 36px; }
@@ -171,21 +172,24 @@
             .footer { padding: 15px 25px; }
         }
 
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
         @media print {
-            body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .container { box-shadow: none !important; margin: 0 !important; padding: 20px !important; max-width: 100% !important; min-height: auto !important; }
+            body { background: var(--background-light) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .container { max-width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 15px !important; }
             .form-group, .btn-group, h2, .back-link, .loading-indicator, .field-group, .footer { display: none !important; }
-            .print-only-header { display: block !important; font-size: 28px !important; color: #000 !important; margin-top: 0 !important; padding-bottom: 10px; border-bottom: 2px solid #333; }
-            .result-section { border-top: none !important; padding-top: 0 !important; }
-            .result, #serviceDuration { page-break-inside: avoid; border: 1px solid #888 !important; background: #f9f9f9 !important; padding: 12px !important; margin-bottom: 10px !important; color: #000 !important; font-weight: 600 !important; }
-            #salaryResult { background: #e9f5ff !important; border-left: 5px solid var(--secondary-color) !important; }
-            #serviceDuration { background: #fff7e6 !important; border-left: 5px solid var(--warning-color) !important; }
-            .details { page-break-inside: avoid; border: 1px solid #333 !important; background: #ffffff !important; padding: 15px !important; border-radius: 0 !important; }
-            .details h3, .details h4 { color: #000 !important; border-bottom: 1px solid #ccc !important; padding-bottom: 5px !important; }
-            .details strong { color: #000 !important; font-weight: 700 !important; }
-            .details ul { padding-right: 20px !important; list-style-position: outside !important; margin-top: 5px !important; margin-bottom: 10px !important; }
-            .details li { padding-right: 0 !important; border-bottom: 1px dotted #eee; padding-top: 5px; padding-bottom: 5px; }
-            .promotion-info-box { background: #f0fff0 !important; border: 1px solid #ccc !important; border-left: 5px solid #4caf50 !important; margin-top: 10px !important; margin-bottom: 20px !important; color: #000 !important; }
+            .print-only-header { display: block !important; font-size: 24px !important; margin-bottom: 12px !important; padding-bottom: 6px !important; }
+            .result-section { margin-top: 12px !important; border-top: none !important; padding-top: 0 !important; }
+            .result { padding: 10px 14px !important; font-size: 16px !important; margin-bottom: 10px !important; page-break-inside: avoid; }
+            .details { margin-top: 10px !important; padding: 16px 18px !important; font-size: 14.5px !important; line-height: 1.5 !important; page-break-inside: avoid; }
+            .details h4 { font-size: 15px !important; margin: 10px 0 6px !important; }
+            .details hr { margin: 5px 0 !important; }
+            .details ul { margin: 6px 0 !important; padding-right: 18px !important; }
+            .details li { padding: 2px 0 !important; }
+            .promotion-info-box { page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -210,7 +214,7 @@
                 <input type="hidden" id="dateOfAppointment" name="dateOfAppointment" value="">
             </div>
             <div class="form-group">
-                <label>تاريخ آخر ترقيع</label>
+                <label>تاريخ آخر ترفيع</label>
                 <div class="odometer-picker" id="lastPromotionDatePicker">
                     <div class="odometer-frame"></div>
                     <div class="odometer-wheel" data-unit="year"><div class="odometer-list"></div></div>
@@ -332,18 +336,18 @@
             <i class="fas fa-spinner"></i> جاري حساب الراتب...
         </div>
         <div class="btn-group">
-            <button type="button" id="calculateBtn"><i class="fas fa-hand-holding-usd"></i> احسب النتائج</button>
-            <button type="button" id="resetBtn"><i class="fas fa-redo-alt"></i> تصفير الحقول</button>
-            <button type="button" id="printBtn"><i class="fas fa-print"></i> طباعة القصاصة PDF</button>
+            <button type="button" id="calculateBtn"></i>حساب قصاصتك</button>
+            <button type="button" id="resetBtn"></i>تهيئة المدخلات</button>
+            <button type="button" id="printBtn"></i>حفظ النتائج</button>
         </div>
     </form>
     <div class="result-section">
-        <div id="salaryResult" class="result hidden"></div>
+         <div id="salaryResult" class="result hidden"></div>
         <div id="serviceDuration" class="result hidden"></div>
         <div id="detailsBox" class="details hidden"></div>
     </div>
     <div class="footer">
-        <p>تمت البرمجة بواسطة المهندس مالك محمد</p>
+        <p>برمجة مالك محمد</p>
     </div>
 </div>
 <script>
@@ -367,7 +371,7 @@
         HEALTH_INSURANCE: 00000,
         SOCIAL_SOLIDARITY: 2000,
         CHILD_HOSPITAL_SUPPORT: 1000,
-        PREVIOUS_DEDUCTION: 195
+        PREVIOUS_DEDUCTION: 1950
     };
     const POSITION_DEDUCTIONS = {
         'section-head': 0.15,
@@ -421,6 +425,7 @@
             nextPromotionDate = new Date(lastDate);
             const totalMonthsToWait = Math.round(effectiveYears * 12);
             nextPromotionDate.setMonth(nextPromotionDate.getMonth() + totalMonthsToWait);
+            nextPromotionDate.setMonth(nextPromotionDate.getMonth() - bonusMonths);
             nextPromotionDate.setHours(0, 0, 0, 0);
         }
         let nextAnnualIncreaseDate = new Date(lastDate);
@@ -432,7 +437,7 @@
         }
         const annualTimeDiff = nextAnnualIncreaseDate.getTime() - today.getTime();
         const annualDaysDiff = Math.ceil(annualTimeDiff / (1000 * 3600 * 24));
-        let annualStatus = 'مستقبلية';
+        let annualStatus = 'متبقي';
         if (annualDaysDiff <= 0) {
             annualStatus = 'مستحقة الآن';
         }
@@ -441,7 +446,7 @@
         if (nextPromotionDate) {
             const promotionTimeDiff = nextPromotionDate.getTime() - today.getTime();
             promotionDaysDiff = Math.ceil(promotionTimeDiff / (1000 * 3600 * 24));
-            promotionStatus = 'مستقبلية';
+            promotionStatus = 'متبقي';
             if (promotionDaysDiff <= 0) {
                 promotionStatus = 'مستحقة الآن';
             }
@@ -847,10 +852,8 @@
             const serviceElement = document.getElementById("serviceDuration");
             if (service && typeof service !== 'string') {
                 serviceElement.innerHTML =
-                    `سنوات الخدمة الفعلية:
-                    (${service.years}) سنة و
-                    (${service.months}) شهر و
-                    (${service.days}) يوم.`;
+                    ` خدمة فعلية:
+                    ${service.years} سنة/ ${service.months} شهر/ ${service.days} يوم `;
                 serviceElement.classList.remove('hidden');
             } else if (typeof service === 'string') {
                 alert(service);
@@ -905,7 +908,7 @@
                     if (promotionInfo.annualStatus === 'مستحقة الآن') {
                         annualStatusDisplay = "مستحقة الآن";
                     } else {
-                        annualStatusDisplay = `${promotionInfo.annualStatus} (${promotionInfo.annualDaysRemaining} يوم متبقي)`;
+                        annualStatusDisplay = `${promotionInfo.annualStatus} (${promotionInfo.annualDaysRemaining} يوم)`;
                     }
                     if (promotionInfo.nextPromotionDate) {
                         nextPromotionDateText = formatDate(promotionInfo.nextPromotionDate);
@@ -914,7 +917,7 @@
                         } else if (promotionInfo.promotionStatus === 'مستحقة الآن') {
                             promotionStatusDisplay = "مستحقة الآن";
                         } else {
-                            promotionStatusDisplay = `${promotionInfo.promotionStatus} (${promotionInfo.promotionDaysRemaining} يوم متبقي)`;
+                            promotionStatusDisplay = `${promotionInfo.promotionStatus} (${promotionInfo.promotionDaysRemaining} يوم )`;
                         }
                     } else {
                         nextPromotionDateText = "لا يوجد";
@@ -924,28 +927,28 @@
             }
             document.getElementById("detailsBox").innerHTML =
                 "<h4>معلومات الموظف</h4>" +
-                "<hr style='margin: 5px 0 12px 0; border-top: 1px solid #ccc;'>" +
+                "<hr style='margin: 5px 0 12px 0; border-top: 1px dashed #ccc;'>" +
                 "<ul>" +
                     `<li>تاريخ التعيين: <span>${formattedDate}</span></li>` +
                     `<li>تاريخ آخر ترفيع: <span>${formattedLastPromotionDate}</span></li>` +
-                    `<li>تاريخ العلاوة القادمة: <span>${nextAnnualDateText}</span></li>` +
-                    `<li>حالة العلاوة: <span>${annualStatusDisplay}</span></li>` +
-                    `<li>تاريخ الترفيع القادم: <span>${nextPromotionDateText}</span></li>` +
+                    `<li>الترفيع القادم: <span>${nextPromotionDateText}</span></li>` +
                     `<li>حالة الترفيع: <span>${promotionStatusDisplay}</span></li>` +
+                    `<li>العلاوة القادمة: <span>${nextAnnualDateText}</span></li>` +
+                    `<li>حالة العلاوة: <span>${annualStatusDisplay}</span></li>` +
                     `<li>موقع العمل: <span>${workTypeText}</span></li>` +
                     `<li>الشهادة: <span>${degreeText}</span></li>` +
                     `<li>الدرجة والمرحلة: <span>${gradeStageText}</span></li>` +
                     `<li>المسؤولية: <span>${positionText}</span></li>` +
                 "</ul>" +
                 "<h4>مخصصات الراتب</h4>" +
-                "<hr style='margin: 5px 0 12px 0; border-top: 1px solid #ccc;'>" +
+                "<hr style='margin: 5px 0 12px 0; border-top: 1px dashed #ccc;'>" +
                 "<ul>" +
                     `<li>الراتب الإسمي: <span>${currentNominal.toLocaleString()}</span> دينار</li>` +
                     `<li>م. شهادة: <span>${certAmount.toLocaleString()}</span> دينار</li>` +
                     `<li>م. خطورة: <span>${riskAmount.toLocaleString()}</span> دينار</li>` +
                     `<li>م. ثابت: <span>${otherFixedAmount.toLocaleString()}</span> دينار</li>` +
                     `<li>م. هندسية: <span>${conditionalAmount.toLocaleString()}</span> دينار</li>` +
-                    `<li>م. زوجية: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
+                    `<li>م. زوجية وأطفال: <span>${familyAllowance.toLocaleString()}</span> دينار</li>` +
                     `<li>م. موقعية: <span>${LOCATION_FIXED_BONUS.toLocaleString()}</span> دينار</li>` +
                     `<li>م. ساعات اضافية: <span>${specialAllowance.toLocaleString()}</span> دينار</li>` +
                 "</ul>" +
