@@ -172,13 +172,23 @@
             .footer { padding: 15px 25px; }
         }
 
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
         @media print {
             body { background: var(--background-light) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .container { max-width: 100% !important; min-height: auto !important; padding-bottom: 35px !important; }
+            .container { max-width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 15px !important; }
             .form-group, .btn-group, h2, .back-link, .loading-indicator, .field-group, .footer { display: none !important; }
-            .print-only-header { display: block !important; }
-            .result-section { border-top: none !important; padding-top: 0 !important; }
-            .result, .details, .promotion-info-box { page-break-inside: avoid; }
+            .print-only-header { display: block !important; font-size: 20px !important; margin-bottom: 10px !important; padding-bottom: 5px !important; }
+            .result-section { margin-top: 8px !important; border-top: none !important; padding-top: 0 !important; }
+            .result { padding: 8px 12px !important; font-size: 14px !important; margin-bottom: 6px !important; page-break-inside: avoid; }
+            .details { margin-top: 6px !important; padding: 12px 15px !important; font-size: 12.5px !important; line-height: 1.4 !important; page-break-inside: avoid; }
+            .details h4 { font-size: 14px !important; margin: 8px 0 4px !important; }
+            .details hr { margin: 3px 0 !important; }
+            .details ul { margin: 4px 0 !important; padding-right: 16px !important; }
+            .promotion-info-box { page-break-inside: avoid; }
         }
     </style>
 </head>
